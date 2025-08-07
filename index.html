@@ -605,13 +605,49 @@
             // Obtener fechas únicas del historial
             const fechas = [...new Set(historialData.map(item => item.fecha))];
             
-            fechas.sort((a, b) => new Date(b.split('/').reverse().join('-')) - new Date(a.split('/').reverse().join('-'))); // Ordenar por fecha descendente
+            fechas.sort((a, b) => {
+                const dateA = new Date(a.split('/').reverse().join('-'));
+                const dateB = new Date(b.split('/').reverse().join('-'));
+                return dateB - dateA;
+            });
             
             fechas.forEach(fecha => {
-                const nuevaEntrada = document.createElement('button');
-                nuevaEntrada.className = `w-full p-4 text-left rounded-lg shadow-sm bg-gray-100 font-bold text-gray-800 hover:bg-gray-200 transition-colors`;
-                nuevaEntrada.textContent = `Colectas del día: ${fecha}`;
-                nuevaEntrada.onclick = () => verDetallePorFecha(fecha);
+                const nuevaEntrada = document.createElement('li');
+                nuevaEntrada.className = 'p-4 rounded-lg shadow-sm bg-gray-100 flex justify-between items-center';
+
+                const contentDiv = document.createElement('div');
+                contentDiv.innerHTML = `
+                    <p class="font-bold text-gray-800">Colectas del día: ${fecha}</p>
+                `;
+
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = "flex space-x-2";
+
+                const verDetalleBtn = document.createElement('button');
+                verDetalleBtn.textContent = 'Ver Detalle';
+                verDetalleBtn.className = 'px-3 py-1 bg-blue-500 text-white rounded-md text-xs hover:bg-blue-600 transition-colors';
+                verDetalleBtn.onclick = () => verDetallePorFecha(fecha);
+                
+                const downloadBtn = document.createElement('button');
+                downloadBtn.textContent = 'Descargar PDF';
+                downloadBtn.className = 'px-3 py-1 bg-red-600 text-white rounded-md text-xs hover:bg-red-700 transition-colors';
+                downloadBtn.onclick = () => {
+                    const tempElement = document.createElement('div');
+                    tempElement.innerHTML = generatePDFContent(fecha);
+                    const opt = {
+                        margin: 1,
+                        filename: `Colecta-${fecha.replace(/\//g, '-')}.pdf`,
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    };
+                    html2pdf().from(tempElement).set(opt).save();
+                };
+
+                actionsDiv.appendChild(verDetalleBtn);
+                actionsDiv.appendChild(downloadBtn);
+                nuevaEntrada.appendChild(contentDiv);
+                nuevaEntrada.appendChild(actionsDiv);
                 historialDetalladoList.appendChild(nuevaEntrada);
             });
         }
@@ -720,6 +756,77 @@
                 historialPorFechaScreen.classList.add('hidden');
                 egresosScreen.classList.remove('hidden');
             }
+        }
+        
+        // Función para calcular y renderizar el resumen detallado para el PDF
+        function generatePDFContent(fecha) {
+            let totalIngresos = 0;
+            let totalEgresos = 0;
+            const ingresosDelDia = historialData.filter(item => item.type === 'ingreso' && item.fecha === fecha);
+            const egresosDelDia = historialData.filter(item => item.type === 'egreso' && item.fecha === fecha);
+            
+            ingresosDelDia.forEach(item => totalIngresos += item.monto);
+            egresosDelDia.forEach(item => totalEgresos += item.monto);
+
+            const saldo = totalIngresos - totalEgresos;
+
+            let ingresosHtml = '';
+            ingresosDelDia.forEach(item => {
+                let billetesHtml = '';
+                for (const denominacion in item.billetes) {
+                    if (item.billetes[denominacion] > 0) {
+                        const subtotal = item.billetes[denominacion] * parseInt(denominacion);
+                        billetesHtml += `<p class="ml-4 text-xs text-gray-600">${item.billetes[denominacion]} x $${denominacion} (${formatCurrency(subtotal)})</p>`;
+                    }
+                }
+                ingresosHtml += `
+                    <div class="border-b border-green-200 pb-2 mb-2">
+                        <p class="font-bold text-green-700">${item.categoria} - ${formatCurrency(item.monto)}</p>
+                        ${billetesHtml}
+                    </div>
+                `;
+            });
+            
+            let egresosHtml = '';
+            egresosDelDia.forEach(item => {
+                egresosHtml += `
+                    <div class="border-b border-red-200 pb-2 mb-2">
+                        <p class="font-bold text-red-700">${item.categoria}: -${formatCurrency(item.monto)}</p>
+                    </div>
+                `;
+            });
+
+            return `
+                <h1 class="text-xl font-bold text-center mb-4">Resumen de Colectas del día</h1>
+                <p class="text-sm text-center mb-4">Fecha de la carga: ${fecha}</p>
+                
+                <div class="p-4 bg-green-100 rounded-lg shadow-sm mb-4">
+                    <h3 class="text-lg font-bold text-green-700 mb-2">Ingresos</h3>
+                    <div class="space-y-3 text-sm">
+                        ${ingresosHtml}
+                    </div>
+                    <hr class="my-3 border-green-300">
+                    <p class="text-md font-bold text-gray-800">Subtotal de Ingresos: <span class="text-green-600">${formatCurrency(totalIngresos)}</span></p>
+                </div>
+                
+                <div class="p-4 bg-red-100 rounded-lg shadow-sm mb-4">
+                    <h3 class="text-lg font-bold text-red-700 mb-2">Egresos</h3>
+                    <div class="space-y-3 text-sm">
+                        ${egresosHtml}
+                    </div>
+                    <hr class="my-3 border-red-300">
+                    <p class="text-md font-bold text-gray-800">Subtotal de Egresos: <span class="text-red-600">${formatCurrency(totalEgresos)}</span></p>
+                </div>
+                
+                <div class="p-4 bg-blue-100 rounded-lg shadow-sm mb-4">
+                    <p class="text-lg font-bold text-gray-800">Total: <span class="text-blue-600">${formatCurrency(saldo)}</span></p>
+                </div>
+                
+                <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-bold text-gray-700 mb-2">Aclaraciones</h3>
+                    <p class="text-sm text-gray-500">No hay aclaraciones.</p>
+                </div>
+            `;
         }
         
         // Función para calcular y renderizar el resumen detallado
@@ -986,7 +1093,7 @@
             };
             
             if (itemToModify) {
-                await updateDataInFirestore(itemToModify.id, data);
+                await writeBatch(db).update(doc(db, "colectas", itemToModify.id), data).commit();
                 itemToModify = null;
             } else {
                 await addDoc(colectasCollection, data);
@@ -1044,6 +1151,8 @@
                 { tipo: 'Otros gastos', monto: egresoOtros }
             ];
 
+            const batch = writeBatch(db);
+
             for (const egreso of egresos) {
                 if (egreso.monto > 0) {
                     const data = {
@@ -1053,12 +1162,14 @@
                         fecha: selectedDate
                     };
                     if (itemToModify && itemToModify.categoria === egreso.tipo) {
-                        await updateDataInFirestore(itemToModify.id, data);
+                        batch.update(doc(db, "colectas", itemToModify.id), data);
                     } else {
-                        await addDoc(colectasCollection, data);
+                        batch.set(doc(colectasCollection), data);
                     }
                 }
             }
+            await batch.commit();
+
             itemToModify = null;
             await fetchDataFromFirestore();
             
@@ -1094,7 +1205,7 @@
             const billetes = {};
             bonplandInputs.forEach(input => {
                 const denomination = input.id.split('-')[1];
-                billetes[denomination] = parseInt(input.value) || 0;
+                billetes[denominacion] = parseInt(input.value) || 0;
             });
             
             const data = {
@@ -1243,7 +1354,7 @@
                 
                 <div class="p-4 bg-gray-100 rounded-lg shadow-sm">
                     <h3 class="text-lg font-bold text-gray-700 mb-2">Aclaraciones</h3>
-                    <p class="text-sm text-gray-500">${aclaracionesTextarea.value || 'No hay aclaraciones.'}</p>
+                    <p class="text-sm text-gray-500">No hay aclaraciones.</p>
                 </div>
             `;
             
