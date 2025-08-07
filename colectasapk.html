@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parroquia San José</title>
+    <!-- Incluye Tailwind CSS para un diseño moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluye la librería para generar PDF desde HTML -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Contenedor principal de la aplicación -->
+    <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full border border-gray-200">
+        <!-- Título de la aplicación -->
+        <h1 class="text-3xl font-extrabold text-center text-slate-800 mb-6">Parroquia San José ⛪</h1>
+        
+        <!-- Pantalla de inicio de sesión -->
+        <div id="login-screen">
+            <h2 class="text-xl font-bold text-gray-700 mb-4 text-center">Acceso a la Aplicación</h2>
+            <div class="flex flex-col gap-4">
+                <input type="password" id="access-code-input" placeholder="Ingresa el código de acceso" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                <button id="login-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                    Ingresar
+                </button>
+            </div>
+            <p id="error-message" class="text-red-500 text-sm mt-4 hidden text-center">No tiene autorización para ingresar.</p>
+        </div>
+
+
+        <!-- Sección de bienvenida y botón de carga inicial -->
+        <div id="initial-screen" class="hidden">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Carga de Colectas</h2>
+            <p class="text-gray-500 mb-6">Haz clic en "Cargar" para seleccionar el tipo de colecta.</p>
+            <!-- Botón que inicia el proceso de carga -->
+            <button id="cargar-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                Cargar
+            </button>
+            
+            <hr class="my-8 border-gray-300">
+            
+            <!-- Botón para ver el historial detallado -->
+            <button id="historial-detallado-btn" class="mt-4 w-full bg-gray-400 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-gray-500 transition-all duration-300 transform hover:scale-105">
+                Historial Detallado
+            </button>
+        </div>
+
+        <!-- Sección para seleccionar el tipo de colecta (inicialmente oculta) -->
+        <div id="select-colecta-screen" class="hidden">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Seleccionar Colecta</h2>
+            <div class="flex flex-col gap-4">
+                <!-- Botones para cada tipo de colecta -->
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de sábado 19:30h">
+                    Colecta de sábado 19:30h
+                </button>
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de domingo 08h">
+                    Colecta de domingo 08h
+                </button>
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de domingo 10:30h">
+                    Colecta de domingo 10:30h
+                </button>
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta Especial">
+                    Colecta Especial
+                </button>
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de domingo 19:30h">
+                    Colecta de domingo 19:30h
+                </button>
+                <button id="back-from-select" class="mt-4 w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
+                    Volver
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección para la carga de billetes (inicialmente oculta) -->
+        <div id="billetes-screen" class="hidden">
+            <h2 id="billetes-title" class="text-xl font-bold text-gray-700 mb-4"></h2>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <!-- Billetes de 20000 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">20000</label>
+                    <input type="number" id="billete-20000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 10000 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">10000</label>
+                    <input type="number" id="billete-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 1000 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">1000</label>
+                    <input type="number" id="billete-1000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 500 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">500</label>
+                    <input type="number" id="billete-500-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 200 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">200</label>
+                    <input type="number" id="billete-200-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 100 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">100</label>
+                    <input type="number" id="billete-100-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 50 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">50</label>
+                    <input type="number" id="billete-50-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 20 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">20</label>
+                    <input type="number" id="billete-20-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 10 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">10</label>
+                    <input type="number" id="billete-10-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+
+            <!-- Total de la carga -->
+            <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-inner">
+                <p class="text-lg font-bold text-gray-800">Total: <span id="total-colecta" class="text-blue-600">$0</span></p>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="flex flex-col gap-4">
+                <button id="confirmar-carga-btn" class="w-full bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
+                    Confirmar Carga
+                </button>
+                <button id="back-from-billetes" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
+                    Volver
+                </button>
+            </div>
+        </div>
+        
+        <!-- Sección para la carga de egresos (inicialmente oculta) -->
+        <div id="egresos-screen" class="hidden">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Egresos</h2>
+            <div class="flex flex-col gap-4 mb-6">
+                <!-- Egresos Padre Jorge -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Gastos Padre Jorge</label>
+                    <input type="number" id="egreso-jorge-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Egresos Padre Adán -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Gastos Padre Adán</label>
+                    <input type="number" id="egreso-adan-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Otros gastos -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Otros gastos</label>
+                    <input type="number" id="egreso-otros-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+
+            <!-- Total de egresos -->
+            <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-inner">
+                <p class="text-lg font-bold text-gray-800">Total de Egresos: <span id="total-egresos" class="text-red-600">$0</span></p>
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <button id="confirmar-egresos-btn" class="w-full bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
+                    Confirmar Egresos
+                </button>
+                <button id="back-from-egresos" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
+                    Volver
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección para la colecta de Bonpland (inicialmente oculta) -->
+        <div id="bonpland-screen" class="hidden">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Colecta de Bonpland</h2>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <!-- Billetes de 20000 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">20000</label>
+                    <input type="number" id="bonpland-20000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 10000 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">10000</label>
+                    <input type="number" id="bonpland-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 1000 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">1000</label>
+                    <input type="number" id="bonpland-1000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 500 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">500</label>
+                    <input type="number" id="bonpland-500-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 200 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">200</label>
+                    <input type="number" id="bonpland-200-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 100 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">100</label>
+                    <input type="number" id="bonpland-100-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 50 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">50</label>
+                    <input type="number" id="bonpland-50-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 20 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">20</label>
+                    <input type="number" id="bonpland-20-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- Billetes de 10 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">10</label>
+                    <input type="number" id="bonpland-10-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+
+            <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-inner">
+                <p class="text-lg font-bold text-gray-800">Total: <span id="bonpland-total" class="text-blue-600">$0</span></p>
+            </div>
+            
+            <div class="flex flex-col gap-4">
+                <button id="confirmar-bonpland-btn" class="w-full bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
+                    Confirmar Colecta
+                </button>
+                <button id="back-from-bonpland" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
+                    Volver
+                </button>
+            </div>
+        </div>
+        
+        <!-- Sección de resumen (inicialmente oculta) -->
+        <div id="summary-screen" class="hidden">
+            <h2 class="text-xl font-bold text-gray-700 mb-2">Resumen Detallado de Cargas</h2>
+            <p id="summary-date" class="text-sm text-gray-500 text-center mb-4"></p>
+            <div class="flex flex-col gap-4 mb-6" id="summary-content">
+                <div class="p-4 bg-green-100 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-bold text-green-700 mb-2">Ingresos</h3>
+                    <div id="summary-ingresos-details" class="space-y-3 text-sm">
+                        <!-- Detalles de colectas se insertarán aquí -->
+                    </div>
+                    <hr class="my-3 border-green-300">
+                    <p class="text-md font-bold text-gray-800">Subtotal de Ingresos: <span id="subtotal-ingresos-summary" class="text-green-600">$0</span></p>
+                </div>
+
+                <div class="p-4 bg-red-100 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-bold text-red-700 mb-2">Egresos</h3>
+                    <div id="summary-egresos-details" class="space-y-3 text-sm">
+                        <!-- Detalles de egresos se insertarán aquí -->
+                    </div>
+                    <hr class="my-3 border-red-300">
+                    <p class="text-md font-bold text-gray-800">Subtotal de Egresos: <span id="subtotal-egresos-summary" class="text-red-600">$0</span></p>
+                </div>
+
+                 <div class="p-4 bg-blue-100 rounded-lg shadow-sm">
+                    <p class="text-lg font-bold text-gray-800">Total: <span id="saldo-summary" class="text-blue-600">$0</span></p>
+                </div>
+            </div>
+            
+            <div class="p-4 bg-gray-100 rounded-lg shadow-sm mb-6">
+                 <h3 class="text-lg font-bold text-gray-700 mb-2">Aclaraciones</h3>
+                 <textarea id="aclaraciones-text" class="w-full h-24 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" placeholder="Escribe aquí cualquier aclaración o nota adicional..."></textarea>
+            </div>
+            
+            <div class="flex flex-col gap-4">
+                <button id="send-whatsapp-btn" class="w-full bg-green-500 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-105">
+                    Enviar por WhatsApp
+                </button>
+                <button id="download-pdf-btn" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105">
+                    Descargar como PDF
+                </button>
+                <button id="back-from-summary" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                    Volver a Pantalla Inicial
+                </button>
+            </div>
+        </div>
+        
+        <!-- Sección para el historial detallado con opciones de modificación y eliminación -->
+        <div id="historial-detallado-screen" class="hidden">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Historial Detallado</h2>
+            <div id="historial-detallado-list" class="space-y-3">
+                <!-- Se insertarán los detalles con botones aquí -->
+            </div>
+            <button id="back-from-historial-detallado" class="mt-4 w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300">
+                Volver
+            </button>
+        </div>
+
+        <!-- Sección para ver el historial por fecha (inicialmente oculta) -->
+        <div id="historial-por-fecha-screen" class="hidden">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Historial de Cargas del día</h2>
+            <p id="historial-por-fecha-date" class="text-sm text-gray-500 text-center mb-4"></p>
+            <div id="historial-por-fecha-list" class="space-y-3" style="width: 100%;">
+                <!-- Detalles del historial para la fecha seleccionada -->
+            </div>
+             <div class="flex flex-col gap-4 mt-6">
+                <button id="download-pdf-historial-btn" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105">
+                    Descargar como PDF
+                </button>
+                <button id="back-from-historial-por-fecha" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300">
+                    Volver
+                </button>
+            </div>
+        </div>
+
+
+        <!-- Modal de confirmación (inicialmente oculta) -->
+        <div id="confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+                <div class="text-center">
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Confirmar Carga</h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">¿Estás seguro de que deseas confirmar esta carga?</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-center gap-4">
+                    <button id="confirm-ok-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        Confirmar
+                    </button>
+                    <button id="confirm-cancel-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Volver
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal de egresos (inicialmente oculta) -->
+        <div id="egresos-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+                <div class="text-center">
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Cargar Egresos</h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">¿Deseas cargar egresos?</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-center gap-4">
+                    <button id="egresos-yes-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Sí
+                    </button>
+                    <button id="egresos-no-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Bonpland (inicialmente oculta) -->
+        <div id="bonpland-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+                <div class="text-center">
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Cargar Colecta de Bonpland</h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">¿Quieres cargar la colecta de Bonpland?</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-center gap-4">
+                    <button id="bonpland-yes-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Sí
+                    </button>
+                    <button id="bonpland-no-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Colecta Especial (inicialmente oculta) -->
+        <div id="colecta-especial-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+                <div class="text-center">
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Colecta Especial</h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500 mb-4">¿Qué tipo de colecta especial es?</p>
+                        <input type="text" id="colecta-especial-input" placeholder="Ej: Colecta para Cáritas" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-center gap-4">
+                    <button id="colecta-especial-confirm-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        Confirmar
+                    </button>
+                    <button id="colecta-especial-cancel-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Volver
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal para elegir la fecha (inicialmente oculta) -->
+        <div id="date-picker-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+                <div class="text-center">
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Seleccionar Fecha</h3>
+                    <div class="mt-2">
+                        <input type="date" id="colecta-date-input" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-center gap-4">
+                    <button id="date-ok-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables para almacenar el estado de la aplicación
+        let selectedColecta = '';
+        let historialData = [];
+        let selectedDate = '';
+        let itemToModify = null;
+        const billeteValues = {
+            '20000': 20000,
+            '10000': 10000,
+            '1000': 1000,
+            '500': 500,
+            '200': 200,
+            '100': 100,
+            '50': 50,
+            '20': 20,
+            '10': 10
+        };
+
+        // Función para formatear el monto con el signo de pesos y separador de miles
+        function formatCurrency(amount) {
+            if (isNaN(amount)) return '$0';
+            const formatted = parseFloat(amount).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return `$${formatted}`;
+        }
+
+        // Helper function to format date
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        // Obtener referencias a los elementos del DOM
+        const loginScreen = document.getElementById('login-screen');
+        const accessCodeInput = document.getElementById('access-code-input');
+        const loginBtn = document.getElementById('login-btn');
+        const errorMessage = document.getElementById('error-message');
+        const initialScreen = document.getElementById('initial-screen');
+        const selectColectaScreen = document.getElementById('select-colecta-screen');
+        const billetesScreen = document.getElementById('billetes-screen');
+        const egresosScreen = document.getElementById('egresos-screen');
+        const bonplandScreen = document.getElementById('bonpland-screen');
+        const summaryScreen = document.getElementById('summary-screen');
+        const historialDetalladoScreen = document.getElementById('historial-detallado-screen');
+        const historialPorFechaScreen = document.getElementById('historial-por-fecha-screen');
+        const confirmationModal = document.getElementById('confirmation-modal');
+        const egresosPromptModal = document.getElementById('egresos-prompt-modal');
+        const bonplandPromptModal = document.getElementById('bonpland-prompt-modal');
+        const colectaEspecialPromptModal = document.getElementById('colecta-especial-prompt-modal');
+        const datePickerModal = document.getElementById('date-picker-modal');
+        const cargarBtn = document.getElementById('cargar-btn');
+        const backFromSelectBtn = document.getElementById('back-from-select');
+        const backFromBilletesBtn = document.getElementById('back-from-billetes');
+        const backFromEgresosBtn = document.getElementById('back-from-egresos');
+        const backFromBonplandBtn = document.getElementById('back-from-bonpland');
+        const backFromSummaryBtn = document.getElementById('back-from-summary');
+        const backFromHistorialDetalladoBtn = document.getElementById('back-from-historial-detallado');
+        const backFromHistorialPorFechaBtn = document.getElementById('back-from-historial-por-fecha');
+        const historialDetalladoList = document.getElementById('historial-detallado-list');
+        const historialDetalladoBtn = document.getElementById('historial-detallado-btn');
+        const historialPorFechaList = document.getElementById('historial-por-fecha-list');
+        const historialPorFechaDate = document.getElementById('historial-por-fecha-date');
+        const colectaOptionBtns = document.querySelectorAll('.colecta-option-btn');
+        const billetesTitle = document.getElementById('billetes-title');
+        const totalColectaSpan = document.getElementById('total-colecta');
+        const confirmarCargaBtn = document.getElementById('confirmar-carga-btn');
+        const confirmOkBtn = document.getElementById('confirm-ok-btn');
+        const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+        const egresosYesBtn = document.getElementById('egresos-yes-btn');
+        const egresosNoBtn = document.getElementById('egresos-no-btn');
+        const bonplandYesBtn = document.getElementById('bonpland-yes-btn');
+        const bonplandNoBtn = document.getElementById('bonpland-no-btn');
+        const confirmarEgresosBtn = document.getElementById('confirmar-egresos-btn');
+        const confirmarBonplandBtn = document.getElementById('confirmar-bonpland-btn');
+        const billeteInputs = document.querySelectorAll('#billetes-screen input[type="number"]');
+        const bonplandInputs = document.querySelectorAll('#bonpland-screen input[type="number"]');
+        const egresoJorgeInput = document.getElementById('egreso-jorge-input');
+        const egresoAdanInput = document.getElementById('egreso-adan-input');
+        const egresoOtrosInput = document.getElementById('egreso-otros-input');
+        const totalEgresosSpan = document.getElementById('total-egresos');
+        const bonplandTotalSpan = document.getElementById('bonpland-total');
+        const summaryDateElement = document.getElementById('summary-date');
+        const summaryIngresosDetails = document.getElementById('summary-ingresos-details');
+        const summaryEgresosDetails = document.getElementById('summary-egresos-details');
+        const subtotalIngresosSummary = document.getElementById('subtotal-ingresos-summary');
+        const subtotalEgresosSummary = document.getElementById('subtotal-egresos-summary');
+        const saldoSummary = document.getElementById('saldo-summary');
+        const aclaracionesTextarea = document.getElementById('aclaraciones-text');
+        const sendWhatsappBtn = document.getElementById('send-whatsapp-btn');
+        const downloadPdfBtn = document.getElementById('download-pdf-btn');
+        const downloadPdfHistorialBtn = document.getElementById('download-pdf-historial-btn');
+        const colectaDateInput = document.getElementById('colecta-date-input');
+        const dateOkBtn = document.getElementById('date-ok-btn');
+        const colectaEspecialInput = document.getElementById('colecta-especial-input');
+        const colectaEspecialConfirmBtn = document.getElementById('colecta-especial-confirm-btn');
+        const colectaEspecialCancelBtn = document.getElementById('colecta-especial-cancel-btn');
+
+        const validAccessCodes = ['liliana', 'jorge', 'jose', 'adan'];
+
+
+        // Función para renderizar el historial en la lista principal
+        function renderHistorial() {
+            // No se renderiza nada en la pantalla de inicio, se deja vacío para que solo se vea el botón
+        }
+        
+        // Función para renderizar el historial detallado por fecha
+        function renderHistorialDetallado() {
+            historialDetalladoList.innerHTML = '';
+            if (historialData.length === 0) {
+                historialDetalladoList.innerHTML = '<li class="p-3 bg-gray-100 rounded-lg text-gray-600 italic text-center">No hay cargas para mostrar.</li>';
+                return;
+            }
+            
+            // Obtener fechas únicas del historial
+            const fechas = [...new Set(historialData.map(item => item.fecha))];
+            
+            fechas.sort((a, b) => new Date(b.split('/').reverse().join('-')) - new Date(a.split('/').reverse().join('-'))); // Ordenar por fecha descendente
+            
+            fechas.forEach(fecha => {
+                const nuevaEntrada = document.createElement('button');
+                nuevaEntrada.className = `w-full p-4 text-left rounded-lg shadow-sm bg-gray-100 font-bold text-gray-800 hover:bg-gray-200 transition-colors`;
+                nuevaEntrada.textContent = `Colectas del día: ${fecha}`;
+                nuevaEntrada.onclick = () => verDetallePorFecha(fecha);
+                historialDetalladoList.appendChild(nuevaEntrada);
+            });
+        }
+        
+        // Función para ver el detalle de un día específico
+        function verDetallePorFecha(fecha) {
+            historialDetalladoScreen.classList.add('hidden');
+            historialPorFechaScreen.classList.remove('hidden');
+            historialPorFechaDate.textContent = `Fecha: ${fecha}`;
+            
+            historialPorFechaList.innerHTML = '';
+            
+            const itemsDeFecha = historialData.filter(item => item.fecha === fecha);
+            
+            itemsDeFecha.forEach((item) => {
+                const nuevaEntrada = document.createElement('li');
+                const backgroundColor = item.type === 'ingreso' ? 'bg-green-50' : 'bg-red-50';
+                const textColor = item.type === 'ingreso' ? 'text-green-700' : 'text-red-700';
+                
+                nuevaEntrada.className = `p-4 rounded-lg shadow-sm flex justify-between items-center ${backgroundColor}`;
+
+                const contentDiv = document.createElement('div');
+                contentDiv.innerHTML = `
+                    <p class="font-medium text-gray-800">${item.categoria}</p>
+                    <p class="text-lg font-bold ${textColor}">${item.type === 'ingreso' ? '+' : '-'} ${formatCurrency(item.monto)}</p>
+                `;
+                
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = "flex space-x-2";
+                
+                const modificarBtn = document.createElement('button');
+                modificarBtn.textContent = 'Modificar';
+                modificarBtn.className = 'px-3 py-1 bg-yellow-500 text-white rounded-md text-xs hover:bg-yellow-600 transition-colors';
+                modificarBtn.onclick = () => modificarItem(historialData.indexOf(item));
+
+                const eliminarBtn = document.createElement('button');
+                eliminarBtn.textContent = 'Eliminar';
+                eliminarBtn.className = 'px-3 py-1 bg-red-600 text-white rounded-md text-xs hover:bg-red-700 transition-colors';
+                eliminarBtn.onclick = () => eliminarItem(historialData.indexOf(item));
+
+                actionsDiv.appendChild(modificarBtn);
+                actionsDiv.appendChild(eliminarBtn);
+                nuevaEntrada.appendChild(contentDiv);
+                nuevaEntrada.appendChild(actionsDiv);
+                historialPorFechaList.appendChild(nuevaEntrada);
+            });
+        }
+
+        // Función para eliminar un ítem del historial
+        function eliminarItem(index) {
+            const itemFecha = historialData[index].fecha;
+            historialData.splice(index, 1);
+            
+            // Si no quedan más elementos para esa fecha, volver a la lista de fechas
+            if (historialData.filter(item => item.fecha === itemFecha).length === 0) {
+                historialPorFechaScreen.classList.add('hidden');
+                historialDetalladoScreen.classList.remove('hidden');
+                renderHistorialDetallado();
+            } else {
+                verDetallePorFecha(itemFecha);
+            }
+        }
+
+        // Función para modificar un ítem del historial
+        function modificarItem(index) {
+            itemToModify = historialData[index];
+            selectedDate = itemToModify.fecha;
+            
+            if (itemToModify.type === 'ingreso') {
+                if (itemToModify.categoria === 'Colecta de Bonpland') {
+                    bonplandInputs.forEach(input => {
+                        const denom = input.id.split('-')[1];
+                        input.value = itemToModify.billetes[denom] || '';
+                    });
+                    calcularTotalBonpland();
+                    historialPorFechaScreen.classList.add('hidden');
+                    bonplandScreen.classList.remove('hidden');
+                } else if (itemToModify.categoria.includes('Colecta Especial')) {
+                    colectaEspecialInput.value = itemToModify.categoria.replace('Colecta Especial - ', '');
+                    colectaEspecialPromptModal.classList.remove('hidden');
+                    historialPorFechaScreen.classList.add('hidden');
+                } else {
+                    billeteInputs.forEach(input => {
+                        const denom = input.id.split('-')[1];
+                        input.value = itemToModify.billetes[denom] || '';
+                    });
+                    calcularTotalColecta();
+                    selectedColecta = itemToModify.categoria;
+                    billetesTitle.textContent = `Modificar para: ${selectedColecta} (${selectedDate})`;
+                    historialPorFechaScreen.classList.add('hidden');
+                    billetesScreen.classList.remove('hidden');
+                }
+            } else if (itemToModify.type === 'egreso') {
+                resetEgresosScreen();
+                if (itemToModify.categoria === 'Gastos Padre Jorge') {
+                    egresoJorgeInput.value = itemToModify.monto;
+                } else if (itemToModify.categoria === 'Gastos Padre Adán') {
+                    egresoAdanInput.value = itemToModify.monto;
+                } else {
+                    egresoOtrosInput.value = itemToModify.monto;
+                }
+                calcularTotalEgresos();
+                historialPorFechaScreen.classList.add('hidden');
+                egresosScreen.classList.remove('hidden');
+            }
+        }
+        
+        // Función para calcular y renderizar el resumen detallado
+        function renderDetailedSummary() {
+            let totalIngresos = 0;
+            let totalEgresos = 0;
+            summaryIngresosDetails.innerHTML = '';
+            summaryEgresosDetails.innerHTML = '';
+            summaryDateElement.textContent = `Fecha de la carga: ${selectedDate}`;
+
+            historialData.forEach(item => {
+                if (item.type === 'ingreso' && item.fecha === selectedDate) {
+                    totalIngresos += item.monto;
+                    const ingresosDiv = document.createElement('div');
+                    ingresosDiv.className = 'border-b border-green-200 pb-2 mb-2 last:border-b-0 last:pb-0 last:mb-0';
+                    let billetesHtml = '';
+                    for (const denominacion in item.billetes) {
+                        if (item.billetes[denominacion] > 0) {
+                            const subtotal = item.billetes[denominacion] * parseInt(denominacion);
+                            billetesHtml += `<p class="ml-4 text-xs text-gray-600">${item.billetes[denominacion]} x $${denominacion} (${formatCurrency(subtotal)})</p>`;
+                        }
+                    }
+                    ingresosDiv.innerHTML = `
+                        <p class="font-bold text-green-700">${item.categoria} - ${formatCurrency(item.monto)}</p>
+                        ${billetesHtml}
+                    `;
+                    summaryIngresosDetails.appendChild(ingresosDiv);
+
+                } else if (item.type === 'egreso' && item.fecha === selectedDate) {
+                    totalEgresos += item.monto;
+                    const egresosDiv = document.createElement('div');
+                    egresosDiv.className = 'border-b border-red-200 pb-2 mb-2 last:border-b-0 last:pb-0 last:mb-0';
+                    egresosDiv.innerHTML = `
+                        <p class="font-bold text-red-700">${item.categoria}: -${formatCurrency(item.monto)}</p>
+                    `;
+                    summaryEgresosDetails.appendChild(egresosDiv);
+                }
+            });
+
+            const saldo = totalIngresos - totalEgresos;
+            subtotalIngresosSummary.textContent = formatCurrency(totalIngresos);
+            subtotalEgresosSummary.textContent = formatCurrency(totalEgresos);
+            saldoSummary.textContent = formatCurrency(saldo);
+        }
+        
+        // Función para calcular el total de la colecta
+        function calcularTotalColecta() {
+            let total = 0;
+            billeteInputs.forEach(input => {
+                const value = parseInt(input.value) || 0;
+                const denomination = input.id.split('-')[1];
+                total += value * billeteValues[denomination];
+            });
+            totalColectaSpan.textContent = formatCurrency(total);
+        }
+
+        // Función para calcular el total de la colecta de Bonpland
+        function calcularTotalBonpland() {
+            let total = 0;
+            bonplandInputs.forEach(input => {
+                const value = parseInt(input.value) || 0;
+                const denomination = input.id.split('-')[1];
+                total += value * billeteValues[denomination];
+            });
+            bonplandTotalSpan.textContent = formatCurrency(total);
+        }
+        
+        // Función para calcular el total de egresos
+        function calcularTotalEgresos() {
+            const egresoJorge = parseFloat(egresoJorgeInput.value) || 0;
+            const egresoAdan = parseFloat(egresoAdanInput.value) || 0;
+            const egresoOtros = parseFloat(egresoOtrosInput.value) || 0;
+            const total = egresoJorge + egresoAdan + egresoOtros;
+            totalEgresosSpan.textContent = formatCurrency(total);
+        }
+
+        // Función para limpiar los campos de billetes
+        function resetBilletesScreen() {
+            billeteInputs.forEach(input => {
+                input.value = '';
+            });
+            calcularTotalColecta();
+        }
+
+        // Función para limpiar los campos de egresos
+        function resetEgresosScreen() {
+            egresoJorgeInput.value = '';
+            egresoAdanInput.value = '';
+            egresoOtrosInput.value = '';
+            calcularTotalEgresos();
+        }
+
+        // Función para manejar el modal de alerta
+        function alert(message) {
+            const modalId = 'custom-alert-modal';
+            let modal = document.getElementById(modalId);
+            
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = modalId;
+                modal.className = "fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50 transition-opacity duration-300 opacity-0";
+                modal.innerHTML = `
+                    <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6 transition-transform duration-300 scale-95">
+                        <div class="text-center">
+                            <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Aviso</h3>
+                            <div class="mt-2">
+                                <p id="alert-message" class="text-sm text-gray-500"></p>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-center">
+                            <button id="alert-ok-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                OK
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            // Actualizar el mensaje y mostrar el modal
+            document.getElementById('alert-message').textContent = message;
+            modal.classList.remove('opacity-0');
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+            
+            // Cerrar el modal al hacer clic en OK
+            document.getElementById('alert-ok-btn').onclick = function() {
+                modal.classList.add('opacity-0');
+                modal.querySelector('div').classList.add('scale-95');
+                modal.querySelector('div').classList.remove('scale-100');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            };
+
+            modal.style.display = 'flex';
+        }
+
+        // --- Manejo de Eventos ---
+        
+        loginBtn.addEventListener('click', () => {
+            const accessCode = accessCodeInput.value.trim().toLowerCase();
+            if (validAccessCodes.includes(accessCode)) {
+                loginScreen.classList.add('hidden');
+                initialScreen.classList.remove('hidden');
+                errorMessage.classList.add('hidden');
+            } else {
+                errorMessage.classList.remove('hidden');
+                accessCodeInput.value = '';
+            }
+        });
+
+        // Escuchar el evento de clic en el botón "Cargar" inicial
+        cargarBtn.addEventListener('click', () => {
+            const now = new Date();
+            const year = now.getFullYear();
+            let month = now.getMonth() + 1;
+            let day = now.getDate();
+            month = month < 10 ? '0' + month : month;
+            day = day < 10 ? '0' + day : day;
+            colectaDateInput.value = `${year}-${month}-${day}`;
+            datePickerModal.classList.remove('hidden');
+        });
+        
+        dateOkBtn.addEventListener('click', () => {
+            selectedDate = formatDate(colectaDateInput.value);
+            if (!selectedDate) {
+                alert('Por favor, selecciona una fecha.');
+                return;
+            }
+            datePickerModal.classList.add('hidden');
+            initialScreen.classList.add('hidden');
+            selectColectaScreen.classList.remove('hidden');
+        });
+
+        // Escuchar los clics en los botones de opción de colecta
+        colectaOptionBtns.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const colectaType = event.target.dataset.colecta;
+                if (colectaType === 'Colecta Especial') {
+                    colectaEspecialInput.value = '';
+                    colectaEspecialPromptModal.classList.remove('hidden');
+                } else {
+                    selectedColecta = colectaType;
+                    billetesTitle.textContent = `Cargar para: ${selectedColecta} (${selectedDate})`;
+                    selectColectaScreen.classList.add('hidden');
+                    billetesScreen.classList.remove('hidden');
+                    resetBilletesScreen();
+                }
+            });
+        });
+        
+        colectaEspecialConfirmBtn.addEventListener('click', () => {
+            const tipoColectaEspecial = colectaEspecialInput.value.trim();
+            if (tipoColectaEspecial === '') {
+                alert('Por favor, ingresa un tipo de colecta especial.');
+                return;
+            }
+            selectedColecta = `Colecta Especial - ${tipoColectaEspecial}`;
+            billetesTitle.textContent = `Cargar para: ${selectedColecta} (${selectedDate})`;
+            colectaEspecialPromptModal.classList.add('hidden');
+            selectColectaScreen.classList.add('hidden');
+            billetesScreen.classList.remove('hidden');
+            resetBilletesScreen();
+        });
+        
+        colectaEspecialCancelBtn.addEventListener('click', () => {
+            colectaEspecialPromptModal.classList.add('hidden');
+        });
+
+        // Escuchar los cambios en los inputs de billetes para recalcular el total
+        billeteInputs.forEach(input => {
+            input.addEventListener('input', calcularTotalColecta);
+        });
+        
+        // Escuchar los cambios en los inputs de Bonpland para recalcular el total
+        bonplandInputs.forEach(input => {
+            input.addEventListener('input', calcularTotalBonpland);
+        });
+
+        // Escuchar el clic en el botón "Confirmar Carga" para mostrar el modal
+        confirmarCargaBtn.addEventListener('click', () => {
+            confirmationModal.classList.remove('hidden');
+        });
+
+        // Escuchar el clic en el botón "Confirmar" del modal
+        confirmOkBtn.addEventListener('click', () => {
+            const totalMonto = parseFloat(totalColectaSpan.textContent.replace('$', '').replace(/\./g, '').replace(',', '.')) || 0;
+            const billetes = {};
+            billeteInputs.forEach(input => {
+                const denomination = input.id.split('-')[1];
+                billetes[denomination] = parseInt(input.value) || 0;
+            });
+            
+            // Si estamos modificando, actualizar el ítem
+            if (itemToModify) {
+                const index = historialData.findIndex(item => item === itemToModify);
+                historialData[index] = {
+                    type: 'ingreso',
+                    categoria: selectedColecta,
+                    monto: totalMonto,
+                    billetes: billetes,
+                    fecha: selectedDate
+                };
+                itemToModify = null;
+            } else {
+                historialData.push({
+                    type: 'ingreso',
+                    categoria: selectedColecta,
+                    monto: totalMonto,
+                    billetes: billetes,
+                    fecha: selectedDate
+                });
+            }
+            
+            renderHistorial();
+            
+            confirmationModal.classList.add('hidden');
+            billetesScreen.classList.add('hidden');
+
+            if (selectedColecta.includes("19:30h") || selectedColecta.includes("Colecta Especial")) {
+                egresosPromptModal.classList.remove('hidden');
+            } else {
+                selectColectaScreen.classList.remove('hidden');
+            }
+        });
+
+        // Escuchar el clic en el botón "Volver" del modal
+        confirmCancelBtn.addEventListener('click', () => {
+            confirmationModal.classList.add('hidden');
+        });
+
+        // Botón "Sí" del modal de egresos
+        egresosYesBtn.addEventListener('click', () => {
+            egresosPromptModal.classList.add('hidden');
+            egresosScreen.classList.remove('hidden');
+            resetEgresosScreen();
+        });
+
+        // Botón "No" del modal de egresos
+        egresosNoBtn.addEventListener('click', () => {
+            egresosPromptModal.classList.add('hidden');
+            bonplandPromptModal.classList.remove('hidden');
+        });
+        
+        // Escuchar los cambios en los inputs de egresos para recalcular el total
+        egresoJorgeInput.addEventListener('input', calcularTotalEgresos);
+        egresoAdanInput.addEventListener('input', calcularTotalEgresos);
+        egresoOtrosInput.addEventListener('input', calcularTotalEgresos);
+
+        // Botón "Confirmar" de la pantalla de egresos
+        confirmarEgresosBtn.addEventListener('click', () => {
+            const egresoJorge = parseFloat(egresoJorgeInput.value) || 0;
+            const egresoAdan = parseFloat(egresoAdanInput.value) || 0;
+            const egresoOtros = parseFloat(egresoOtrosInput.value) || 0;
+
+            if (egresoJorge <= 0 && egresoAdan <= 0 && egresoOtros <= 0 && !itemToModify) {
+                alert('Por favor, introduce al menos un monto de egreso válido.');
+                return;
+            }
+
+            if (egresoJorge > 0) {
+                historialData.push({
+                    type: 'egreso',
+                    categoria: 'Gastos Padre Jorge',
+                    monto: egresoJorge,
+                    fecha: selectedDate
+                });
+            }
+            if (egresoAdan > 0) {
+                historialData.push({
+                    type: 'egreso',
+                    categoria: 'Gastos Padre Adán',
+                    monto: egresoAdan,
+                    fecha: selectedDate
+                });
+            }
+            if (egresoOtros > 0) {
+                historialData.push({
+                    type: 'egreso',
+                    categoria: 'Otros gastos',
+                    monto: egresoOtros,
+                    fecha: selectedDate
+                });
+            }
+            
+            egresosScreen.classList.add('hidden');
+            bonplandPromptModal.classList.remove('hidden');
+            resetEgresosScreen();
+        });
+        
+        // Botón "Sí" del modal de Bonpland
+        bonplandYesBtn.addEventListener('click', () => {
+            bonplandPromptModal.classList.add('hidden');
+            bonplandScreen.classList.remove('hidden');
+            bonplandInputs.forEach(input => input.value = ''); // Limpiar campos de Bonpland
+            calcularTotalBonpland();
+        });
+
+        // Botón "No" del modal de Bonpland
+        bonplandNoBtn.addEventListener('click', () => {
+            bonplandPromptModal.classList.add('hidden');
+            renderDetailedSummary();
+            summaryScreen.classList.remove('hidden');
+        });
+        
+        // Botón "Confirmar" de la pantalla de Bonpland
+        confirmarBonplandBtn.addEventListener('click', () => {
+            const montoBonpland = parseFloat(bonplandTotalSpan.textContent.replace('$', '').replace(/\./g, '').replace(',', '.')) || 0;
+            
+            if (montoBonpland <= 0) {
+                alert('Por favor, introduce un monto válido para la colecta de Bonpland.');
+                return;
+            }
+
+            const billetes = {};
+            bonplandInputs.forEach(input => {
+                const denomination = input.id.split('-')[1];
+                billetes[denomination] = parseInt(input.value) || 0;
+            });
+            
+            // Si estamos modificando, actualizar el ítem
+            if (itemToModify) {
+                const index = historialData.findIndex(item => item === itemToModify);
+                historialData[index] = {
+                    type: 'ingreso',
+                    categoria: 'Colecta de Bonpland',
+                    monto: montoBonpland,
+                    billetes: billetes,
+                    fecha: selectedDate
+                };
+                itemToModify = null;
+            } else {
+                historialData.push({
+                    type: 'ingreso',
+                    categoria: 'Colecta de Bonpland',
+                    monto: montoBonpland,
+                    billetes: billetes,
+                    fecha: selectedDate
+                });
+            }
+            
+            bonplandScreen.classList.add('hidden');
+            renderDetailedSummary();
+            summaryScreen.classList.remove('hidden');
+        });
+
+        // Botón para ir al historial detallado
+        historialDetalladoBtn.addEventListener('click', () => {
+            initialScreen.classList.add('hidden');
+            historialDetalladoScreen.classList.remove('hidden');
+            renderHistorialDetallado();
+        });
+
+        // Botón "Volver" desde la pantalla de historial detallado
+        backFromHistorialDetalladoBtn.addEventListener('click', () => {
+            historialDetalladoScreen.classList.add('hidden');
+            initialScreen.classList.remove('hidden');
+        });
+        
+        backFromHistorialPorFechaBtn.addEventListener('click', () => {
+            historialPorFechaScreen.classList.add('hidden');
+            historialDetalladoScreen.classList.remove('hidden');
+        });
+
+        // Botón "Volver" desde la pantalla de selección de colectas
+        backFromSelectBtn.addEventListener('click', () => {
+            selectColectaScreen.classList.add('hidden');
+            initialScreen.classList.remove('hidden');
+        });
+
+        // Botón "Volver" desde la pantalla de carga de billetes
+        backFromBilletesBtn.addEventListener('click', () => {
+            billetesScreen.classList.add('hidden');
+            selectColectaScreen.classList.remove('hidden');
+        });
+        
+        // Botón "Volver" desde la pantalla de egresos
+        backFromEgresosBtn.addEventListener('click', () => {
+            egresosScreen.classList.add('hidden');
+            selectColectaScreen.classList.remove('hidden');
+        });
+        
+        // Botón "Volver" desde la pantalla de Bonpland
+        backFromBonplandBtn.addEventListener('click', () => {
+            bonplandScreen.classList.add('hidden');
+            selectColectaScreen.classList.remove('hidden');
+        });
+        
+        // Botón "Volver" desde la pantalla de resumen
+        backFromSummaryBtn.addEventListener('click', () => {
+            summaryScreen.classList.add('hidden');
+            initialScreen.classList.remove('hidden');
+        });
+        
+        // Botón de Descargar PDF del Historial por Fecha
+        downloadPdfHistorialBtn.addEventListener('click', () => {
+            const fechaActual = historialPorFechaDate.textContent.replace('Fecha: ', '');
+            const fileName = `Colecta-${fechaActual.replace(/\//g, '-')}.pdf`;
+
+            const element = document.createElement('div');
+            element.id = 'temp-pdf-content';
+            element.className = 'p-4';
+            
+            // Construir el HTML para el PDF
+            let pdfContent = `<h1 class="text-xl font-bold text-center mb-4">Resumen de Colectas del día</h1>`;
+            pdfContent += `<p class="text-sm text-center mb-6">Fecha: ${fechaActual}</p>`;
+            
+            historialData.filter(item => item.fecha === fechaActual).forEach(item => {
+                 pdfContent += `
+                    <div class="mb-3 p-3 rounded-lg shadow-sm ${item.type === 'ingreso' ? 'bg-green-50' : 'bg-red-50'}">
+                        <p class="font-medium text-gray-800">${item.categoria}</p>
+                        <p class="text-lg font-bold ${item.type === 'ingreso' ? 'text-green-700' : 'text-red-700'}">${item.type === 'ingreso' ? '+' : '-'} ${formatCurrency(item.monto)}</p>
+                    </div>
+                `;
+            });
+            
+            element.innerHTML = pdfContent;
+            document.body.appendChild(element);
+
+            // Opciones de html2pdf
+            const opt = {
+                margin: 1,
+                filename: fileName,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            // Generar y descargar el PDF
+            html2pdf().from(element).set(opt).save().then(() => {
+                element.remove(); // Eliminar el elemento temporal
+            });
+        });
+
+        // --- Funcionalidad de Exportación y Envío ---
+        
+        // Botón de Enviar por WhatsApp
+        sendWhatsappBtn.addEventListener('click', () => {
+            const dateString = selectedDate;
+            const fileName = `Colecta-${dateString.replace(/\//g, '-')}.pdf`;
+            
+            const element = document.getElementById('summary-content');
+            const opt = {
+                margin: 1,
+                filename: fileName,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            html2pdf().from(element).set(opt).save();
+
+            const whatsappMessage = `Te comparto el resumen de la colecta del día ${selectedDate}.`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
+            window.open(whatsappUrl, '_blank');
+
+            // Muestra un mensaje al usuario para que adjunte el PDF
+            alert(`Se ha generado el PDF "${fileName}" y se ha descargado. Por favor, adjúntalo manualmente en el chat de WhatsApp.`);
+        });
+
+        // Botón de Descargar PDF
+        downloadPdfBtn.addEventListener('click', () => {
+            const element = document.getElementById('summary-content');
+            const dateString = selectedDate.replace(/\//g, '-');
+            const fileName = `Colecta-${dateString}.pdf`;
+
+            const opt = {
+                margin: 1,
+                filename: fileName,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            html2pdf().from(element).set(opt).save();
+        });
+        
+    </script>
+</body>
+</html>
