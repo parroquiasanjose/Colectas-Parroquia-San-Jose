@@ -1,1 +1,0 @@
-# Colectas-Parroquia-San-Jose
