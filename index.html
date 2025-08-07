@@ -404,6 +404,9 @@
                     <button id="date-ok-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                         Confirmar
                     </button>
+                    <button id="date-cancel-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Volver
+                    </button>
                 </div>
             </div>
         </div>
@@ -554,6 +557,7 @@
         const downloadPdfHistorialBtn = document.getElementById('download-pdf-historial-btn');
         const colectaDateInput = document.getElementById('colecta-date-input');
         const dateOkBtn = document.getElementById('date-ok-btn');
+        const dateCancelBtn = document.getElementById('date-cancel-btn');
         const colectaEspecialInput = document.getElementById('colecta-especial-input');
         const colectaEspecialConfirmBtn = document.getElementById('colecta-especial-confirm-btn');
         const colectaEspecialCancelBtn = document.getElementById('colecta-especial-cancel-btn');
@@ -931,6 +935,11 @@
             document.getElementById('colecta-selected-date').textContent = `Fecha seleccionada: ${selectedDate}`;
         });
 
+        dateCancelBtn.addEventListener('click', () => {
+            datePickerModal.classList.add('hidden');
+            initialScreen.classList.remove('hidden');
+        });
+
         colectaOptionBtns.forEach(button => {
             button.addEventListener('click', (event) => {
                 const colectaType = event.target.dataset.colecta;
@@ -1248,7 +1257,7 @@
                 });
             });
 
-            const worksheet = XLSX.utils.json_to_sheet(dataToExport, { origin: 'A2', skipHeader: true });
+            const worksheet = XLSX.utils.json_to_sheet(dataToExport, { origin: 'A3', skipHeader: true });
             
             // Add Main Header
             XLSX.utils.sheet_add_aoa(worksheet, [['Parroquia San José - Resumen de Colectas']], { origin: 'A1' });
@@ -1265,7 +1274,7 @@
                 ['', '', 'Subtotal Ingresos'],
                 ['', '', 'Subtotal Egresos'],
                 ['', '', 'SALDO TOTAL']
-            ], { origin: `A${totalRowStart}` });
+            ], { origin: `B${totalRowStart}` });
 
             // Add Formulas
             worksheet[`D${totalRowStart}`] = { t: 'n', f: `SUMIF(B3:B${dataRangeEnd},"Ingreso",D3:D${dataRangeEnd})`, z: '$#,##0' };
