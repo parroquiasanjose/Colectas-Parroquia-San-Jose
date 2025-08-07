@@ -8,11 +8,29 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Incluye la librería para generar PDF desde HTML -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <!-- Incluye las librerías de Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // Exponer las funciones de Firebase en el objeto global para que sean accesibles en el script
+        window.firebase = { 
+            initializeApp, 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            getDocs, 
+            doc, 
+            deleteDoc, 
+            query, 
+            where, 
+            writeBatch 
+        };
+    </script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-        }
-    </style>
+        </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
@@ -419,7 +437,23 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCFfAFcn9ORmYnGb6vWtiFr8GhnnnuRzQ",
+            authDomain: "parroquiasanjose-d1f43.firebaseapp.com",
+            projectId: "parroquiasanjose-d1f43",
+            storageBucket: "parroquiasanjose-d1f43.firebasestorage.app",
+            messagingSenderId: "766196957289",
+            appId: "1:766196957289:web:8382f5454e4bef839f22f8"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const colectasCollection = collection(db, "colectas");
+        
         // Variables para almacenar el estado de la aplicación
         let selectedColecta = '';
         let historialData = [];
@@ -522,6 +556,35 @@
         const validAccessCodes = ['liliana', 'jorge', 'jose', 'adan'];
 
 
+        // --- Firestore Functions ---
+
+        async function fetchDataFromFirestore() {
+            historialData = [];
+            const querySnapshot = await getDocs(colectasCollection);
+            querySnapshot.forEach((d) => {
+                historialData.push({ ...d.data(), id: d.id });
+            });
+        }
+
+        async function saveDataToFirestore(data) {
+            await addDoc(colectasCollection, data);
+        }
+        
+        async function updateDataInFirestore(id, data) {
+            const docRef = doc(db, "colectas", id);
+            const batch = writeBatch(db);
+            batch.update(docRef, data);
+            await batch.commit();
+        }
+
+        async function deleteDataFromFirestore(id) {
+            const docRef = doc(db, "colectas", id);
+            await deleteDoc(docRef);
+        }
+
+
+        // --- UI Rendering Functions ---
+
         // Función para renderizar el historial en la lista principal
         function renderHistorial() {
             // No se renderiza nada en la pantalla de inicio, se deja vacío para que solo se vea el botón
@@ -578,12 +641,12 @@
                 const modificarBtn = document.createElement('button');
                 modificarBtn.textContent = 'Modificar';
                 modificarBtn.className = 'px-3 py-1 bg-yellow-500 text-white rounded-md text-xs hover:bg-yellow-600 transition-colors';
-                modificarBtn.onclick = () => modificarItem(historialData.indexOf(item));
+                modificarBtn.onclick = () => modificarItem(historialData.findIndex(d => d.id === item.id));
 
                 const eliminarBtn = document.createElement('button');
                 eliminarBtn.textContent = 'Eliminar';
                 eliminarBtn.className = 'px-3 py-1 bg-red-600 text-white rounded-md text-xs hover:bg-red-700 transition-colors';
-                eliminarBtn.onclick = () => eliminarItem(historialData.indexOf(item));
+                eliminarBtn.onclick = () => eliminarItem(historialData.findIndex(d => d.id === item.id));
 
                 actionsDiv.appendChild(modificarBtn);
                 actionsDiv.appendChild(eliminarBtn);
@@ -594,12 +657,15 @@
         }
 
         // Función para eliminar un ítem del historial
-        function eliminarItem(index) {
-            const itemFecha = historialData[index].fecha;
+        async function eliminarItem(index) {
+            const item = historialData[index];
+            const itemFecha = item.fecha;
+
+            await deleteDataFromFirestore(item.id);
             historialData.splice(index, 1);
             
             // Si no quedan más elementos para esa fecha, volver a la lista de fechas
-            if (historialData.filter(item => item.fecha === itemFecha).length === 0) {
+            if (historialData.filter(i => i.fecha === itemFecha).length === 0) {
                 historialPorFechaScreen.classList.add('hidden');
                 historialDetalladoScreen.classList.remove('hidden');
                 renderHistorialDetallado();
@@ -796,6 +862,7 @@
                 loginScreen.classList.add('hidden');
                 initialScreen.classList.remove('hidden');
                 errorMessage.classList.add('hidden');
+                fetchDataFromFirestore();
             } else {
                 errorMessage.classList.remove('hidden');
                 accessCodeInput.value = '';
@@ -876,7 +943,7 @@
         });
 
         // Escuchar el clic en el botón "Confirmar" del modal
-        confirmOkBtn.addEventListener('click', () => {
+        confirmOkBtn.addEventListener('click', async () => {
             const totalMonto = parseFloat(totalColectaSpan.textContent.replace('$', '').replace(/\./g, '').replace(',', '.')) || 0;
             const billetes = {};
             billeteInputs.forEach(input => {
@@ -884,28 +951,22 @@
                 billetes[denomination] = parseInt(input.value) || 0;
             });
             
-            // Si estamos modificando, actualizar el ítem
+            const data = {
+                type: 'ingreso',
+                categoria: selectedColecta,
+                monto: totalMonto,
+                billetes: billetes,
+                fecha: selectedDate
+            };
+            
             if (itemToModify) {
-                const index = historialData.findIndex(item => item === itemToModify);
-                historialData[index] = {
-                    type: 'ingreso',
-                    categoria: selectedColecta,
-                    monto: totalMonto,
-                    billetes: billetes,
-                    fecha: selectedDate
-                };
+                await updateDataInFirestore(itemToModify.id, data);
                 itemToModify = null;
             } else {
-                historialData.push({
-                    type: 'ingreso',
-                    categoria: selectedColecta,
-                    monto: totalMonto,
-                    billetes: billetes,
-                    fecha: selectedDate
-                });
+                await addDoc(colectasCollection, data);
             }
             
-            renderHistorial();
+            await fetchDataFromFirestore();
             
             confirmationModal.classList.add('hidden');
             billetesScreen.classList.add('hidden');
@@ -941,7 +1002,7 @@
         egresoOtrosInput.addEventListener('input', calcularTotalEgresos);
 
         // Botón "Confirmar" de la pantalla de egresos
-        confirmarEgresosBtn.addEventListener('click', () => {
+        confirmarEgresosBtn.addEventListener('click', async () => {
             const egresoJorge = parseFloat(egresoJorgeInput.value) || 0;
             const egresoAdan = parseFloat(egresoAdanInput.value) || 0;
             const egresoOtros = parseFloat(egresoOtrosInput.value) || 0;
@@ -950,31 +1011,30 @@
                 alert('Por favor, introduce al menos un monto de egreso válido.');
                 return;
             }
+            
+            const egresos = [
+                { tipo: 'Gastos Padre Jorge', monto: egresoJorge },
+                { tipo: 'Gastos Padre Adán', monto: egresoAdan },
+                { tipo: 'Otros gastos', monto: egresoOtros }
+            ];
 
-            if (egresoJorge > 0) {
-                historialData.push({
-                    type: 'egreso',
-                    categoria: 'Gastos Padre Jorge',
-                    monto: egresoJorge,
-                    fecha: selectedDate
-                });
+            for (const egreso of egresos) {
+                if (egreso.monto > 0) {
+                    const data = {
+                        type: 'egreso',
+                        categoria: egreso.tipo,
+                        monto: egreso.monto,
+                        fecha: selectedDate
+                    };
+                    if (itemToModify && itemToModify.categoria === egreso.tipo) {
+                        await updateDataInFirestore(itemToModify.id, data);
+                    } else {
+                        await addDoc(colectasCollection, data);
+                    }
+                }
             }
-            if (egresoAdan > 0) {
-                historialData.push({
-                    type: 'egreso',
-                    categoria: 'Gastos Padre Adán',
-                    monto: egresoAdan,
-                    fecha: selectedDate
-                });
-            }
-            if (egresoOtros > 0) {
-                historialData.push({
-                    type: 'egreso',
-                    categoria: 'Otros gastos',
-                    monto: egresoOtros,
-                    fecha: selectedDate
-                });
-            }
+            itemToModify = null;
+            await fetchDataFromFirestore();
             
             egresosScreen.classList.add('hidden');
             bonplandPromptModal.classList.remove('hidden');
@@ -997,7 +1057,7 @@
         });
         
         // Botón "Confirmar" de la pantalla de Bonpland
-        confirmarBonplandBtn.addEventListener('click', () => {
+        confirmarBonplandBtn.addEventListener('click', async () => {
             const montoBonpland = parseFloat(bonplandTotalSpan.textContent.replace('$', '').replace(/\./g, '').replace(',', '.')) || 0;
             
             if (montoBonpland <= 0) {
@@ -1011,26 +1071,22 @@
                 billetes[denomination] = parseInt(input.value) || 0;
             });
             
-            // Si estamos modificando, actualizar el ítem
+            const data = {
+                type: 'ingreso',
+                categoria: 'Colecta de Bonpland',
+                monto: montoBonpland,
+                billetes: billetes,
+                fecha: selectedDate
+            };
+            
             if (itemToModify) {
-                const index = historialData.findIndex(item => item === itemToModify);
-                historialData[index] = {
-                    type: 'ingreso',
-                    categoria: 'Colecta de Bonpland',
-                    monto: montoBonpland,
-                    billetes: billetes,
-                    fecha: selectedDate
-                };
+                await updateDataInFirestore(itemToModify.id, data);
                 itemToModify = null;
             } else {
-                historialData.push({
-                    type: 'ingreso',
-                    categoria: 'Colecta de Bonpland',
-                    monto: montoBonpland,
-                    billetes: billetes,
-                    fecha: selectedDate
-                });
+                await addDoc(colectasCollection, data);
             }
+            
+            await fetchDataFromFirestore();
             
             bonplandScreen.classList.add('hidden');
             renderDetailedSummary();
@@ -1038,9 +1094,10 @@
         });
 
         // Botón para ir al historial detallado
-        historialDetalladoBtn.addEventListener('click', () => {
+        historialDetalladoBtn.addEventListener('click', async () => {
             initialScreen.classList.add('hidden');
             historialDetalladoScreen.classList.remove('hidden');
+            await fetchDataFromFirestore();
             renderHistorialDetallado();
         });
 
