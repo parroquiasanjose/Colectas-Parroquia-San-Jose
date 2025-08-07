@@ -11,7 +11,7 @@
     <!-- Incluye las librerías de Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
         // Exponer las funciones de Firebase en el objeto global para que sean accesibles en el script
         window.firebase = { 
@@ -22,8 +22,6 @@
             getDocs, 
             doc, 
             deleteDoc, 
-            query, 
-            where, 
             writeBatch 
         };
     </script>
@@ -40,7 +38,7 @@
         <h1 class="text-3xl font-extrabold text-center text-slate-800 mb-6">Parroquia San José ⛪</h1>
         
         <!-- Pantalla de inicio de sesión -->
-        <div id="login-screen">
+        <div id="login-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 mb-4 text-center">Acceso a la Aplicación</h2>
             <div class="flex flex-col gap-4">
                 <input type="password" id="access-code-input" placeholder="Ingresa el código de acceso" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
@@ -66,6 +64,11 @@
             <!-- Botón para ver el historial detallado -->
             <button id="historial-detallado-btn" class="mt-4 w-full bg-gray-400 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-gray-500 transition-all duration-300 transform hover:scale-105">
                 Historial Detallado
+            </button>
+
+            <!-- Botón para cerrar sesión -->
+            <button id="logout-btn" class="mt-4 w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105">
+                Cerrar Sesión
             </button>
         </div>
 
@@ -357,7 +360,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal de egresos (inicialmente oculta) -->
         <div id="egresos-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
@@ -552,6 +555,7 @@
         const colectaEspecialInput = document.getElementById('colecta-especial-input');
         const colectaEspecialConfirmBtn = document.getElementById('colecta-especial-confirm-btn');
         const colectaEspecialCancelBtn = document.getElementById('colecta-especial-cancel-btn');
+        const logoutBtn = document.getElementById('logout-btn');
 
         const validAccessCodes = ['liliana', 'jorge', 'jose', 'adan'];
 
@@ -862,10 +866,31 @@
                 loginScreen.classList.add('hidden');
                 initialScreen.classList.remove('hidden');
                 errorMessage.classList.add('hidden');
+                localStorage.setItem('auth', 'true');
                 fetchDataFromFirestore();
             } else {
                 errorMessage.classList.remove('hidden');
                 accessCodeInput.value = '';
+            }
+        });
+
+        // Evento para cerrar sesión
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('auth');
+            initialScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            accessCodeInput.value = '';
+            historialData = []; // Limpiar datos del historial
+        });
+        
+        // Verificar el estado de la sesión al cargar la página
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('auth') === 'true') {
+                loginScreen.classList.add('hidden');
+                initialScreen.classList.remove('hidden');
+                fetchDataFromFirestore();
+            } else {
+                loginScreen.classList.remove('hidden');
             }
         });
 
@@ -971,7 +996,7 @@
             confirmationModal.classList.add('hidden');
             billetesScreen.classList.add('hidden');
 
-            if (selectedColecta.includes("19:30h") || selectedColecta.includes("Colecta Especial")) {
+            if (selectedColecta.includes("19:30h")) {
                 egresosPromptModal.classList.remove('hidden');
             } else {
                 selectColectaScreen.classList.remove('hidden');
