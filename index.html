@@ -14,9 +14,67 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* Estilos para las animaciones de transición */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+        .fade-in-anim {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .fade-out-anim {
+            animation: fadeOut 0.3s ease-in forwards;
+        }
+        .filter-btn.active {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white;
+        }
+
+        /* Estilos para Notificaciones Toast */
+        #toast-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .toast {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .toast.hiding {
+            animation: fadeOut 0.5s ease-in forwards;
+        }
+        .toast-success {
+            background-color: #16a34a; /* green-600 */
+        }
+        .toast-error {
+            background-color: #dc2626; /* red-600 */
+        }
+        .toast-info {
+            background-color: #2563eb; /* blue-600 */
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Contenedor de Notificaciones Toast -->
+    <div id="toast-container"></div>
+
+    <!-- Spinner/Cargador -->
+    <div id="spinner" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
+    </div>
 
     <!-- Contenedor principal de la aplicación -->
     <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full border border-gray-200">
@@ -28,7 +86,7 @@
             <h2 class="text-xl font-bold text-gray-700 mb-4 text-center">Acceso a la Aplicación</h2>
             <div class="flex flex-col gap-4">
                 <input type="password" id="access-code-input" placeholder="Ingresa el código de acceso" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
-                <button id="login-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                <button id="login-btn" class="w-full bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:from-green-600 hover:to-green-800 transition-all duration-300 transform hover:scale-105">
                     Ingresar
                 </button>
             </div>
@@ -281,15 +339,29 @@
         <!-- Sección para el historial detallado con opciones de modificación y eliminación -->
         <div id="historial-detallado-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 mb-4">Historial Detallado</h2>
+            
+            <!-- Controles de Búsqueda y Filtro -->
+            <div class="mb-4 space-y-3">
+                <input type="text" id="search-historial-input" placeholder="Buscar por fecha (dd/mm/aaaa)..." class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                <div class="flex justify-center gap-2">
+                    <button data-filter="todos" class="filter-btn active flex-1 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-xl hover:bg-gray-300 transition-colors">Todos</button>
+                    <button data-filter="ingreso" class="filter-btn flex-1 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-xl hover:bg-gray-300 transition-colors">Ingresos</button>
+                    <button data-filter="egreso" class="filter-btn flex-1 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-xl hover:bg-gray-300 transition-colors">Egresos</button>
+                </div>
+            </div>
+
             <div id="historial-detallado-list" class="space-y-3">
                 <!-- Se insertarán los detalles con botones aquí -->
             </div>
-            <button id="export-excel-btn" class="mt-6 w-full bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300">
-                Descargar Excel (Todas las Fechas)
-            </button>
-            <button id="back-from-historial-detallado" class="mt-4 w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300">
-                Volver
-            </button>
+            <div class="mt-6 space-y-4">
+                <div class="flex gap-2">
+                    <button id="export-pdf-backup-btn" class="w-1/2 bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">Backup (PDF)</button>
+                    <button id="export-excel-btn" class="w-1/2 bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300">Backup (Excel)</button>
+                </div>
+                <button id="back-from-historial-detallado" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300">
+                    Volver
+                </button>
+            </div>
         </div>
 
         <!-- Sección para ver el historial por fecha (inicialmente oculta) -->
@@ -455,7 +527,7 @@
     </body>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, writeBatch, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, writeBatch, updateDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Configuración de Firebase
         const firebaseConfig = {
@@ -468,6 +540,19 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // Habilitar persistencia offline
+        try {
+            enableIndexedDbPersistence(db);
+            console.log("Persistencia offline habilitada.");
+        } catch (err) {
+            if (err.code == 'failed-precondition') {
+                console.warn("La persistencia offline falló, probablemente porque hay otra pestaña abierta con la aplicación.");
+            } else if (err.code == 'unimplemented') {
+                console.warn("El navegador actual no soporta la persistencia offline.");
+            }
+        }
+
         const colectasCollection = collection(db, "colectas");
         
         // Variables para almacenar el estado de la aplicación
@@ -477,6 +562,7 @@
         let itemToModify = null;
         let itemToDeleteId = null;
         let dateToDelete = null;
+        let currentFilter = 'todos';
 
         // --- Helper Functions ---
         function formatCurrency(amount) {
@@ -494,6 +580,7 @@
         }
         
         // --- DOM Element References ---
+        const spinner = document.getElementById('spinner');
         const loginScreen = document.getElementById('login-screen');
         const accessCodeInput = document.getElementById('access-code-input');
         const loginBtn = document.getElementById('login-btn');
@@ -529,6 +616,9 @@
         const historialDetalladoList = document.getElementById('historial-detallado-list');
         const historialDetalladoBtn = document.getElementById('historial-detallado-btn');
         const exportExcelBtn = document.getElementById('export-excel-btn');
+        const exportPdfBackupBtn = document.getElementById('export-pdf-backup-btn');
+        const searchHistorialInput = document.getElementById('search-historial-input');
+        const filterBtns = document.querySelectorAll('.filter-btn');
         const historialPorFechaList = document.getElementById('historial-por-fecha-list');
         const historialPorFechaDate = document.getElementById('historial-por-fecha-date');
         const colectaOptionBtns = document.querySelectorAll('.colecta-option-btn');
@@ -564,6 +654,26 @@
         const logoutBtn = document.getElementById('logout-btn');
 
         const validAccessCodes = ['liliana', 'jorge', 'jose', 'adan'];
+
+        // --- Spinner Functions ---
+        const showSpinner = () => spinner.classList.remove('hidden');
+        const hideSpinner = () => spinner.classList.add('hidden');
+
+        // --- Toast Notification Function ---
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('hiding');
+                toast.addEventListener('animationend', () => {
+                    toast.remove();
+                });
+            }, 3000);
+        }
 
         // --- Calculation and Reset Functions ---
         function calcularTotalColecta() {
@@ -607,11 +717,19 @@
 
         // --- Firestore Functions ---
         async function fetchDataFromFirestore() {
-            historialData = [];
-            const querySnapshot = await getDocs(colectasCollection);
-            querySnapshot.forEach((d) => {
-                historialData.push({ ...d.data(), id: d.id });
-            });
+            showSpinner();
+            try {
+                historialData = [];
+                const querySnapshot = await getDocs(colectasCollection);
+                querySnapshot.forEach((d) => {
+                    historialData.push({ ...d.data(), id: d.id });
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                showToast("No se pudieron cargar los datos.", 'error');
+            } finally {
+                hideSpinner();
+            }
         }
 
         async function saveDataToFirestore(data) {
@@ -740,20 +858,33 @@
 
         function renderHistorialDetallado() {
             historialDetalladoList.innerHTML = '';
-            if (historialData.length === 0) {
-                historialDetalladoList.innerHTML = '<li class="p-3 bg-gray-100 rounded-lg text-gray-600 italic text-center">No hay cargas para mostrar.</li>';
+
+            const searchTerm = searchHistorialInput.value.toLowerCase();
+            let filteredItems = historialData;
+
+            if (currentFilter !== 'todos') {
+                filteredItems = filteredItems.filter(item => item.type === currentFilter);
+            }
+
+            const datesWithFilteredItems = [...new Set(filteredItems.map(item => item.fecha))];
+            let finalDates = datesWithFilteredItems;
+            
+            if (searchTerm) {
+                finalDates = datesWithFilteredItems.filter(fecha => fecha.includes(searchTerm));
+            }
+
+            if (finalDates.length === 0) {
+                historialDetalladoList.innerHTML = '<li class="p-3 bg-gray-100 rounded-lg text-gray-600 italic text-center">No se encontraron registros con los filtros aplicados.</li>';
                 return;
             }
             
-            const fechas = [...new Set(historialData.map(item => item.fecha))];
-            
-            fechas.sort((a, b) => {
+            finalDates.sort((a, b) => {
                 const dateA = new Date(a.split('/').reverse().join('-'));
                 const dateB = new Date(b.split('/').reverse().join('-'));
                 return dateB - dateA;
             });
             
-            fechas.forEach(fecha => {
+            finalDates.forEach(fecha => {
                 const nuevaEntrada = document.createElement('li');
                 nuevaEntrada.className = 'p-4 rounded-lg shadow-sm bg-gray-100 flex justify-between items-center';
 
@@ -879,14 +1010,16 @@
         }
         
         // --- Event Listeners ---
-        loginBtn.addEventListener('click', () => {
+        loginBtn.addEventListener('click', async () => {
             const accessCode = accessCodeInput.value.trim().toLowerCase();
             if (validAccessCodes.includes(accessCode)) {
+                showSpinner();
+                await fetchDataFromFirestore();
+                hideSpinner();
                 loginScreen.classList.add('hidden');
                 initialScreen.classList.remove('hidden');
                 errorMessage.classList.add('hidden');
                 localStorage.setItem('auth', 'true');
-                fetchDataFromFirestore();
             } else {
                 errorMessage.classList.remove('hidden');
                 accessCodeInput.value = '';
@@ -907,11 +1040,13 @@
             historialData = [];
         });
         
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
             if (localStorage.getItem('auth') === 'true') {
+                showSpinner();
+                await fetchDataFromFirestore();
+                hideSpinner();
                 loginScreen.classList.add('hidden');
                 initialScreen.classList.remove('hidden');
-                fetchDataFromFirestore();
             } else {
                 loginScreen.classList.remove('hidden');
             }
@@ -926,7 +1061,7 @@
         dateOkBtn.addEventListener('click', () => {
             selectedDate = formatDate(colectaDateInput.value);
             if (!selectedDate) {
-                alert('Por favor, selecciona una fecha.');
+                showToast('Por favor, selecciona una fecha.', 'error');
                 return;
             }
             datePickerModal.classList.add('hidden');
@@ -937,7 +1072,6 @@
 
         dateCancelBtn.addEventListener('click', () => {
             datePickerModal.classList.add('hidden');
-            initialScreen.classList.remove('hidden');
         });
 
         colectaOptionBtns.forEach(button => {
@@ -959,7 +1093,7 @@
         colectaEspecialConfirmBtn.addEventListener('click', () => {
             const tipoColectaEspecial = colectaEspecialInput.value.trim();
             if (tipoColectaEspecial === '') {
-                alert('Por favor, ingresa un tipo de colecta especial.');
+                showToast('Por favor, ingresa un tipo de colecta especial.', 'error');
                 return;
             }
             selectedColecta = `Colecta Especial - ${tipoColectaEspecial}`;
@@ -984,31 +1118,42 @@
         confirmCancelBtn.addEventListener('click', () => confirmationModal.classList.add('hidden'));
 
         confirmOkBtn.addEventListener('click', async () => {
-            const totalMonto = parseFloat(totalColectaSpan.textContent.replace(/\$|\./g, '').replace(',', '.')) || 0;
-            const billetes = {};
-            billeteInputs.forEach(input => {
-                const denomination = input.id.split('-')[1];
-                billetes[denomination] = parseInt(input.value) || 0;
-            });
-            
-            const data = { type: 'ingreso', categoria: selectedColecta, monto: totalMonto, billetes, fecha: selectedDate };
-            
-            if (itemToModify) {
-                await updateDataInFirestore(itemToModify.id, data);
-                itemToModify = null;
-                billetesScreen.classList.add('hidden');
-                verDetallePorFecha(selectedDate);
-            } else {
-                await saveDataToFirestore(data);
-                billetesScreen.classList.add('hidden');
-                if (selectedColecta.includes("domingo 19:30h")) {
-                    egresosPromptModal.classList.remove('hidden');
-                } else {
-                    selectColectaScreen.classList.remove('hidden');
-                }
-            }
-            await fetchDataFromFirestore();
+            showSpinner();
             confirmationModal.classList.add('hidden');
+            try {
+                const totalMonto = parseFloat(totalColectaSpan.textContent.replace(/\$|\./g, '').replace(',', '.')) || 0;
+                const billetes = {};
+                billeteInputs.forEach(input => {
+                    const denomination = input.id.split('-')[1];
+                    billetes[denomination] = parseInt(input.value) || 0;
+                });
+                
+                const data = { type: 'ingreso', categoria: selectedColecta, monto: totalMonto, billetes, fecha: selectedDate };
+                
+                if (itemToModify) {
+                    await updateDataInFirestore(itemToModify.id, data);
+                    itemToModify = null;
+                    billetesScreen.classList.add('hidden');
+                    await fetchDataFromFirestore();
+                    verDetallePorFecha(selectedDate);
+                    showToast('Registro modificado con éxito.', 'success');
+                } else {
+                    await saveDataToFirestore(data);
+                    await fetchDataFromFirestore();
+                    billetesScreen.classList.add('hidden');
+                    showToast('Colecta guardada con éxito.', 'success');
+                    if (selectedColecta.includes("domingo 19:30h")) {
+                        egresosPromptModal.classList.remove('hidden');
+                    } else {
+                        selectColectaScreen.classList.remove('hidden');
+                    }
+                }
+            } catch (error) {
+                console.error("Error confirming charge:", error);
+                showToast('Error al guardar el registro.', 'error');
+            } finally {
+                hideSpinner();
+            }
         });
 
         egresosYesBtn.addEventListener('click', () => {
@@ -1023,44 +1168,51 @@
         });
         
         confirmarEgresosBtn.addEventListener('click', async () => {
-            const egresoJorge = parseFloat(egresoJorgeInput.value) || 0;
-            const egresoAdan = parseFloat(egresoAdanInput.value) || 0;
-            const egresoOtros = parseFloat(egresoOtrosInput.value) || 0;
+            showSpinner();
+            try {
+                const egresoJorge = parseFloat(egresoJorgeInput.value) || 0;
+                const egresoAdan = parseFloat(egresoAdanInput.value) || 0;
+                const egresoOtros = parseFloat(egresoOtrosInput.value) || 0;
 
-            if (egresoJorge <= 0 && egresoAdan <= 0 && egresoOtros <= 0 && !itemToModify) {
-                alert('Por favor, introduce al menos un monto de egreso válido.');
-                return;
-            }
-            
-            const batch = writeBatch(db);
-            const egresos = [
-                { tipo: 'Gastos Padre Jorge', monto: egresoJorge },
-                { tipo: 'Gastos Padre Adán', monto: egresoAdan },
-                { tipo: 'Otros gastos', monto: egresoOtros }
-            ];
+                if (egresoJorge <= 0 && egresoAdan <= 0 && egresoOtros <= 0 && !itemToModify) {
+                    showToast('Introduce al menos un monto de egreso.', 'error');
+                    return;
+                }
+                
+                const batch = writeBatch(db);
+                const egresos = [
+                    { tipo: 'Gastos Padre Jorge', monto: egresoJorge },
+                    { tipo: 'Gastos Padre Adán', monto: egresoAdan },
+                    { tipo: 'Otros gastos', monto: egresoOtros }
+                ];
 
-            for (const egreso of egresos) {
-                if (egreso.monto > 0) {
-                    const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
-                    if (itemToModify && itemToModify.categoria === egreso.tipo) {
-                        batch.update(doc(db, "colectas", itemToModify.id), data);
-                    } else {
-                        batch.set(doc(colectasCollection), data);
+                for (const egreso of egresos) {
+                    if (egreso.monto > 0) {
+                        const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
+                        if (itemToModify && itemToModify.categoria === egreso.tipo) {
+                            batch.update(doc(db, "colectas", itemToModify.id), data);
+                        } else {
+                            batch.set(doc(colectasCollection), data);
+                        }
                     }
                 }
+                await batch.commit();
+                showToast('Egresos guardados con éxito.', 'success');
+                itemToModify = null;
+                await fetchDataFromFirestore();
+                egresosScreen.classList.add('hidden');
+                if(itemToModify){
+                    verDetallePorFecha(selectedDate);
+                } else {
+                     bonplandPromptModal.classList.remove('hidden');
+                }
+                resetEgresosScreen();
+            } catch (error) {
+                console.error("Error saving expenses:", error);
+                showToast('Error al guardar los egresos.', 'error');
+            } finally {
+                hideSpinner();
             }
-            await batch.commit();
-
-            itemToModify = null;
-            await fetchDataFromFirestore();
-            
-            egresosScreen.classList.add('hidden');
-            if(itemToModify){
-                verDetallePorFecha(selectedDate);
-            } else {
-                 bonplandPromptModal.classList.remove('hidden');
-            }
-            resetEgresosScreen();
         });
         
         bonplandYesBtn.addEventListener('click', () => {
@@ -1076,36 +1228,45 @@
         });
         
         confirmarBonplandBtn.addEventListener('click', async () => {
-            const montoBonpland = parseFloat(bonplandTotalSpan.textContent.replace(/\$|\./g, '').replace(',', '.')) || 0;
-            
-            if (montoBonpland <= 0 && !itemToModify) {
-                // Allow skipping if not modifying
-                bonplandScreen.classList.add('hidden');
-                finalConfirmationModal.classList.remove('hidden');
-                return;
-            }
-
-            const billetes = {};
-            bonplandInputs.forEach(input => {
-                const denomination = input.id.split('-')[1];
-                billetes[denomination] = parseInt(input.value) || 0;
-            });
-            
-            const data = { type: 'ingreso', categoria: 'Colecta de Bonpland', monto: montoBonpland, billetes, fecha: selectedDate };
-            
-            if (itemToModify) {
-                await updateDataInFirestore(itemToModify.id, data);
-                itemToModify = null;
-                await fetchDataFromFirestore();
-                bonplandScreen.classList.add('hidden');
-                verDetallePorFecha(selectedDate);
-            } else {
-                if (montoBonpland > 0) {
-                    await saveDataToFirestore(data);
+            showSpinner();
+            try {
+                const montoBonpland = parseFloat(bonplandTotalSpan.textContent.replace(/\$|\./g, '').replace(',', '.')) || 0;
+                
+                if (montoBonpland <= 0 && !itemToModify) {
+                    bonplandScreen.classList.add('hidden');
+                    finalConfirmationModal.classList.remove('hidden');
+                    return;
                 }
-                await fetchDataFromFirestore();
-                bonplandScreen.classList.add('hidden');
-                finalConfirmationModal.classList.remove('hidden');
+
+                const billetes = {};
+                bonplandInputs.forEach(input => {
+                    const denomination = input.id.split('-')[1];
+                    billetes[denomination] = parseInt(input.value) || 0;
+                });
+                
+                const data = { type: 'ingreso', categoria: 'Colecta de Bonpland', monto: montoBonpland, billetes, fecha: selectedDate };
+                
+                if (itemToModify) {
+                    await updateDataInFirestore(itemToModify.id, data);
+                    itemToModify = null;
+                    await fetchDataFromFirestore();
+                    bonplandScreen.classList.add('hidden');
+                    verDetallePorFecha(selectedDate);
+                    showToast('Colecta de Bonpland modificada.', 'success');
+                } else {
+                    if (montoBonpland > 0) {
+                        await saveDataToFirestore(data);
+                    }
+                    await fetchDataFromFirestore();
+                    bonplandScreen.classList.add('hidden');
+                    finalConfirmationModal.classList.remove('hidden');
+                    showToast('Colecta de Bonpland guardada.', 'success');
+                }
+            } catch (error) {
+                console.error("Error saving Bonpland collection:", error);
+                showToast('Error al guardar Colecta de Bonpland.', 'error');
+            } finally {
+                hideSpinner();
             }
         });
 
@@ -1184,9 +1345,10 @@
         });
 
         deleteConfirmBtn.addEventListener('click', async () => {
-            if (dateToDelete) {
-                // Logic to delete all items for a specific date
-                try {
+            showSpinner();
+            deleteConfirmationModal.classList.add('hidden');
+            try {
+                if (dateToDelete) {
                     const itemsToDelete = historialData.filter(item => item.fecha === dateToDelete);
                     const batch = writeBatch(db);
                     itemsToDelete.forEach(item => {
@@ -1196,26 +1358,29 @@
                     await batch.commit();
                     await fetchDataFromFirestore();
                     renderHistorialDetallado();
-                } catch (error) {
-                    console.error("Error deleting by date:", error);
-                }
-            } else if (itemToDeleteId) {
-                // Logic to delete a single item
-                const item = historialData.find(i => i.id === itemToDeleteId);
-                if (item) {
-                    await deleteDataFromFirestore(itemToDeleteId);
-                    await fetchDataFromFirestore();
-                    if (historialData.filter(i => i.fecha === item.fecha).length === 0) {
-                        historialPorFechaScreen.classList.add('hidden');
-                        renderHistorialDetallado();
-                    } else {
-                        verDetallePorFecha(item.fecha);
+                    showToast(`Registros del día ${dateToDelete} eliminados.`, 'success');
+                } else if (itemToDeleteId) {
+                    const item = historialData.find(i => i.id === itemToDeleteId);
+                    if (item) {
+                        await deleteDataFromFirestore(itemToDeleteId);
+                        await fetchDataFromFirestore();
+                        showToast('Registro eliminado.', 'success');
+                        if (historialData.filter(i => i.fecha === item.fecha).length === 0) {
+                            historialPorFechaScreen.classList.add('hidden');
+                            renderHistorialDetallado();
+                        } else {
+                            verDetallePorFecha(item.fecha);
+                        }
                     }
                 }
+            } catch (error) {
+                console.error("Error deleting record(s):", error);
+                showToast('Error al eliminar.', 'error');
+            } finally {
+                itemToDeleteId = null;
+                dateToDelete = null;
+                hideSpinner();
             }
-            deleteConfirmationModal.classList.add('hidden');
-            itemToDeleteId = null;
-            dateToDelete = null;
         });
 
         // --- Final Confirmation Modal Listeners ---
@@ -1228,6 +1393,18 @@
         finalConfirmNoBtn.addEventListener('click', () => {
             finalConfirmationModal.classList.add('hidden');
             verDetallePorFecha(selectedDate);
+        });
+
+        // --- Search and Filter Listeners ---
+        searchHistorialInput.addEventListener('input', renderHistorialDetallado);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderHistorialDetallado();
+            });
         });
 
         exportExcelBtn.addEventListener('click', () => {
@@ -1301,6 +1478,32 @@
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Resumen General");
             XLSX.writeFile(workbook, "Resumen_Total_Colectas.xlsx");
+        });
+
+        exportPdfBackupBtn.addEventListener('click', () => {
+            const allDates = [...new Set(historialData.map(item => item.fecha))].sort((a, b) => {
+                const dateA = new Date(a.split('/').reverse().join('-'));
+                const dateB = new Date(b.split('/').reverse().join('-'));
+                return dateB - dateA;
+            });
+
+            let fullHtml = `<h1 style="text-align: center; font-size: 24px; margin-bottom: 20px;">Copia de Seguridad - Parroquia San José</h1>`;
+            allDates.forEach(fecha => {
+                fullHtml += `<div style="page-break-after: always;">${generateDetailedSummaryHTML(fecha)}</div>`;
+            });
+
+            const element = document.createElement('div');
+            element.innerHTML = fullHtml;
+
+            const opt = {
+                margin: 0.5,
+                filename: `Backup_Total_Colectas.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().from(element).set(opt).save();
         });
 
     </script>
