@@ -653,7 +653,7 @@
         const colectaEspecialCancelBtn = document.getElementById('colecta-especial-cancel-btn');
         const logoutBtn = document.getElementById('logout-btn');
 
-        const validAccessCodes = ['liliana', 'jorge', 'jose', 'adan'];
+        const validAccessCodes = ['liliana', 'jorge', 'jose', 'adan', 'javier', 'ana'];
 
         // --- Spinner Functions ---
         const showSpinner = () => spinner.classList.remove('hidden');
@@ -1020,6 +1020,8 @@
                 initialScreen.classList.remove('hidden');
                 errorMessage.classList.add('hidden');
                 localStorage.setItem('auth', 'true');
+                const capitalizedName = accessCode.charAt(0).toUpperCase() + accessCode.slice(1);
+                showToast(`¡Bienvenido/a, ${capitalizedName}!`, 'success');
             } else {
                 errorMessage.classList.remove('hidden');
                 accessCodeInput.value = '';
@@ -1077,6 +1079,14 @@
         colectaOptionBtns.forEach(button => {
             button.addEventListener('click', (event) => {
                 const colectaType = event.target.dataset.colecta;
+                
+                // Check for duplicates before proceeding
+                const isDuplicate = historialData.some(item => item.fecha === selectedDate && item.categoria === colectaType);
+                if (isDuplicate) {
+                    showToast('Esta colecta ya ha sido cargada para esta fecha.', 'error');
+                    return;
+                }
+
                 if (colectaType === 'Colecta Especial') {
                     colectaEspecialInput.value = '';
                     colectaEspecialPromptModal.classList.remove('hidden');
@@ -1097,6 +1107,14 @@
                 return;
             }
             selectedColecta = `Colecta Especial - ${tipoColectaEspecial}`;
+
+            // Check for duplicates for special collections
+            const isDuplicate = historialData.some(item => item.fecha === selectedDate && item.categoria === selectedColecta);
+            if (isDuplicate) {
+                showToast('Esta colecta especial ya ha sido cargada para esta fecha.', 'error');
+                return;
+            }
+
             billetesTitle.textContent = `Cargar para: ${selectedColecta} (${selectedDate})`;
             colectaEspecialPromptModal.classList.add('hidden');
             selectColectaScreen.classList.add('hidden');
