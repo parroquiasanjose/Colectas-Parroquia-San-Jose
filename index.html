@@ -74,6 +74,70 @@
         .toast-info {
             background-color: #2563eb; /* blue-600 */
         }
+
+        /* Estilos específicos para la generación de PDF */
+        @media print {
+            body {
+                font-family: Arial, sans-serif;
+            }
+        }
+        .pdf-container {
+            font-family: Arial, sans-serif;
+            color: #000;
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .pdf-header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .pdf-header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        .pdf-header p {
+            font-size: 18px;
+            margin: 0;
+        }
+        .pdf-section {
+            margin-bottom: 20px;
+        }
+        .pdf-section-title {
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .pdf-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+        .pdf-item-category {
+            font-weight: bold;
+        }
+        .pdf-billetes {
+            padding-left: 20px;
+            font-size: 12px;
+            color: #333;
+        }
+        .pdf-subtotal, .pdf-total {
+            text-align: right;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #555;
+        }
+        .pdf-total {
+            font-size: 18px;
+            border-top: 2px solid #000;
+        }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
@@ -889,97 +953,84 @@
         }
 
         // --- UI Rendering Functions ---
-        function generateDetailedSummaryHTML(fecha) {
+        function generateDetailedSummaryHTML(fecha, isForPdf = false) {
             const itemsDelDia = historialData.filter(item => item.fecha === fecha);
             let totalIngresos = 0;
             let totalEgresos = 0;
 
             let ingresosHtml = '';
             const ingresosDelDia = itemsDelDia.filter(item => item.type === 'ingreso');
-            if (ingresosDelDia.length === 0) {
-                ingresosHtml = '<p class="text-sm text-gray-500 dark:text-slate-400 italic">No hay ingresos registrados para este día.</p>';
-            } else {
+            if (ingresosDelDia.length > 0) {
                 ingresosDelDia.forEach(item => {
                     totalIngresos += item.monto;
-                    let billetesHtml = '<div class="ml-4 mt-1 text-xs text-gray-600 dark:text-slate-400">';
-                    let hasBilletes = false;
-                    // Check if billetes object exists and is not empty
+                    let billetesHtml = '';
                     if (item.billetes && Object.keys(item.billetes).length > 0) {
-                        Object.entries(item.billetes).sort((a, b) => parseInt(b[0]) - parseInt(a[0])).forEach(([denominacion, cantidad]) => {
-                            if (cantidad > 0) {
-                                hasBilletes = true;
-                                const subtotal = cantidad * parseInt(denominacion);
-                                billetesHtml += `<p>${cantidad} x ${formatCurrency(parseInt(denominacion))} = ${formatCurrency(subtotal)}</p>`;
-                            }
-                        });
+                        const billetesDetalle = Object.entries(item.billetes)
+                            .filter(([, cantidad]) => cantidad > 0)
+                            .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
+                            .map(([denominacion, cantidad]) => `<div>${cantidad} x ${formatCurrency(parseInt(denominacion))} = ${formatCurrency(cantidad * parseInt(denominacion))}</div>`)
+                            .join('');
+                        if (billetesDetalle) {
+                            billetesHtml = `<div class="${isForPdf ? 'pdf-billetes' : 'ml-4 mt-1 text-xs text-gray-600 dark:text-slate-400'}">${billetesDetalle}</div>`;
+                        }
                     }
-                    billetesHtml += '</div>';
-                    ingresosHtml += `
-                        <div class="border-b border-gray-200 dark:border-slate-700 pb-2 mb-2">
-                            <p class="font-semibold text-gray-800 dark:text-slate-200">${item.categoria}: <span class="font-bold text-green-700 dark:text-green-400">${formatCurrency(item.monto)}</span></p>
-                            ${hasBilletes ? billetesHtml : ''}
-                        </div>
-                    `;
+                    if (isForPdf) {
+                        ingresosHtml += `<div class="pdf-item"><span>${item.categoria}</span><span>${formatCurrency(item.monto)}</span></div>${billetesHtml}`;
+                    } else {
+                        ingresosHtml += `<div class="border-b border-gray-200 dark:border-slate-700 pb-2 mb-2"><p class="font-semibold text-gray-800 dark:text-slate-200">${item.categoria}: <span class="font-bold text-green-700 dark:text-green-400">${formatCurrency(item.monto)}</span></p>${billetesHtml}</div>`;
+                    }
                 });
             }
 
-
             let egresosHtml = '';
             const egresosDelDia = itemsDelDia.filter(item => item.type === 'egreso');
-             if (egresosDelDia.length === 0) {
-                egresosHtml = '<p class="text-sm text-gray-500 dark:text-slate-400 italic">No hay egresos registrados para este día.</p>';
-            } else {
+            if (egresosDelDia.length > 0) {
                 egresosDelDia.forEach(item => {
                     totalEgresos += item.monto;
-                    egresosHtml += `
-                        <div class="flex justify-between items-center py-1 border-b border-gray-200 dark:border-slate-700">
-                            <p class="font-semibold text-gray-800 dark:text-slate-200">${item.categoria}:</p>
-                            <p class="font-bold text-red-700 dark:text-red-400">${formatCurrency(item.monto)}</p>
-                        </div>
-                    `;
+                    if (isForPdf) {
+                        egresosHtml += `<div class="pdf-item"><span>${item.categoria}</span><span>-${formatCurrency(item.monto)}</span></div>`;
+                    } else {
+                        egresosHtml += `<div class="flex justify-between items-center py-1 border-b border-gray-200 dark:border-slate-700"><p class="font-semibold text-gray-800 dark:text-slate-200">${item.categoria}:</p><p class="font-bold text-red-700 dark:text-red-400">${formatCurrency(item.monto)}</p></div>`;
+                    }
                 });
             }
 
             const saldoFinal = totalIngresos - totalEgresos;
 
+            if (isForPdf) {
+                return `
+                    <div class="pdf-container">
+                        <div class="pdf-header"><h1>Parroquia San José</h1><p>Resumen del día: ${fecha}</p></div>
+                        <div class="pdf-section">
+                            <h2 class="pdf-section-title">Ingresos</h2>
+                            ${ingresosHtml || '<div class="pdf-item"><span>No hay ingresos registrados.</span></div>'}
+                            <div class="pdf-subtotal"><span>Subtotal Ingresos:</span><span>${formatCurrency(totalIngresos)}</span></div>
+                        </div>
+                        <div class="pdf-section">
+                            <h2 class="pdf-section-title">Egresos</h2>
+                            ${egresosHtml || '<div class="pdf-item"><span>No hay egresos registrados.</span></div>'}
+                            <div class="pdf-subtotal"><span>Subtotal Egresos:</span><span>-${formatCurrency(totalEgresos)}</span></div>
+                        </div>
+                        <div class="pdf-total"><span>SALDO FINAL:</span><span>${formatCurrency(saldoFinal)}</span></div>
+                    </div>`;
+            }
+
+            // Original HTML for on-screen display
             return `
-                <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm">
-                    <h3 class="text-lg font-bold text-green-800 dark:text-green-300 mb-2 border-b pb-1 border-green-200 dark:border-green-700">Ingresos</h3>
-                    <div class="space-y-2 text-sm">${ingresosHtml}</div>
-                    <hr class="my-3 border-green-200 dark:border-green-700">
-                    <div class="flex justify-between items-center text-md font-bold text-gray-800 dark:text-slate-100">
-                        <p>Subtotal de Ingresos:</p>
-                        <span class="text-green-700 dark:text-green-400">${formatCurrency(totalIngresos)}</span>
-                    </div>
-                </div>
-
-                <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg shadow-sm">
-                    <h3 class="text-lg font-bold text-red-800 dark:text-red-300 mb-2 border-b pb-1 border-red-200 dark:border-red-700">Egresos</h3>
-                    <div class="space-y-2 text-sm">${egresosHtml}</div>
-                    <hr class="my-3 border-red-200 dark:border-red-700">
-                    <div class="flex justify-between items-center text-md font-bold text-gray-800 dark:text-slate-100">
-                        <p>Subtotal de Egresos:</p>
-                        <span class="text-red-700 dark:text-red-400">${formatCurrency(totalEgresos)}</span>
-                    </div>
-                </div>
-
-                 <div class="p-4 bg-blue-100 dark:bg-blue-900/20 rounded-lg shadow-inner mt-4">
-                    <div class="flex justify-between items-center text-lg font-extrabold text-gray-800 dark:text-slate-100">
-                        <p>SALDO FINAL:</p>
-                        <span class="text-blue-700 dark:text-blue-400">${formatCurrency(saldoFinal)}</span>
-                    </div>
-                </div>
-            `;
+                <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm">${ingresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-green-800 dark:text-green-300 mb-2 border-b pb-1 border-green-200 dark:border-green-700">Ingresos</h3><div class="space-y-2 text-sm">${ingresosHtml}</div>` : '<p class="text-sm text-gray-500 dark:text-slate-400 italic">No hay ingresos registrados.</p>'}<hr class="my-3 border-green-200 dark:border-green-700"><div class="flex justify-between items-center text-md font-bold text-gray-800 dark:text-slate-100"><p>Subtotal de Ingresos:</p><span class="text-green-700 dark:text-green-400">${formatCurrency(totalIngresos)}</span></div></div>
+                <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg shadow-sm">${egresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-red-800 dark:text-red-300 mb-2 border-b pb-1 border-red-200 dark:border-red-700">Egresos</h3><div class="space-y-2 text-sm">${egresosHtml}</div>` : '<p class="text-sm text-gray-500 dark:text-slate-400 italic">No hay egresos registrados.</p>'}<hr class="my-3 border-red-200 dark:border-red-700"><div class="flex justify-between items-center text-md font-bold text-gray-800 dark:text-slate-100"><p>Subtotal de Egresos:</p><span class="text-red-700 dark:text-red-400">${formatCurrency(totalEgresos)}</span></div></div>
+                <div class="p-4 bg-blue-100 dark:bg-blue-900/20 rounded-lg shadow-inner mt-4"><div class="flex justify-between items-center text-lg font-extrabold text-gray-800 dark:text-slate-100"><p>SALDO FINAL:</p><span class="text-blue-700 dark:text-blue-400">${formatCurrency(saldoFinal)}</span></div></div>`;
         }
+
 
         function renderDetailedSummary() {
             summaryDateElement.textContent = `Resumen del día: ${selectedDate}`;
-            summaryContent.innerHTML = generateDetailedSummaryHTML(selectedDate);
+            summaryContent.innerHTML = generateDetailedSummaryHTML(selectedDate, false);
         }
 
         function descargarPdfPorFecha(fecha) {
             const element = document.createElement('div');
-            element.innerHTML = generateDetailedSummaryHTML(fecha);
+            element.innerHTML = generateDetailedSummaryHTML(fecha, true);
 
             const opt = {
                 margin: 0.5,
@@ -1672,7 +1723,7 @@
 
             let fullHtml = `<h1 style="text-align: center; font-size: 24px; margin-bottom: 20px;">Copia de Seguridad - Parroquia San José</h1>`;
             allDates.forEach(fecha => {
-                fullHtml += `<div style="page-break-after: always;">${generateDetailedSummaryHTML(fecha)}</div>`;
+                fullHtml += `<div style="page-break-after: always;">${generateDetailedSummaryHTML(fecha, true)}</div>`;
             });
 
             const element = document.createElement('div');
