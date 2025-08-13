@@ -768,6 +768,36 @@
             const year = date.getFullYear();
             return `${day}/${month}/${year}`;
         }
+
+        const categoryOrder = [
+            'Colecta entre semana',
+            'Colecta de sábado 19:30h',
+            'Colecta de domingo 08h',
+            'Colecta de domingo 10:30h',
+            'Colecta de domingo 19:30h',
+            'Colecta Especial',
+            'Intenciones y Sacramento',
+            'Donaciones',
+            'Alcancias',
+            'Secretaría',
+            'Colecta de Bonpland',
+            'Gastos Padre Jorge',
+            'Gastos Padre Adán',
+            'Otros gastos'
+        ];
+
+        function sortItemsByCategory(a, b) {
+            const getOrderIndex = (category) => {
+                const baseCategory = category.startsWith('Colecta Especial') ? 'Colecta Especial' : category;
+                const index = categoryOrder.indexOf(baseCategory);
+                return index === -1 ? categoryOrder.length : index;
+            };
+
+            const indexA = getOrderIndex(a.categoria);
+            const indexB = getOrderIndex(b.categoria);
+
+            return indexA - indexB;
+        }
         
         // --- DOM Element References ---
         const spinner = document.getElementById('spinner');
@@ -955,6 +985,7 @@
         // --- UI Rendering Functions ---
         function generateDetailedSummaryHTML(fecha, isForPdf = false) {
             const itemsDelDia = historialData.filter(item => item.fecha === fecha);
+            itemsDelDia.sort(sortItemsByCategory);
             let totalIngresos = 0;
             let totalEgresos = 0;
 
@@ -1120,6 +1151,7 @@
             historialPorFechaList.innerHTML = '';
             
             const itemsDeFecha = historialData.filter(item => item.fecha === fecha);
+            itemsDeFecha.sort(sortItemsByCategory);
             
             itemsDeFecha.forEach((item) => {
                 const nuevaEntrada = document.createElement('li');
@@ -1647,7 +1679,11 @@
             const sortedData = [...historialData].sort((a, b) => {
                 const dateA = new Date(a.fecha.split('/').reverse().join('-'));
                 const dateB = new Date(b.fecha.split('/').reverse().join('-'));
-                return dateB - dateA;
+                const dateDiff = dateB - dateA;
+                if (dateDiff !== 0) {
+                    return dateDiff;
+                }
+                return sortItemsByCategory(a, b); // Secondary sort
             });
 
             sortedData.forEach(item => {
@@ -1655,6 +1691,7 @@
                 if (item.type === 'ingreso' && item.billetes) {
                     billetesDetalle = Object.entries(item.billetes)
                         .filter(([, cantidad]) => cantidad > 0)
+                        .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
                         .map(([denominacion, cantidad]) => `${cantidad}x$${denominacion}`)
                         .join(', ');
                 }
