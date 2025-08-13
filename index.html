@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parroquia San José</title>
+    <!-- Incluye Tailwind CSS para un diseño moderno y responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluye la librería para generar PDF desde HTML -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <!-- Incluye la librería para generar archivos Excel (SheetJS) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Incluye la librería para gráficos (Chart.js) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Aplica el tema oscuro al instante para evitar el "flash" de tema claro
@@ -74,23 +78,29 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
 
+    <!-- Contenedor de Notificaciones Toast -->
     <div id="toast-container"></div>
 
+    <!-- Spinner/Cargador -->
     <div id="spinner" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
         <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
     </div>
 
+    <!-- Contenedor principal de la aplicación -->
     <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-2xl max-w-md w-full border border-gray-200 dark:border-slate-700 relative transition-colors duration-300">
+        <!-- Botón de Tema Oscuro -->
         <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             <svg id="theme-toggle-dark-icon" class="hidden h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
             <svg id="theme-toggle-light-icon" class="hidden h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 10.607a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707-.707a1 1 0 01-1.414 0zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
         </button>
 
+        <!-- Título de la aplicación -->
         <div class="text-center mb-8">
             <h1 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100">Parroquia San José ⛪</h1>
             <p class="text-2xl font-semibold text-gray-500 dark:text-slate-400 mt-1">Colectas</p>
         </div>
         
+        <!-- Pantalla de inicio de sesión -->
         <div id="login-screen" class="hidden">
             <div class="flex flex-col items-center justify-center">
                 <div class="w-full max-w-xs">
@@ -106,8 +116,10 @@
         </div>
 
 
+        <!-- Sección de bienvenida y botón de carga inicial -->
         <div id="initial-screen" class="hidden">
-             <div id="dashboard" class="mb-6 p-4 bg-gray-100 dark:bg-slate-700 rounded-xl space-y-2">
+             <!-- Panel de Resumen Rápido -->
+            <div id="dashboard" class="mb-6 p-4 bg-gray-100 dark:bg-slate-700 rounded-xl space-y-2">
                 <h3 class="text-lg font-bold text-gray-800 dark:text-slate-100 text-center mb-2">Resumen Rápido</h3>
                 <div class="flex justify-between text-sm">
                     <span class="font-semibold text-gray-600 dark:text-slate-300">Total Recaudado Hoy:</span>
@@ -125,43 +137,64 @@
 
             <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Carga de Colectas</h2>
             <p class="text-gray-500 dark:text-slate-400 mb-6">Haz clic en "Cargar" para seleccionar el tipo de colecta.</p>
+            <!-- Botón que inicia el proceso de carga -->
             <button id="cargar-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
                 Cargar
             </button>
             
             <hr class="my-8 border-gray-300 dark:border-slate-600">
             
+            <!-- Botón para ver el historial detallado -->
             <button id="historial-detallado-btn" class="mt-4 w-full bg-gray-400 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-gray-500 transition-all duration-300 transform hover:scale-105">
                 Historial Detallado
             </button>
             
+            <!-- Botón para ver reportes -->
             <button id="reports-btn" class="mt-4 w-full bg-purple-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-105">
                 Ver Reportes
             </button>
 
+            <!-- Botón para cerrar sesión -->
             <button id="logout-btn" class="mt-4 w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105">
                 Cerrar Sesión
             </button>
         </div>
 
+        <!-- Sección para seleccionar el tipo de colecta (inicialmente oculta) -->
         <div id="select-colecta-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Seleccionar Colecta</h2>
             <p id="colecta-selected-date" class="text-sm text-gray-500 dark:text-slate-400 text-center mb-4"></p>
-            <div class="flex flex-col gap-4">
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-3 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de sábado 19:30h">
+            <div class="flex flex-col gap-3">
+                <!-- Botones para cada tipo de colecta -->
+                 <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta entre semana">
+                    Colecta entre semana
+                </button>
+                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de sábado 19:30h">
                     Colecta de sábado 19:30h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-3 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de domingo 08h">
+                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de domingo 08h">
                     Colecta de domingo 08h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-3 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de domingo 10:30h">
+                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de domingo 10:30h">
                     Colecta de domingo 10:30h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-3 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta Especial">
+                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de domingo 19:30h">
+                    Colecta de domingo 19:30h
+                </button>
+                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta Especial">
                     Colecta Especial
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-3 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de domingo 19:30h">
-                    Colecta de domingo 19:30h
+                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Intenciones y Sacramento">
+                    Intenciones y Sacramento
+                </button>
+                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Donaciones">
+                    Donaciones
+                </button>
+                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Alcancias">
+                    Alcancias
+                </button>
+                <button id="secretaria-btn" class="w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors">
+                    Secretaría
                 </button>
                 <button id="back-from-select" class="mt-4 w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
                     Volver
@@ -169,55 +202,68 @@
             </div>
         </div>
 
+        <!-- Sección para la carga de billetes (inicialmente oculta) -->
         <div id="billetes-screen" class="hidden">
             <h2 id="billetes-title" class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4"></h2>
             <div class="grid grid-cols-2 gap-4 mb-6">
+                <!-- Billetes de 20000 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">20000</label>
                     <input type="number" id="billete-20000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 10000 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">10000</label>
                     <input type="number" id="billete-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 2000 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">2000</label>
                     <input type="number" id="billete-2000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 1000 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">1000</label>
                     <input type="number" id="billete-1000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 500 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">500</label>
                     <input type="number" id="billete-500-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 200 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">200</label>
                     <input type="number" id="billete-200-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 100 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">100</label>
                     <input type="number" id="billete-100-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 50 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">50</label>
                     <input type="number" id="billete-50-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 20 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">20</label>
                     <input type="number" id="billete-20-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 10 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">10</label>
                     <input type="number" id="billete-10-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
 
+            <!-- Total de la carga -->
             <div class="mb-6 p-4 bg-gray-100 dark:bg-slate-700 rounded-lg shadow-inner">
                 <p class="text-lg font-bold text-gray-800 dark:text-slate-100">Total: <span id="total-colecta" class="text-blue-600 dark:text-blue-400">$0</span></p>
             </div>
 
+            <!-- Botones de acción -->
             <div class="flex flex-col gap-4">
                 <button id="confirmar-carga-btn" class="w-full bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
                     Confirmar Carga
@@ -228,23 +274,28 @@
             </div>
         </div>
         
+        <!-- Sección para la carga de egresos (inicialmente oculta) -->
         <div id="egresos-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Egresos</h2>
             <div class="flex flex-col gap-4 mb-6">
+                <!-- Egresos Padre Jorge -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Gastos Padre Jorge</label>
                     <input type="number" id="egreso-jorge-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Egresos Padre Adán -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Gastos Padre Adán</label>
                     <input type="number" id="egreso-adan-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Otros gastos -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Otros gastos</label>
                     <input type="number" id="egreso-otros-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
 
+            <!-- Total de egresos -->
             <div class="mb-6 p-4 bg-gray-100 dark:bg-slate-700 rounded-lg shadow-inner">
                 <p class="text-lg font-bold text-gray-800 dark:text-slate-100">Total de Egresos: <span id="total-egresos" class="text-red-600 dark:text-red-400">$0</span></p>
             </div>
@@ -259,45 +310,56 @@
             </div>
         </div>
 
+        <!-- Sección para la colecta de Bonpland (inicialmente oculta) -->
         <div id="bonpland-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Colecta de Bonpland</h2>
             <div class="grid grid-cols-2 gap-4 mb-6">
+                <!-- Billetes de 20000 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">20000</label>
                     <input type="number" id="bonpland-20000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 10000 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">10000</label>
                     <input type="number" id="bonpland-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-                 <div>
+                 <!-- Billetes de 2000 -->
+                <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">2000</label>
                     <input type="number" id="bonpland-2000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 1000 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">1000</label>
                     <input type="number" id="bonpland-1000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 500 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">500</label>
                     <input type="number" id="bonpland-500-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 200 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">200</label>
                     <input type="number" id="bonpland-200-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 100 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">100</label>
                     <input type="number" id="bonpland-100-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 50 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">50</label>
                     <input type="number" id="bonpland-50-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 20 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">20</label>
                     <input type="number" id="bonpland-20-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
+                <!-- Billetes de 10 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">10</label>
                     <input type="number" id="bonpland-10-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -318,12 +380,15 @@
             </div>
         </div>
         
+        <!-- Sección de resumen (inicialmente oculta) -->
         <div id="summary-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-2">Resumen Detallado de Cargas</h2>
             <p id="summary-date" class="text-sm text-gray-500 dark:text-slate-400 text-center mb-4"></p>
             
+            <!-- Contenedor para el resumen detallado que se inyectará con JS -->
             <div class="flex flex-col gap-4 mb-6" id="summary-content">
-                </div>
+                <!-- El contenido detallado se insertará aquí -->
+            </div>
             
             <div class="p-4 bg-gray-100 dark:bg-slate-700 rounded-lg shadow-sm mb-6">
                  <h3 class="text-lg font-bold text-gray-700 dark:text-slate-200 mb-2">Aclaraciones</h3>
@@ -340,9 +405,11 @@
             </div>
         </div>
         
+        <!-- Sección para el historial detallado con opciones de modificación y eliminación -->
         <div id="historial-detallado-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Historial Detallado</h2>
             
+            <!-- Controles de Búsqueda y Filtro -->
             <div class="mb-4 space-y-3">
                 <input type="text" id="search-historial-input" placeholder="Buscar por fecha (dd/mm/aaaa)..." class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
                 <div class="flex justify-center gap-2">
@@ -353,7 +420,8 @@
             </div>
 
             <div id="historial-detallado-list" class="space-y-3">
-                </div>
+                <!-- Se insertarán los detalles con botones aquí -->
+            </div>
             <div class="mt-6 space-y-4">
                 <div class="flex gap-2">
                     <button id="export-pdf-backup-btn" class="w-1/2 bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">Backup (PDF)</button>
@@ -365,11 +433,13 @@
             </div>
         </div>
 
+        <!-- Sección para ver el historial por fecha (inicialmente oculta) -->
         <div id="historial-por-fecha-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Historial de Cargas del día</h2>
             <p id="historial-por-fecha-date" class="text-sm text-gray-500 dark:text-slate-400 text-center mb-4"></p>
             <div id="historial-por-fecha-list" class="space-y-3" style="width: 100%;">
-                </div>
+                <!-- Detalles del historial para la fecha seleccionada -->
+            </div>
              <div class="flex flex-col gap-4 mt-6">
                 <button id="download-pdf-historial-btn" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105">
                     Descargar como PDF
@@ -380,6 +450,7 @@
             </div>
         </div>
 
+        <!-- Sección de Reportes -->
         <div id="reports-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Reportes Gráficos</h2>
 
@@ -410,6 +481,7 @@
         </div>
 
 
+        <!-- Modal de confirmación (inicialmente oculta) -->
         <div id="confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
@@ -429,6 +501,7 @@
             </div>
         </div>
 
+        <!-- Modal de egresos (inicialmente oculta) -->
         <div id="egresos-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
@@ -448,6 +521,7 @@
             </div>
         </div>
 
+        <!-- Modal de Bonpland (inicialmente oculta) -->
         <div id="bonpland-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
@@ -467,6 +541,7 @@
             </div>
         </div>
 
+        <!-- Modal de Colecta Especial (inicialmente oculta) -->
         <div id="colecta-especial-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
@@ -487,6 +562,7 @@
             </div>
         </div>
         
+        <!-- Modal para elegir la fecha (inicialmente oculta) -->
         <div id="date-picker-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
@@ -506,6 +582,7 @@
             </div>
         </div>
 
+        <!-- Modal de Confirmación de Eliminación -->
         <div id="delete-confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
@@ -525,6 +602,7 @@
             </div>
         </div>
 
+        <!-- Modal de Confirmación Final -->
         <div id="final-confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
@@ -539,6 +617,27 @@
                     </button>
                     <button id="final-confirm-no-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         No, modificar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Secretaría (inicialmente oculta) -->
+        <div id="secretaria-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+                <div class="text-center">
+                    <h3 id="secretaria-modal-title" class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Ingreso de Secretaría</h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500 dark:text-slate-400 mb-4">Introduce el monto total.</p>
+                        <input type="number" id="secretaria-monto-input" placeholder="Monto" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-center gap-4">
+                    <button id="secretaria-confirm-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        Confirmar
+                    </button>
+                    <button id="secretaria-cancel-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Volver
                     </button>
                 </div>
             </div>
@@ -688,6 +787,14 @@
         const dashboardTodayTotal = document.getElementById('dashboard-today-total');
         const dashboardMonthBalance = document.getElementById('dashboard-month-balance');
         const dashboardLastUpload = document.getElementById('dashboard-last-upload');
+        // New elements for Secretaría
+        const secretariaBtn = document.getElementById('secretaria-btn');
+        const secretariaModal = document.getElementById('secretaria-modal');
+        const secretariaModalTitle = document.getElementById('secretaria-modal-title');
+        const secretariaMontoInput = document.getElementById('secretaria-monto-input');
+        const secretariaConfirmBtn = document.getElementById('secretaria-confirm-btn');
+        const secretariaCancelBtn = document.getElementById('secretaria-cancel-btn');
+
 
         // --- Spinner Functions ---
         const showSpinner = () => spinner.classList.remove('hidden');
@@ -796,7 +903,8 @@
                     totalIngresos += item.monto;
                     let billetesHtml = '<div class="ml-4 mt-1 text-xs text-gray-600 dark:text-slate-400">';
                     let hasBilletes = false;
-                    if (item.billetes) {
+                    // Check if billetes object exists and is not empty
+                    if (item.billetes && Object.keys(item.billetes).length > 0) {
                         Object.entries(item.billetes).sort((a, b) => parseInt(b[0]) - parseInt(a[0])).forEach(([denominacion, cantidad]) => {
                             if (cantidad > 0) {
                                 hasBilletes = true;
@@ -1010,7 +1118,12 @@
             selectedDate = itemToModify.fecha;
             
             if (itemToModify.type === 'ingreso') {
-                if (itemToModify.categoria === 'Colecta de Bonpland') {
+                if (itemToModify.categoria === 'Secretaría') {
+                    secretariaMontoInput.value = itemToModify.monto;
+                    secretariaModalTitle.textContent = 'Modificar Ingreso de Secretaría';
+                    historialPorFechaScreen.classList.add('hidden');
+                    secretariaModal.classList.remove('hidden');
+                } else if (itemToModify.categoria === 'Colecta de Bonpland') {
                     bonplandInputs.forEach(input => {
                         const denom = input.id.split('-')[1];
                         input.value = itemToModify.billetes[denom] || '';
@@ -1018,7 +1131,7 @@
                     calcularTotalBonpland();
                     historialPorFechaScreen.classList.add('hidden');
                     bonplandScreen.classList.remove('hidden');
-                } else {
+                } else { // Any other income type with banknotes
                     billeteInputs.forEach(input => {
                         const denom = input.id.split('-')[1];
                         input.value = itemToModify.billetes[denom] || '';
@@ -1758,6 +1871,57 @@
             dashboardMonthBalance.textContent = formatCurrency(monthIncome - monthExpense);
             dashboardLastUpload.textContent = lastUploadDate ? formatDate(lastUploadDate.toISOString().split('T')[0]) : '-';
         }
+
+        // --- Secretaría Logic ---
+        secretariaBtn.addEventListener('click', () => {
+            const colectaType = 'Secretaría';
+            const isDuplicate = historialData.some(item => item.fecha === selectedDate && item.categoria === colectaType);
+            if (isDuplicate) {
+                showToast('El ingreso de Secretaría ya ha sido cargado para esta fecha.', 'error');
+                return;
+            }
+            secretariaMontoInput.value = '';
+            secretariaModalTitle.textContent = 'Ingreso de Secretaría';
+            secretariaModal.classList.remove('hidden');
+        });
+
+        secretariaCancelBtn.addEventListener('click', () => {
+            secretariaModal.classList.add('hidden');
+            itemToModify = null; // Clear modification state
+        });
+
+        secretariaConfirmBtn.addEventListener('click', async () => {
+            const monto = parseFloat(secretariaMontoInput.value);
+            if (isNaN(monto) || monto <= 0) {
+                showToast('Por favor, ingresa un monto válido.', 'error');
+                return;
+            }
+            
+            showSpinner();
+            secretariaModal.classList.add('hidden');
+
+            try {
+                const data = { type: 'ingreso', categoria: 'Secretaría', monto: monto, fecha: selectedDate };
+                
+                if (itemToModify) { // If we are modifying
+                    await updateDataInFirestore(itemToModify.id, data);
+                    await fetchDataFromFirestore();
+                    verDetallePorFecha(selectedDate); // Go back to the detail view
+                    showToast('Ingreso de Secretaría modificado.', 'success');
+                } else { // If we are creating a new one
+                    await saveDataToFirestore(data);
+                    await fetchDataFromFirestore();
+                    selectColectaScreen.classList.remove('hidden'); // Go back to selection
+                    showToast('Ingreso de Secretaría guardado.', 'success');
+                }
+            } catch (error) {
+                console.error("Error saving Secretaría income:", error);
+                showToast('Error al guardar el ingreso.', 'error');
+            } finally {
+                itemToModify = null; // Reset modification state
+                hideSpinner();
+            }
+        });
 
     </script>
 </body>
