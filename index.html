@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +12,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- Incluye la librería para gráficos (Chart.js) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Aplica el tema oscuro al instante para evitar el "flash" de tema claro
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-    </script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -140,7 +132,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
     <!-- Contenedor de Notificaciones Toast -->
     <div id="toast-container"></div>
@@ -151,17 +143,12 @@
     </div>
 
     <!-- Contenedor principal de la aplicación -->
-    <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-2xl max-w-md w-full border border-gray-200 dark:border-slate-700 relative transition-colors duration-300">
-        <!-- Botón de Tema Oscuro -->
-        <button id="theme-toggle" class="absolute top-4 right-4 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            <svg id="theme-toggle-dark-icon" class="hidden h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-            <svg id="theme-toggle-light-icon" class="hidden h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 10.607a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707-.707a1 1 0 01-1.414 0zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-        </button>
-
+    <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full border border-gray-200 relative">
+        
         <!-- Título de la aplicación -->
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100">Parroquia San José ⛪</h1>
-            <p class="text-2xl font-semibold text-gray-500 dark:text-slate-400 mt-1">Colectas</p>
+            <h1 class="text-3xl font-extrabold text-slate-800">Parroquia San José ⛪</h1>
+            <p class="text-2xl font-semibold text-gray-500 mt-1">Colectas</p>
         </div>
         
         <!-- Pantalla de inicio de sesión -->
@@ -169,7 +156,7 @@
             <div class="flex flex-col items-center justify-center">
                 <div class="w-full max-w-xs">
                     <div class="flex flex-col gap-4">
-                         <p class="text-center text-gray-600 dark:text-slate-300">Bienvenido. Presione para continuar.</p>
+                         <p class="text-center text-gray-600">Bienvenido. Presione para continuar.</p>
                         <button id="login-btn" class="w-full bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:from-green-600 hover:to-green-800 transition-all duration-300 transform hover:scale-105">
                             Ingresar
                         </button>
@@ -183,30 +170,30 @@
         <!-- Sección de bienvenida y botón de carga inicial -->
         <div id="initial-screen" class="hidden">
              <!-- Panel de Resumen Rápido -->
-            <div id="dashboard" class="mb-6 p-4 bg-gray-100 dark:bg-slate-700 rounded-xl space-y-2">
-                <h3 class="text-lg font-bold text-gray-800 dark:text-slate-100 text-center mb-2">Resumen Rápido</h3>
+            <div id="dashboard" class="mb-6 p-4 bg-gray-100 rounded-xl space-y-2">
+                <h3 class="text-lg font-bold text-gray-800 text-center mb-2">Resumen Rápido</h3>
                 <div class="flex justify-between text-sm">
-                    <span class="font-semibold text-gray-600 dark:text-slate-300">Total Recaudado Hoy:</span>
-                    <span id="dashboard-today-total" class="font-bold text-green-600 dark:text-green-400">$0</span>
+                    <span class="font-semibold text-gray-600">Total Recaudado Hoy:</span>
+                    <span id="dashboard-today-total" class="font-bold text-green-600">$0</span>
                 </div>
                 <div class="flex justify-between text-sm">
-                    <span class="font-semibold text-gray-600 dark:text-slate-300">Saldo del Mes Actual:</span>
-                    <span id="dashboard-month-balance" class="font-bold text-blue-600 dark:text-blue-400">$0</span>
+                    <span class="font-semibold text-gray-600">Saldo del Mes Actual:</span>
+                    <span id="dashboard-month-balance" class="font-bold text-blue-600">$0</span>
                 </div>
                 <div class="flex justify-between text-sm">
-                    <span class="font-semibold text-gray-600 dark:text-slate-300">Última Carga:</span>
-                    <span id="dashboard-last-upload" class="font-bold text-gray-700 dark:text-slate-200">-</span>
+                    <span class="font-semibold text-gray-600">Última Carga:</span>
+                    <span id="dashboard-last-upload" class="font-bold text-gray-700">-</span>
                 </div>
             </div>
 
-            <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Carga de Colectas</h2>
-            <p class="text-gray-500 dark:text-slate-400 mb-6">Haz clic en "Cargar" para seleccionar el tipo de colecta.</p>
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Carga de Colectas</h2>
+            <p class="text-gray-500 mb-6">Haz clic en "Cargar" para seleccionar el tipo de colecta.</p>
             <!-- Botón que inicia el proceso de carga -->
             <button id="cargar-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
                 Cargar
             </button>
             
-            <hr class="my-8 border-gray-300 dark:border-slate-600">
+            <hr class="my-8 border-gray-300">
             
             <!-- Botón para ver el historial detallado -->
             <button id="historial-detallado-btn" class="mt-4 w-full bg-gray-400 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-gray-500 transition-all duration-300 transform hover:scale-105">
@@ -226,38 +213,38 @@
 
         <!-- Sección para seleccionar el tipo de colecta (inicialmente oculta) -->
         <div id="select-colecta-screen" class="hidden">
-            <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Seleccionar Colecta</h2>
-            <p id="colecta-selected-date" class="text-sm text-gray-500 dark:text-slate-400 text-center mb-4"></p>
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Seleccionar Colecta</h2>
+            <p id="colecta-selected-date" class="text-sm text-gray-500 text-center mb-4"></p>
             <div class="flex flex-col gap-3">
                 <!-- Botones para cada tipo de colecta -->
-                 <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta entre semana">
+                 <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta entre semana">
                     Colecta entre semana
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de sábado 19:30h">
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de sábado 19:30h">
                     Colecta de sábado 19:30h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de domingo 08h">
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de domingo 08h">
                     Colecta de domingo 08h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de domingo 10:30h">
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de domingo 10:30h">
                     Colecta de domingo 10:30h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta de domingo 19:30h">
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de domingo 19:30h">
                     Colecta de domingo 19:30h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Colecta Especial">
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta Especial">
                     Colecta Especial
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Intenciones y Sacramento">
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Intenciones y Sacramento">
                     Intenciones y Sacramento
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Donaciones">
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Donaciones">
                     Donaciones
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors" data-colecta="Alcancias">
+                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Alcancias">
                     Alcancias
                 </button>
-                <button id="secretaria-btn" class="w-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors">
+                <button id="secretaria-btn" class="w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors">
                     Secretaría
                 </button>
                 <button id="back-from-select" class="mt-4 w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
@@ -268,63 +255,63 @@
 
         <!-- Sección para la carga de billetes (inicialmente oculta) -->
         <div id="billetes-screen" class="hidden">
-            <h2 id="billetes-title" class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4"></h2>
+            <h2 id="billetes-title" class="text-xl font-bold text-gray-700 mb-4"></h2>
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <!-- Billetes de 20000 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">20000</label>
-                    <input type="number" id="billete-20000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">20000</label>
+                    <input type="number" id="billete-20000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 10000 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">10000</label>
-                    <input type="number" id="billete-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">10000</label>
+                    <input type="number" id="billete-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 2000 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">2000</label>
-                    <input type="number" id="billete-2000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">2000</label>
+                    <input type="number" id="billete-2000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 1000 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">1000</label>
-                    <input type="number" id="billete-1000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">1000</label>
+                    <input type="number" id="billete-1000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 500 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">500</label>
-                    <input type="number" id="billete-500-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">500</label>
+                    <input type="number" id="billete-500-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 200 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">200</label>
-                    <input type="number" id="billete-200-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">200</label>
+                    <input type="number" id="billete-200-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 100 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">100</label>
-                    <input type="number" id="billete-100-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">100</label>
+                    <input type="number" id="billete-100-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 50 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">50</label>
-                    <input type="number" id="billete-50-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">50</label>
+                    <input type="number" id="billete-50-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 20 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">20</label>
-                    <input type="number" id="billete-20-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">20</label>
+                    <input type="number" id="billete-20-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 10 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">10</label>
-                    <input type="number" id="billete-10-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">10</label>
+                    <input type="number" id="billete-10-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
 
             <!-- Total de la carga -->
-            <div class="mb-6 p-4 bg-gray-100 dark:bg-slate-700 rounded-lg shadow-inner">
-                <p class="text-lg font-bold text-gray-800 dark:text-slate-100">Total: <span id="total-colecta" class="text-blue-600 dark:text-blue-400">$0</span></p>
+            <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-inner">
+                <p class="text-lg font-bold text-gray-800">Total: <span id="total-colecta" class="text-blue-600">$0</span></p>
             </div>
 
             <!-- Botones de acción -->
@@ -340,28 +327,28 @@
         
         <!-- Sección para la carga de egresos (inicialmente oculta) -->
         <div id="egresos-screen" class="hidden">
-            <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Egresos</h2>
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Egresos</h2>
             <div class="flex flex-col gap-4 mb-6">
                 <!-- Egresos Padre Jorge -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Gastos Padre Jorge</label>
-                    <input type="text" inputmode="numeric" id="egreso-jorge-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">Gastos Padre Jorge</label>
+                    <input type="text" inputmode="numeric" id="egreso-jorge-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Egresos Padre Adán -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Gastos Padre Adán</label>
-                    <input type="text" inputmode="numeric" id="egreso-adan-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">Gastos Padre Adán</label>
+                    <input type="text" inputmode="numeric" id="egreso-adan-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Otros gastos -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Otros gastos</label>
-                    <input type="text" inputmode="numeric" id="egreso-otros-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">Otros gastos</label>
+                    <input type="text" inputmode="numeric" id="egreso-otros-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
 
             <!-- Total de egresos -->
-            <div class="mb-6 p-4 bg-gray-100 dark:bg-slate-700 rounded-lg shadow-inner">
-                <p class="text-lg font-bold text-gray-800 dark:text-slate-100">Total de Egresos: <span id="total-egresos" class="text-red-600 dark:text-red-400">$0</span></p>
+            <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-inner">
+                <p class="text-lg font-bold text-gray-800">Total de Egresos: <span id="total-egresos" class="text-red-600">$0</span></p>
             </div>
 
             <div class="flex flex-col gap-4">
@@ -376,62 +363,62 @@
 
         <!-- Sección para la colecta de Bonpland (inicialmente oculta) -->
         <div id="bonpland-screen" class="hidden">
-            <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Colecta de Bonpland</h2>
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Colecta de Bonpland</h2>
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <!-- Billetes de 20000 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">20000</label>
-                    <input type="number" id="bonpland-20000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">20000</label>
+                    <input type="number" id="bonpland-20000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 10000 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">10000</label>
-                    <input type="number" id="bonpland-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">10000</label>
+                    <input type="number" id="bonpland-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                  <!-- Billetes de 2000 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">2000</label>
-                    <input type="number" id="bonpland-2000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">2000</label>
+                    <input type="number" id="bonpland-2000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 1000 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">1000</label>
-                    <input type="number" id="bonpland-1000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">1000</label>
+                    <input type="number" id="bonpland-1000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 500 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">500</label>
-                    <input type="number" id="bonpland-500-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">500</label>
+                    <input type="number" id="bonpland-500-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 200 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">200</label>
-                    <input type="number" id="bonpland-200-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">200</label>
+                    <input type="number" id="bonpland-200-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 100 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">100</label>
-                    <input type="number" id="bonpland-100-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">100</label>
+                    <input type="number" id="bonpland-100-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 50 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">50</label>
-                    <input type="number" id="bonpland-50-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">50</label>
+                    <input type="number" id="bonpland-50-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 20 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">20</label>
-                    <input type="number" id="bonpland-20-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">20</label>
+                    <input type="number" id="bonpland-20-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Billetes de 10 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">10</label>
-                    <input type="number" id="bonpland-10-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">10</label>
+                    <input type="number" id="bonpland-10-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
 
-            <div class="mb-6 p-4 bg-gray-100 dark:bg-slate-700 rounded-lg shadow-inner">
-                <p class="text-lg font-bold text-gray-800 dark:text-slate-100">Total: <span id="bonpland-total" class="text-blue-600 dark:text-blue-400">$0</span></p>
+            <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-inner">
+                <p class="text-lg font-bold text-gray-800">Total: <span id="bonpland-total" class="text-blue-600">$0</span></p>
             </div>
             
             <div class="flex flex-col gap-4">
@@ -446,17 +433,17 @@
         
         <!-- Sección de resumen (inicialmente oculta) -->
         <div id="summary-screen" class="hidden">
-            <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-2">Resumen Detallado de Cargas</h2>
-            <p id="summary-date" class="text-sm text-gray-500 dark:text-slate-400 text-center mb-4"></p>
+            <h2 class="text-xl font-bold text-gray-700 mb-2">Resumen Detallado de Cargas</h2>
+            <p id="summary-date" class="text-sm text-gray-500 text-center mb-4"></p>
             
             <!-- Contenedor para el resumen detallado que se inyectará con JS -->
             <div class="flex flex-col gap-4 mb-6" id="summary-content">
                 <!-- El contenido detallado se insertará aquí -->
             </div>
             
-            <div class="p-4 bg-gray-100 dark:bg-slate-700 rounded-lg shadow-sm mb-6">
-                 <h3 class="text-lg font-bold text-gray-700 dark:text-slate-200 mb-2">Aclaraciones</h3>
-                 <textarea id="aclaraciones-text" class="w-full h-24 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors" placeholder="Escribe aquí cualquier aclaración o nota adicional..."></textarea>
+            <div class="p-4 bg-gray-100 rounded-lg shadow-sm mb-6">
+                 <h3 class="text-lg font-bold text-gray-700 mb-2">Aclaraciones</h3>
+                 <textarea id="aclaraciones-text" class="w-full h-24 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Escribe aquí cualquier aclaración o nota adicional..."></textarea>
             </div>
             
             <div class="flex flex-col gap-4">
@@ -471,15 +458,15 @@
         
         <!-- Sección para el historial detallado con opciones de modificación y eliminación -->
         <div id="historial-detallado-screen" class="hidden">
-            <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Historial Detallado</h2>
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Historial Detallado</h2>
             
             <!-- Controles de Búsqueda y Filtro -->
             <div class="mb-4 space-y-3">
-                <input type="text" id="search-historial-input" placeholder="Buscar por fecha (dd/mm/aaaa)..." class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                <input type="text" id="search-historial-input" placeholder="Buscar por fecha (dd/mm/aaaa)..." class="w-full px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <div class="flex justify-center gap-2">
-                    <button data-filter="todos" class="filter-btn active flex-1 bg-gray-200 dark:bg-slate-600 text-gray-800 dark:text-slate-200 font-semibold py-2 px-4 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-500 transition-colors">Todos</button>
-                    <button data-filter="ingreso" class="filter-btn flex-1 bg-gray-200 dark:bg-slate-600 text-gray-800 dark:text-slate-200 font-semibold py-2 px-4 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-500 transition-colors">Ingresos</button>
-                    <button data-filter="egreso" class="filter-btn flex-1 bg-gray-200 dark:bg-slate-600 text-gray-800 dark:text-slate-200 font-semibold py-2 px-4 rounded-xl hover:bg-gray-300 dark:hover:bg-slate-500 transition-colors">Egresos</button>
+                    <button data-filter="todos" class="filter-btn active flex-1 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-xl hover:bg-gray-300">Todos</button>
+                    <button data-filter="ingreso" class="filter-btn flex-1 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-xl hover:bg-gray-300">Ingresos</button>
+                    <button data-filter="egreso" class="filter-btn flex-1 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-xl hover:bg-gray-300">Egresos</button>
                 </div>
             </div>
 
@@ -499,8 +486,8 @@
 
         <!-- Sección para ver el historial por fecha (inicialmente oculta) -->
         <div id="historial-por-fecha-screen" class="hidden">
-            <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Historial de Cargas del día</h2>
-            <p id="historial-por-fecha-date" class="text-sm text-gray-500 dark:text-slate-400 text-center mb-4"></p>
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Historial de Cargas del día</h2>
+            <p id="historial-por-fecha-date" class="text-sm text-gray-500 text-center mb-4"></p>
             <div id="historial-por-fecha-list" class="space-y-3" style="width: 100%;">
                 <!-- Detalles del historial para la fecha seleccionada -->
             </div>
@@ -516,22 +503,22 @@
 
         <!-- Sección de Reportes -->
         <div id="reports-screen" class="hidden">
-            <h2 class="text-xl font-bold text-gray-700 dark:text-slate-200 mb-4">Reportes Gráficos</h2>
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Reportes Gráficos</h2>
 
-            <div class="mb-8 p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
-                <h3 class="text-lg font-semibold text-gray-700 dark:text-slate-200 mb-2 text-center">Ingresos por Tipo de Colecta</h3>
+            <div class="mb-8 p-4 bg-gray-50 rounded-lg">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2 text-center">Ingresos por Tipo de Colecta</h3>
                 <canvas id="income-by-type-chart"></canvas>
             </div>
 
-            <div class="mb-8 p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
-                <h3 class="text-lg font-semibold text-gray-700 dark:text-slate-200 mb-2 text-center">Distribución de Gastos</h3>
+            <div class="mb-8 p-4 bg-gray-50 rounded-lg">
+                <h3 class="text-lg font-semibold text-gray-700 mb-2 text-center">Distribución de Gastos</h3>
                 <canvas id="expenses-pie-chart" style="max-height: 300px; margin: auto;"></canvas>
             </div>
 
-            <div class="mb-8 p-4 bg-gray-50 dark:bg-slate-700 rounded-lg">
+            <div class="mb-8 p-4 bg-gray-50 rounded-lg">
                 <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-semibold text-gray-700 dark:text-slate-200">Evolución Financiera</h3>
-                    <select id="time-filter-select" class="text-sm rounded-lg border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 focus:ring-blue-500 focus:border-blue-500">
+                    <h3 class="text-lg font-semibold text-gray-700">Evolución Financiera</h3>
+                    <select id="time-filter-select" class="text-sm rounded-lg border-gray-300 bg-white text-gray-900 focus:ring-blue-500 focus:border-blue-500">
                         <option value="30d">Últimos 30 días</option>
                         <option value="thisYear">Este Año</option>
                     </select>
@@ -547,11 +534,11 @@
 
         <!-- Modal de confirmación (inicialmente oculta) -->
         <div id="confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Confirmar Carga</h3>
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Confirmar Carga</h3>
                     <div class="mt-2">
-                        <p class="text-sm text-gray-500 dark:text-slate-400">¿Estás seguro de que deseas confirmar esta carga?</p>
+                        <p class="text-sm text-gray-500">¿Estás seguro de que deseas confirmar esta carga?</p>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
@@ -567,11 +554,11 @@
 
         <!-- Modal de egresos (inicialmente oculta) -->
         <div id="egresos-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Cargar Egresos</h3>
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Cargar Egresos</h3>
                     <div class="mt-2">
-                        <p class="text-sm text-gray-500 dark:text-slate-400">¿Deseas cargar egresos?</p>
+                        <p class="text-sm text-gray-500">¿Deseas cargar egresos?</p>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
@@ -587,11 +574,11 @@
 
         <!-- Modal de Bonpland (inicialmente oculta) -->
         <div id="bonpland-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Cargar Colecta de Bonpland</h3>
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Cargar Colecta de Bonpland</h3>
                     <div class="mt-2">
-                        <p class="text-sm text-gray-500 dark:text-slate-400">¿Quieres cargar la colecta de Bonpland?</p>
+                        <p class="text-sm text-gray-500">¿Quieres cargar la colecta de Bonpland?</p>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
@@ -607,12 +594,12 @@
 
         <!-- Modal de Colecta Especial (inicialmente oculta) -->
         <div id="colecta-especial-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Colecta Especial</h3>
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Colecta Especial</h3>
                     <div class="mt-2">
-                        <p class="text-sm text-gray-500 dark:text-slate-400 mb-4">¿Qué tipo de colecta especial es?</p>
-                        <input type="text" id="colecta-especial-input" placeholder="Ej: Colecta para Cáritas" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                        <p class="text-sm text-gray-500 mb-4">¿Qué tipo de colecta especial es?</p>
+                        <input type="text" id="colecta-especial-input" placeholder="Ej: Colecta para Cáritas" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
@@ -628,11 +615,11 @@
         
         <!-- Modal para elegir la fecha (inicialmente oculta) -->
         <div id="date-picker-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Seleccionar Fecha</h3>
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Seleccionar Fecha</h3>
                     <div class="mt-2">
-                        <input type="date" id="colecta-date-input" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                        <input type="date" id="colecta-date-input" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
@@ -648,11 +635,11 @@
 
         <!-- Modal de Confirmación de Eliminación -->
         <div id="delete-confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Confirmar Eliminación</h3>
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Confirmar Eliminación</h3>
                     <div class="mt-2">
-                        <p id="delete-confirmation-message" class="text-sm text-gray-500 dark:text-slate-400"></p>
+                        <p id="delete-confirmation-message" class="text-sm text-gray-500"></p>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
@@ -668,11 +655,11 @@
 
         <!-- Modal de Confirmación Final -->
         <div id="final-confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Confirmar Todo</h3>
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Confirmar Todo</h3>
                     <div class="mt-2">
-                        <p class="text-sm text-gray-500 dark:text-slate-400">¿Deseas confirmar todas las cargas y ver el resumen final?</p>
+                        <p class="text-sm text-gray-500">¿Deseas confirmar todas las cargas y ver el resumen final?</p>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
@@ -688,12 +675,12 @@
 
         <!-- Modal de Secretaría (inicialmente oculta) -->
         <div id="secretaria-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
-                    <h3 id="secretaria-modal-title" class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Ingreso de Secretaría</h3>
+                    <h3 id="secretaria-modal-title" class="text-xl font-bold leading-6 text-gray-900 mb-4">Ingreso de Secretaría</h3>
                     <div class="mt-2">
-                        <p class="text-sm text-gray-500 dark:text-slate-400 mb-4">Introduce el monto total.</p>
-                        <input type="text" inputmode="numeric" id="secretaria-monto-input" placeholder="Monto" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                        <p class="text-sm text-gray-500 mb-4">Introduce el monto total.</p>
+                        <input type="text" inputmode="numeric" id="secretaria-monto-input" placeholder="Monto" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
@@ -891,9 +878,6 @@
         const colectaEspecialCancelBtn = document.getElementById('colecta-especial-cancel-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const timeFilterSelect = document.getElementById('time-filter-select');
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const lightIcon = document.getElementById('theme-toggle-light-icon');
-        const darkIcon = document.getElementById('theme-toggle-dark-icon');
         const dashboardTodayTotal = document.getElementById('dashboard-today-total');
         const dashboardMonthBalance = document.getElementById('dashboard-month-balance');
         const dashboardLastUpload = document.getElementById('dashboard-last-upload');
@@ -1021,13 +1005,13 @@
                             .map(([denominacion, cantidad]) => `<div>${cantidad} x ${formatCurrency(parseInt(denominacion))} = ${formatCurrency(cantidad * parseInt(denominacion))}</div>`)
                             .join('');
                         if (billetesDetalle) {
-                            billetesHtml = `<div class="${isForPdf ? 'pdf-billetes' : 'ml-4 mt-1 text-xs text-gray-600 dark:text-slate-400'}">${billetesDetalle}</div>`;
+                            billetesHtml = `<div class="${isForPdf ? 'pdf-billetes' : 'ml-4 mt-1 text-xs text-gray-600'}">${billetesDetalle}</div>`;
                         }
                     }
                     if (isForPdf) {
                         ingresosHtml += `<div class="pdf-item"><span>${item.categoria}</span><span>${formatCurrency(item.monto)}</span></div>${billetesHtml}`;
                     } else {
-                        ingresosHtml += `<div class="border-b border-gray-200 dark:border-slate-700 pb-2 mb-2"><p class="font-semibold text-gray-800 dark:text-slate-200">${item.categoria}: <span class="font-bold text-green-700 dark:text-green-400">${formatCurrency(item.monto)}</span></p>${billetesHtml}</div>`;
+                        ingresosHtml += `<div class="border-b border-gray-200 pb-2 mb-2"><p class="font-semibold text-gray-800">${item.categoria}: <span class="font-bold text-green-700">${formatCurrency(item.monto)}</span></p>${billetesHtml}</div>`;
                     }
                 });
             }
@@ -1040,7 +1024,7 @@
                     if (isForPdf) {
                         egresosHtml += `<div class="pdf-item"><span>${item.categoria}</span><span>-${formatCurrency(item.monto)}</span></div>`;
                     } else {
-                        egresosHtml += `<div class="flex justify-between items-center py-1 border-b border-gray-200 dark:border-slate-700"><p class="font-semibold text-gray-800 dark:text-slate-200">${item.categoria}:</p><p class="font-bold text-red-700 dark:text-red-400">${formatCurrency(item.monto)}</p></div>`;
+                        egresosHtml += `<div class="flex justify-between items-center py-1 border-b border-gray-200"><p class="font-semibold text-gray-800">${item.categoria}:</p><p class="font-bold text-red-700">${formatCurrency(item.monto)}</p></div>`;
                     }
                 });
             }
@@ -1067,9 +1051,9 @@
 
             // Original HTML for on-screen display
             return `
-                <div class="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg shadow-sm">${ingresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-green-800 dark:text-green-300 mb-2 border-b pb-1 border-green-200 dark:border-green-700">Ingresos</h3><div class="space-y-2 text-sm">${ingresosHtml}</div>` : '<p class="text-sm text-gray-500 dark:text-slate-400 italic">No hay ingresos registrados.</p>'}<hr class="my-3 border-green-200 dark:border-green-700"><div class="flex justify-between items-center text-md font-bold text-gray-800 dark:text-slate-100"><p>Subtotal de Ingresos:</p><span class="text-green-700 dark:text-green-400">${formatCurrency(totalIngresos)}</span></div></div>
-                <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg shadow-sm">${egresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-red-800 dark:text-red-300 mb-2 border-b pb-1 border-red-200 dark:border-red-700">Egresos</h3><div class="space-y-2 text-sm">${egresosHtml}</div>` : '<p class="text-sm text-gray-500 dark:text-slate-400 italic">No hay egresos registrados.</p>'}<hr class="my-3 border-red-200 dark:border-red-700"><div class="flex justify-between items-center text-md font-bold text-gray-800 dark:text-slate-100"><p>Subtotal de Egresos:</p><span class="text-red-700 dark:text-red-400">${formatCurrency(totalEgresos)}</span></div></div>
-                <div class="p-4 bg-blue-100 dark:bg-blue-900/20 rounded-lg shadow-inner mt-4"><div class="flex justify-between items-center text-lg font-extrabold text-gray-800 dark:text-slate-100"><p>SALDO FINAL:</p><span class="text-blue-700 dark:text-blue-400">${formatCurrency(saldoFinal)}</span></div></div>`;
+                <div class="p-4 bg-green-50 rounded-lg shadow-sm">${ingresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-green-800 mb-2 border-b pb-1 border-green-200">Ingresos</h3><div class="space-y-2 text-sm">${ingresosHtml}</div>` : '<p class="text-sm text-gray-500 italic">No hay ingresos registrados.</p>'}<hr class="my-3 border-green-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal de Ingresos:</p><span class="text-green-700">${formatCurrency(totalIngresos)}</span></div></div>
+                <div class="p-4 bg-red-50 rounded-lg shadow-sm">${egresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-red-800 mb-2 border-b pb-1 border-red-200">Egresos</h3><div class="space-y-2 text-sm">${egresosHtml}</div>` : '<p class="text-sm text-gray-500 italic">No hay egresos registrados.</p>'}<hr class="my-3 border-red-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal de Egresos:</p><span class="text-red-700">${formatCurrency(totalEgresos)}</span></div></div>
+                <div class="p-4 bg-blue-100 rounded-lg shadow-inner mt-4"><div class="flex justify-between items-center text-lg font-extrabold text-gray-800"><p>SALDO FINAL:</p><span class="text-blue-700">${formatCurrency(saldoFinal)}</span></div></div>`;
         }
 
 
@@ -1118,7 +1102,7 @@
             }
 
             if (finalDates.length === 0) {
-                historialDetalladoList.innerHTML = '<li class="p-3 bg-gray-100 dark:bg-slate-700 rounded-lg text-gray-600 dark:text-slate-400 italic text-center">No se encontraron registros con los filtros aplicados.</li>';
+                historialDetalladoList.innerHTML = '<li class="p-3 bg-gray-100 rounded-lg text-gray-600 italic text-center">No se encontraron registros con los filtros aplicados.</li>';
                 return;
             }
             
@@ -1130,10 +1114,10 @@
             
             finalDates.forEach(fecha => {
                 const nuevaEntrada = document.createElement('li');
-                nuevaEntrada.className = 'p-4 rounded-lg shadow-sm bg-gray-100 dark:bg-slate-700 flex justify-between items-center';
+                nuevaEntrada.className = 'p-4 rounded-lg shadow-sm bg-gray-100 flex justify-between items-center';
 
                 const contentDiv = document.createElement('div');
-                contentDiv.innerHTML = `<p class="font-bold text-gray-800 dark:text-slate-200">Colectas del día: ${fecha}</p>`;
+                contentDiv.innerHTML = `<p class="font-bold text-gray-800">Colectas del día: ${fecha}</p>`;
 
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = "flex space-x-2";
@@ -1174,14 +1158,14 @@
             
             itemsDeFecha.forEach((item) => {
                 const nuevaEntrada = document.createElement('li');
-                const backgroundColor = item.type === 'ingreso' ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20';
-                const textColor = item.type === 'ingreso' ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400';
+                const backgroundColor = item.type === 'ingreso' ? 'bg-green-50' : 'bg-red-50';
+                const textColor = item.type === 'ingreso' ? 'text-green-700' : 'text-red-700';
                 
                 nuevaEntrada.className = `p-4 rounded-lg shadow-sm flex justify-between items-center ${backgroundColor}`;
 
                 const contentDiv = document.createElement('div');
                 contentDiv.innerHTML = `
-                    <p class="font-medium text-gray-800 dark:text-slate-200">${item.categoria}</p>
+                    <p class="font-medium text-gray-800">${item.categoria}</p>
                     <p class="text-lg font-bold ${textColor}">${item.type === 'ingreso' ? '+' : '-'} ${formatCurrency(item.monto)}</p>
                 `;
                 
@@ -1953,26 +1937,6 @@
                 options: { scales: { y: { beginAtZero: true } } }
             });
         }
-
-        // --- Theme Toggle Logic ---
-        themeToggleBtn.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            updateThemeIcons(isDark);
-        });
-
-        function updateThemeIcons(isDark) {
-            if (isDark) {
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
-            } else {
-                darkIcon.classList.remove('hidden');
-                lightIcon.classList.add('hidden');
-            }
-        }
-
-        // Set initial icon state
-        updateThemeIcons(document.documentElement.classList.contains('dark'));
         
         // --- Dashboard Logic ---
         function updateDashboard() {
