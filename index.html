@@ -345,17 +345,17 @@
                 <!-- Egresos Padre Jorge -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Gastos Padre Jorge</label>
-                    <input type="number" id="egreso-jorge-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" inputmode="numeric" id="egreso-jorge-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Egresos Padre Adán -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Gastos Padre Adán</label>
-                    <input type="number" id="egreso-adan-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" inputmode="numeric" id="egreso-adan-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Otros gastos -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-slate-300">Otros gastos</label>
-                    <input type="number" id="egreso-otros-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" inputmode="numeric" id="egreso-otros-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
             </div>
 
@@ -693,7 +693,7 @@
                     <h3 id="secretaria-modal-title" class="text-xl font-bold leading-6 text-gray-900 dark:text-slate-100 mb-4">Ingreso de Secretaría</h3>
                     <div class="mt-2">
                         <p class="text-sm text-gray-500 dark:text-slate-400 mb-4">Introduce el monto total.</p>
-                        <input type="number" id="secretaria-monto-input" placeholder="Monto" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                        <input type="text" inputmode="numeric" id="secretaria-monto-input" placeholder="Monto" class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
@@ -767,6 +767,22 @@
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
             return `${day}/${month}/${year}`;
+        }
+
+        // **NUEVO** - Función para formatear números con separador de miles
+        function formatWithSeparators(number) {
+            if (number === null || number === undefined || isNaN(number)) {
+                return '';
+            }
+            // Usa un punto como separador de miles
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // **NUEVO** - Función para quitar el formato y obtener el número
+        function parseFormattedValue(value) {
+            if (typeof value !== 'string') return 0;
+            // Quita los puntos antes de convertir a número
+            return parseFloat(value.replace(/\./g, '')) || 0;
         }
 
         const categoryOrder = [
@@ -888,6 +904,8 @@
         const secretariaMontoInput = document.getElementById('secretaria-monto-input');
         const secretariaConfirmBtn = document.getElementById('secretaria-confirm-btn');
         const secretariaCancelBtn = document.getElementById('secretaria-cancel-btn');
+        // **NUEVO** - Campos de importe que necesitan formato
+        const amountInputs = document.querySelectorAll('#egreso-jorge-input, #egreso-adan-input, #egreso-otros-input, #secretaria-monto-input');
 
 
         // --- Spinner Functions ---
@@ -932,9 +950,10 @@
         }
 
         function calcularTotalEgresos() {
-            const jorge = parseFloat(egresoJorgeInput.value) || 0;
-            const adan = parseFloat(egresoAdanInput.value) || 0;
-            const otros = parseFloat(egresoOtrosInput.value) || 0;
+            // **MODIFICADO** - Usa la función `parseFormattedValue`
+            const jorge = parseFormattedValue(egresoJorgeInput.value);
+            const adan = parseFormattedValue(egresoAdanInput.value);
+            const otros = parseFormattedValue(egresoOtrosInput.value);
             totalEgresosSpan.textContent = formatCurrency(jorge + adan + otros);
         }
 
@@ -1202,7 +1221,8 @@
             
             if (itemToModify.type === 'ingreso') {
                 if (itemToModify.categoria === 'Secretaría') {
-                    secretariaMontoInput.value = itemToModify.monto;
+                    // **MODIFICADO** - Formatea el valor al popular el campo
+                    secretariaMontoInput.value = formatWithSeparators(itemToModify.monto);
                     secretariaModalTitle.textContent = 'Modificar Ingreso de Secretaría';
                     historialPorFechaScreen.classList.add('hidden');
                     secretariaModal.classList.remove('hidden');
@@ -1227,12 +1247,13 @@
                 }
             } else if (itemToModify.type === 'egreso') {
                 resetEgresosScreen();
+                // **MODIFICADO** - Formatea los valores al popular los campos
                 if (itemToModify.categoria === 'Gastos Padre Jorge') {
-                    egresoJorgeInput.value = itemToModify.monto;
+                    egresoJorgeInput.value = formatWithSeparators(itemToModify.monto);
                 } else if (itemToModify.categoria === 'Gastos Padre Adán') {
-                    egresoAdanInput.value = itemToModify.monto;
+                    egresoAdanInput.value = formatWithSeparators(itemToModify.monto);
                 } else {
-                    egresoOtrosInput.value = itemToModify.monto;
+                    egresoOtrosInput.value = formatWithSeparators(itemToModify.monto);
                 }
                 calcularTotalEgresos();
                 historialPorFechaScreen.classList.add('hidden');
@@ -1372,9 +1393,34 @@
 
         billeteInputs.forEach(input => input.addEventListener('input', calcularTotalColecta));
         bonplandInputs.forEach(input => input.addEventListener('input', calcularTotalBonpland));
-        egresoJorgeInput.addEventListener('input', calcularTotalEgresos);
-        egresoAdanInput.addEventListener('input', calcularTotalEgresos);
-        egresoOtrosInput.addEventListener('input', calcularTotalEgresos);
+        
+        // **MODIFICADO** - Se quitan los listeners individuales de egresos, se manejarán con el listener `amountInputs`
+        // egresoJorgeInput.addEventListener('input', calcularTotalEgresos);
+        // egresoAdanInput.addEventListener('input', calcularTotalEgresos);
+        // egresoOtrosInput.addEventListener('input', calcularTotalEgresos);
+
+        // **NUEVO** - Listener para formatear los campos de importe en tiempo real
+        amountInputs.forEach(input => {
+            input.addEventListener('input', (event) => {
+                const input = event.target;
+                let value = input.value.replace(/\./g, ''); // Quita los puntos para obtener el número real
+                
+                if (isNaN(value) || value === '') {
+                    input.value = '';
+                    // Dispara un evento input para que el total se recalcule a 0
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    return;
+                }
+
+                const numberValue = parseInt(value, 10);
+                input.value = formatWithSeparators(numberValue);
+
+                // Llama a la función de cálculo correspondiente después de formatear
+                if (input.id.startsWith('egreso')) {
+                    calcularTotalEgresos();
+                }
+            });
+        });
 
         confirmarCargaBtn.addEventListener('click', () => confirmationModal.classList.remove('hidden'));
         confirmCancelBtn.addEventListener('click', () => confirmationModal.classList.add('hidden'));
@@ -1432,9 +1478,10 @@
         confirmarEgresosBtn.addEventListener('click', async () => {
             showSpinner();
             try {
-                const egresoJorge = parseFloat(egresoJorgeInput.value) || 0;
-                const egresoAdan = parseFloat(egresoAdanInput.value) || 0;
-                const egresoOtros = parseFloat(egresoOtrosInput.value) || 0;
+                // **MODIFICADO** - Usa `parseFormattedValue` para obtener los valores correctos
+                const egresoJorge = parseFormattedValue(egresoJorgeInput.value);
+                const egresoAdan = parseFormattedValue(egresoAdanInput.value);
+                const egresoOtros = parseFormattedValue(egresoOtrosInput.value);
 
                 if (egresoJorge <= 0 && egresoAdan <= 0 && egresoOtros <= 0 && !itemToModify) {
                     showToast('Introduce al menos un monto de egreso.', 'error');
@@ -1979,7 +2026,8 @@
         });
 
         secretariaConfirmBtn.addEventListener('click', async () => {
-            const monto = parseFloat(secretariaMontoInput.value);
+            // **MODIFICADO** - Usa `parseFormattedValue` para obtener el valor correcto
+            const monto = parseFormattedValue(secretariaMontoInput.value);
             if (isNaN(monto) || monto <= 0) {
                 showToast('Por favor, ingresa un monto válido.', 'error');
                 return;
