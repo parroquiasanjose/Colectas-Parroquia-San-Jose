@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parroquia San José</title>
+    <!-- INICIO: CAMBIO SOLICITADO - Favicon actualizado -->
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/vTQjffhK/NUEVO-LOGO.png">
+    <!-- FIN: CAMBIO SOLICITADO -->
     <!-- Incluye Tailwind CSS para un diseño moderno y responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Incluye la librería para generar PDF desde HTML -->
@@ -113,10 +116,13 @@
         .pdf-item-category {
             font-weight: bold;
         }
-        .pdf-billetes {
+        .pdf-billetes, .pdf-description {
             padding-left: 20px;
             font-size: 12px;
             color: #333;
+        }
+        .pdf-description {
+            font-style: italic;
         }
         .pdf-subtotal, .pdf-total {
             text-align: right;
@@ -147,7 +153,12 @@
         
         <!-- Título de la aplicación -->
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-extrabold text-slate-800">Parroquia San José ⛪</h1>
+            <!-- INICIO: CAMBIO SOLICITADO - Logo actualizado -->
+            <div class="flex justify-center items-center gap-3">
+                <img src="https://i.postimg.cc/vTQjffhK/NUEVO-LOGO.png" alt="Logo Parroquia San José" class="h-12">
+                <h1 class="text-3xl font-extrabold text-slate-800">Parroquia San José</h1>
+            </div>
+            <!-- FIN: CAMBIO SOLICITADO -->
             <p class="text-2xl font-semibold text-gray-500 mt-1">Colectas</p>
         </div>
         
@@ -676,13 +687,19 @@
         <!-- Modal de Secretaría (inicialmente oculta) -->
         <div id="secretaria-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
-                <div class="text-center">
-                    <h3 id="secretaria-modal-title" class="text-xl font-bold leading-6 text-gray-900 mb-4">Ingreso de Secretaría</h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500 mb-4">Introduce el monto total.</p>
-                        <input type="text" inputmode="numeric" id="secretaria-monto-input" placeholder="Monto" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <h3 id="secretaria-modal-title" class="text-xl font-bold leading-6 text-gray-900 mb-4 text-center">Ingreso de Secretaría</h3>
+                <!-- INICIO: CAMBIO SOLICITADO -->
+                <div class="mt-2 space-y-4">
+                    <div>
+                        <label for="secretaria-monto-input" class="block text-sm font-medium text-gray-700">Monto</label>
+                        <input type="text" inputmode="numeric" id="secretaria-monto-input" placeholder="Monto" class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label for="secretaria-descripcion-input" class="block text-sm font-medium text-gray-700">Descripción del Ingreso</label>
+                        <input type="text" id="secretaria-descripcion-input" placeholder="Ej: Bautismo, Certificado..." class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
+                <!-- FIN: CAMBIO SOLICITADO -->
                 <div class="mt-6 flex justify-center gap-4">
                     <button id="secretaria-confirm-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                         Confirmar
@@ -886,6 +903,9 @@
         const secretariaModal = document.getElementById('secretaria-modal');
         const secretariaModalTitle = document.getElementById('secretaria-modal-title');
         const secretariaMontoInput = document.getElementById('secretaria-monto-input');
+        // INICIO: CAMBIO SOLICITADO
+        const secretariaDescripcionInput = document.getElementById('secretaria-descripcion-input');
+        // FIN: CAMBIO SOLICITADO
         const secretariaConfirmBtn = document.getElementById('secretaria-confirm-btn');
         const secretariaCancelBtn = document.getElementById('secretaria-cancel-btn');
         // **NUEVO** - Campos de importe que necesitan formato
@@ -998,6 +1018,12 @@
                 ingresosDelDia.forEach(item => {
                     totalIngresos += item.monto;
                     let billetesHtml = '';
+                    // INICIO: CAMBIO SOLICITADO - Mostrar descripción
+                    let descripcionHtml = '';
+                    if (item.descripcion) {
+                        descripcionHtml = `<div class="${isForPdf ? 'pdf-description' : 'ml-4 mt-1 text-xs text-gray-500 italic'}">${item.descripcion}</div>`;
+                    }
+                    // FIN: CAMBIO SOLICITADO
                     if (item.billetes && Object.keys(item.billetes).length > 0) {
                         const billetesDetalle = Object.entries(item.billetes)
                             .filter(([, cantidad]) => cantidad > 0)
@@ -1009,9 +1035,9 @@
                         }
                     }
                     if (isForPdf) {
-                        ingresosHtml += `<div class="pdf-item"><span>${item.categoria}</span><span>${formatCurrency(item.monto)}</span></div>${billetesHtml}`;
+                        ingresosHtml += `<div class="pdf-item"><span>${item.categoria}</span><span>${formatCurrency(item.monto)}</span></div>${descripcionHtml}${billetesHtml}`;
                     } else {
-                        ingresosHtml += `<div class="border-b border-gray-200 pb-2 mb-2"><p class="font-semibold text-gray-800">${item.categoria}: <span class="font-bold text-green-700">${formatCurrency(item.monto)}</span></p>${billetesHtml}</div>`;
+                        ingresosHtml += `<div class="border-b border-gray-200 pb-2 mb-2"><p class="font-semibold text-gray-800">${item.categoria}: <span class="font-bold text-green-700">${formatCurrency(item.monto)}</span></p>${descripcionHtml}${billetesHtml}</div>`;
                     }
                 });
             }
@@ -1161,12 +1187,17 @@
                 const backgroundColor = item.type === 'ingreso' ? 'bg-green-50' : 'bg-red-50';
                 const textColor = item.type === 'ingreso' ? 'text-green-700' : 'text-red-700';
                 
+                // INICIO: CAMBIO SOLICITADO - Mostrar descripción
+                const descripcionHtml = item.descripcion ? `<p class="text-xs text-gray-500 italic">${item.descripcion}</p>` : '';
+                // FIN: CAMBIO SOLICITADO
+                
                 nuevaEntrada.className = `p-4 rounded-lg shadow-sm flex justify-between items-center ${backgroundColor}`;
 
                 const contentDiv = document.createElement('div');
                 contentDiv.innerHTML = `
                     <p class="font-medium text-gray-800">${item.categoria}</p>
                     <p class="text-lg font-bold ${textColor}">${item.type === 'ingreso' ? '+' : '-'} ${formatCurrency(item.monto)}</p>
+                    ${descripcionHtml}
                 `;
                 
                 const actionsDiv = document.createElement('div');
@@ -1207,6 +1238,9 @@
                 if (itemToModify.categoria === 'Secretaría') {
                     // **MODIFICADO** - Formatea el valor al popular el campo
                     secretariaMontoInput.value = formatWithSeparators(itemToModify.monto);
+                    // INICIO: CAMBIO SOLICITADO - Popular descripción
+                    secretariaDescripcionInput.value = itemToModify.descripcion || '';
+                    // FIN: CAMBIO SOLICITADO
                     secretariaModalTitle.textContent = 'Modificar Ingreso de Secretaría';
                     historialPorFechaScreen.classList.add('hidden');
                     secretariaModal.classList.remove('hidden');
@@ -1731,6 +1765,9 @@
                     'Fecha': item.fecha,
                     'Tipo': item.type === 'ingreso' ? 'Ingreso' : 'Egreso',
                     'Categoría': item.categoria,
+                    // INICIO: CAMBIO SOLICITADO - Añadir descripción a Excel
+                    'Descripción': item.descripcion || '',
+                    // FIN: CAMBIO SOLICITADO
                     'Monto': item.monto,
                     'Detalle de Billetes': billetesDetalle
                 });
@@ -1740,29 +1777,29 @@
             
             // Add Main Header
             XLSX.utils.sheet_add_aoa(worksheet, [['Parroquia San José - Resumen de Colectas']], { origin: 'A1' });
-            worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }]; // Merge A1 to E1
+            worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }]; // Merge A1 to F1
             
             // Add Column Headers
-            XLSX.utils.sheet_add_aoa(worksheet, [['Fecha', 'Tipo', 'Categoría', 'Monto', 'Detalle de Billetes']], { origin: 'A2' });
+            XLSX.utils.sheet_add_aoa(worksheet, [['Fecha', 'Tipo', 'Categoría', 'Descripción', 'Monto', 'Detalle de Billetes']], { origin: 'A2' });
 
             const dataRangeEnd = dataToExport.length + 2;
             const totalRowStart = dataRangeEnd + 2;
 
             // Add Totals Section
             XLSX.utils.sheet_add_aoa(worksheet, [
-                ['', '', 'Subtotal Ingresos'],
-                ['', '', 'Subtotal Egresos'],
-                ['', '', 'SALDO TOTAL']
+                ['', '', '', 'Subtotal Ingresos'],
+                ['', '', '', 'Subtotal Egresos'],
+                ['', '', '', 'SALDO TOTAL']
             ], { origin: `B${totalRowStart}` });
 
             // Add Formulas
-            worksheet[`D${totalRowStart}`] = { t: 'n', f: `SUMIF(B3:B${dataRangeEnd},"Ingreso",D3:D${dataRangeEnd})`, z: '$#,##0' };
-            worksheet[`D${totalRowStart + 1}`] = { t: 'n', f: `SUMIF(B3:B${dataRangeEnd},"Egreso",D3:D${dataRangeEnd})`, z: '$#,##0' };
-            worksheet[`D${totalRowStart + 2}`] = { t: 'n', f: `D${totalRowStart}-D${totalRowStart + 1}`, z: '$#,##0' };
+            worksheet[`E${totalRowStart}`] = { t: 'n', f: `SUMIF(B3:B${dataRangeEnd},"Ingreso",E3:E${dataRangeEnd})`, z: '$#,##0' };
+            worksheet[`E${totalRowStart + 1}`] = { t: 'n', f: `SUMIF(B3:B${dataRangeEnd},"Egreso",E3:E${dataRangeEnd})`, z: '$#,##0' };
+            worksheet[`E${totalRowStart + 2}`] = { t: 'n', f: `E${totalRowStart}-E${totalRowStart + 1}`, z: '$#,##0' };
             
             // Apply currency format to the Monto column
             for (let i = 3; i <= dataRangeEnd; i++) {
-                const cellAddress = `D${i}`;
+                const cellAddress = `E${i}`;
                 if (worksheet[cellAddress]) {
                     worksheet[cellAddress].z = '$#,##0';
                 }
@@ -1772,9 +1809,10 @@
             worksheet['!cols'] = [
                 { wch: 12 }, // Fecha
                 { wch: 10 }, // Tipo
-                { wch: 40 }, // Categoría
+                { wch: 30 }, // Categoría
+                { wch: 30 }, // Descripción
                 { wch: 15 }, // Monto
-                { wch: 50 }  // Detalle de Billetes
+                { wch: 40 }  // Detalle de Billetes
             ];
 
             const workbook = XLSX.utils.book_new();
@@ -1974,12 +2012,16 @@
         // --- Secretaría Logic ---
         secretariaBtn.addEventListener('click', () => {
             const colectaType = 'Secretaría';
-            const isDuplicate = historialData.some(item => item.fecha === selectedDate && item.categoria === colectaType);
-            if (isDuplicate) {
-                showToast('El ingreso de Secretaría ya ha sido cargado para esta fecha.', 'error');
+            // No se puede duplicar un ingreso de secretaría en el mismo día, se debe modificar el existente.
+            const existingEntry = historialData.find(item => item.fecha === selectedDate && item.categoria === colectaType);
+            if (existingEntry) {
+                showToast('Ya existe un ingreso de Secretaría para hoy. Puede modificarlo desde el historial.', 'error');
                 return;
             }
             secretariaMontoInput.value = '';
+            // INICIO: CAMBIO SOLICITADO
+            secretariaDescripcionInput.value = '';
+            // FIN: CAMBIO SOLICITADO
             secretariaModalTitle.textContent = 'Ingreso de Secretaría';
             secretariaModal.classList.remove('hidden');
         });
@@ -1992,6 +2034,10 @@
         secretariaConfirmBtn.addEventListener('click', async () => {
             // **MODIFICADO** - Usa `parseFormattedValue` para obtener el valor correcto
             const monto = parseFormattedValue(secretariaMontoInput.value);
+            // INICIO: CAMBIO SOLICITADO
+            const descripcion = secretariaDescripcionInput.value.trim();
+            // FIN: CAMBIO SOLICITADO
+            
             if (isNaN(monto) || monto <= 0) {
                 showToast('Por favor, ingresa un monto válido.', 'error');
                 return;
@@ -2001,7 +2047,7 @@
             secretariaModal.classList.add('hidden');
 
             try {
-                const data = { type: 'ingreso', categoria: 'Secretaría', monto: monto, fecha: selectedDate };
+                const data = { type: 'ingreso', categoria: 'Secretaría', monto: monto, descripcion: descripcion, fecha: selectedDate };
                 
                 if (itemToModify) { // If we are modifying
                     await updateDataInFirestore(itemToModify.id, data);
