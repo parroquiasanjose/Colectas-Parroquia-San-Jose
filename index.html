@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parroquia San José</title>
-    <!-- INICIO: CAMBIO SOLICITADO - Favicon actualizado -->
+    <!-- Favicon actualizado -->
     <link rel="icon" type="image/png" href="https://i.postimg.cc/vTQjffhK/NUEVO-LOGO.png">
-    <!-- FIN: CAMBIO SOLICITADO -->
     <!-- Incluye Tailwind CSS para un diseño moderno y responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Incluye la librería para generar PDF desde HTML -->
@@ -136,6 +135,70 @@
             font-size: 18px;
             border-top: 2px solid #000;
         }
+        /* Estilos para los botones con degradado */
+        .btn-gradient {
+            background-image: linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to));
+            color: white;
+            font-weight: 600;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition-property: all;
+            transition-duration: 300ms;
+            transform: scale(1);
+        }
+
+        .btn-gradient:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-blue-gradient {
+            --tw-gradient-from: #2563eb;
+            --tw-gradient-to: #1d4ed8;
+        }
+
+        .btn-green-gradient {
+            --tw-gradient-from: #16a34a;
+            --tw-gradient-to: #15803d;
+        }
+
+        .btn-red-gradient {
+            --tw-gradient-from: #dc2626;
+            --tw-gradient-to: #b91c1c;
+        }
+
+        .btn-gray-gradient {
+            --tw-gradient-from: #6b7280;
+            --tw-gradient-to: #4b5563;
+        }
+
+        .btn-purple-gradient {
+            --tw-gradient-from: #9333ea;
+            --tw-gradient-to: #7e22ce;
+        }
+        
+        .btn-orange-gradient {
+            --tw-gradient-from: #f97316;
+            --tw-gradient-to: #ea580c;
+        }
+
+        /* Estilos para botones de selección de colecta */
+        .colecta-option-btn-style {
+             background-color: #e5e7eb; /* gray-200 */
+             color: #1f2937; /* gray-800 */
+             font-weight: 600;
+             padding-top: 0.5rem;
+             padding-bottom: 0.5rem;
+             border-radius: 0.75rem;
+             transition-property: background-color;
+             transition-duration: 300ms;
+             border: 2px solid transparent;
+        }
+
+        .colecta-option-btn-style:hover {
+            background-color: #d1d5db; /* gray-300 */
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
@@ -167,10 +230,12 @@
             <div class="flex flex-col items-center justify-center">
                 <div class="w-full max-w-xs">
                     <div class="flex flex-col gap-4">
-                         <p class="text-center text-gray-600">Bienvenido. Presione para continuar.</p>
-                        <button id="login-btn" class="w-full bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:from-green-600 hover:to-green-800 transition-all duration-300 transform hover:scale-105">
+                        <p class="text-center text-gray-600">Bienvenido. Presione para continuar.</p>
+                        <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                        <button id="login-btn" class="w-full btn-gradient bg-green-500 to-green-700">
                             Ingresar
                         </button>
+                        <!-- FIN: CAMBIO SOLICITADO -->
                     </div>
                     <p id="error-message" class="text-red-500 text-sm mt-4 hidden text-center">Error de autenticación.</p>
                 </div>
@@ -180,7 +245,7 @@
 
         <!-- Sección de bienvenida y botón de carga inicial -->
         <div id="initial-screen" class="hidden">
-             <!-- Panel de Resumen Rápido -->
+            <!-- Panel de Resumen Rápido -->
             <div id="dashboard" class="mb-6 p-4 bg-gray-100 rounded-xl space-y-2">
                 <h3 class="text-lg font-bold text-gray-800 text-center mb-2">Resumen Rápido</h3>
                 <div class="flex justify-between text-sm">
@@ -199,27 +264,31 @@
 
             <h2 class="text-xl font-bold text-gray-700 mb-4">Carga de Colectas</h2>
             <p class="text-gray-500 mb-6">Haz clic en "Cargar" para seleccionar el tipo de colecta.</p>
-            <!-- Botón que inicia el proceso de carga -->
-            <button id="cargar-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+            <button id="cargar-btn" class="w-full btn-gradient btn-blue-gradient">
                 Cargar
             </button>
+            <!-- FIN: CAMBIO SOLICITADO -->
             
             <hr class="my-8 border-gray-300">
             
-            <!-- Botón para ver el historial detallado -->
-            <button id="historial-detallado-btn" class="mt-4 w-full bg-gray-400 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-gray-500 transition-all duration-300 transform hover:scale-105">
+            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+            <button id="historial-detallado-btn" class="mt-4 w-full btn-gradient btn-gray-gradient">
                 Historial Detallado
             </button>
+            <!-- FIN: CAMBIO SOLICITADO -->
             
-            <!-- Botón para ver reportes -->
-            <button id="reports-btn" class="mt-4 w-full bg-purple-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-105">
+            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+            <button id="reports-btn" class="mt-4 w-full btn-gradient btn-purple-gradient">
                 Ver Reportes
             </button>
+            <!-- FIN: CAMBIO SOLICITADO -->
 
-            <!-- Botón para cerrar sesión -->
-            <button id="logout-btn" class="mt-4 w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105">
+            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+            <button id="logout-btn" class="mt-4 w-full btn-gradient btn-red-gradient">
                 Cerrar Sesión
             </button>
+            <!-- FIN: CAMBIO SOLICITADO -->
         </div>
 
         <!-- Sección para seleccionar el tipo de colecta (inicialmente oculta) -->
@@ -228,39 +297,53 @@
             <p id="colecta-selected-date" class="text-sm text-gray-500 text-center mb-4"></p>
             <div class="flex flex-col gap-3">
                 <!-- Botones para cada tipo de colecta -->
-                 <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta entre semana">
+                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón para selección -->
+                <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Colecta entre semana">
                     Colecta entre semana
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de sábado 19:30h">
+                <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Colecta de sábado 19:30h">
                     Colecta de sábado 19:30h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de domingo 08h">
+                <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Colecta de domingo 08h">
                     Colecta de domingo 08h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de domingo 10:30h">
+                <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Colecta de domingo 10:30h">
                     Colecta de domingo 10:30h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta de domingo 19:30h">
+                <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Colecta de domingo 19:30h">
                     Colecta de domingo 19:30h
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Colecta Especial">
+                <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Colecta Especial">
                     Colecta Especial
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Intenciones y Sacramento">
+                <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Intenciones y Sacramento">
                     Intenciones y Sacramento
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Donaciones">
+                <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Donaciones">
                     Donaciones
                 </button>
-                <button class="colecta-option-btn w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors" data-colecta="Alcancias">
+                <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Alcancias">
                     Alcancias
                 </button>
-                <button id="secretaria-btn" class="w-full bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl hover:bg-gray-300 transition-colors">
+                <button id="bonpland-colecta-btn" class="w-full colecta-option-btn-style">
+                    Colecta de Bonpland
+                </button>
+                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                <button id="egresos-direct-btn" class="w-full btn-gradient btn-orange-gradient">
+                    Egresos
+                </button>
+                <!-- FIN: CAMBIO SOLICITADO -->
+                <button id="secretaria-btn" class="w-full colecta-option-btn-style">
                     Secretaría
                 </button>
-                <button id="back-from-select" class="mt-4 w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
+                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                <button id="confirmar-todo-btn" class="mt-4 w-full btn-gradient btn-green-gradient">
+                    Confirmar Carga
+                </button>
+                <button id="back-from-select" class="mt-4 w-full btn-gradient btn-red-gradient">
                     Volver
                 </button>
+                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
 
@@ -327,12 +410,14 @@
 
             <!-- Botones de acción -->
             <div class="flex flex-col gap-4">
-                <button id="confirmar-carga-btn" class="w-full bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
+                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                <button id="confirmar-carga-btn" class="w-full btn-gradient btn-green-gradient">
                     Confirmar Carga
                 </button>
-                <button id="back-from-billetes" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
+                <button id="back-from-billetes" class="w-full btn-gradient btn-red-gradient">
                     Volver
                 </button>
+                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
         
@@ -363,12 +448,14 @@
             </div>
 
             <div class="flex flex-col gap-4">
-                <button id="confirmar-egresos-btn" class="w-full bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
+                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                <button id="confirmar-egresos-btn" class="w-full btn-gradient btn-green-gradient">
                     Confirmar Egresos
                 </button>
-                <button id="back-from-egresos" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
+                <button id="back-from-egresos" class="w-full btn-gradient btn-red-gradient">
                     Volver
                 </button>
+                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
 
@@ -386,7 +473,7 @@
                     <label class="block text-sm font-medium text-gray-700">10000</label>
                     <input type="number" id="bonpland-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-                 <!-- Billetes de 2000 -->
+                <!-- Billetes de 2000 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">2000</label>
                     <input type="number" id="bonpland-2000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -433,12 +520,14 @@
             </div>
             
             <div class="flex flex-col gap-4">
-                <button id="confirmar-bonpland-btn" class="w-full bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
+                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                <button id="confirmar-bonpland-btn" class="w-full btn-gradient btn-green-gradient">
                     Confirmar Colecta
                 </button>
-                <button id="back-from-bonpland" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">
+                <button id="back-from-bonpland" class="w-full btn-gradient btn-red-gradient">
                     Volver
                 </button>
+                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
         
@@ -453,17 +542,19 @@
             </div>
             
             <div class="p-4 bg-gray-100 rounded-lg shadow-sm mb-6">
-                 <h3 class="text-lg font-bold text-gray-700 mb-2">Aclaraciones</h3>
-                 <textarea id="aclaraciones-text" class="w-full h-24 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Escribe aquí cualquier aclaración o nota adicional..."></textarea>
+                <h3 class="text-lg font-bold text-gray-700 mb-2">Aclaraciones</h3>
+                <textarea id="aclaraciones-text" class="w-full h-24 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Escribe aquí cualquier aclaración o nota adicional..."></textarea>
             </div>
             
             <div class="flex flex-col gap-4">
-                <button id="download-pdf-btn" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105">
+                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                <button id="download-pdf-btn" class="w-full btn-gradient btn-red-gradient">
                     Descargar como PDF
                 </button>
-                <button id="back-from-summary" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                <button id="back-from-summary" class="w-full btn-gradient btn-blue-gradient">
                     Volver a Pantalla Inicial
                 </button>
+                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
         
@@ -486,12 +577,14 @@
             </div>
             <div class="mt-6 space-y-4">
                 <div class="flex gap-2">
-                    <button id="export-pdf-backup-btn" class="w-1/2 bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300">Backup (PDF)</button>
-                    <button id="export-excel-btn" class="w-1/2 bg-green-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-green-700 transition-all duration-300">Backup (Excel)</button>
+                    <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                    <button id="export-pdf-backup-btn" class="w-1/2 btn-gradient btn-red-gradient">Backup (PDF)</button>
+                    <button id="export-excel-btn" class="w-1/2 btn-gradient btn-green-gradient">Backup (Excel)</button>
+                    <!-- FIN: CAMBIO SOLICITADO -->
+                    <button id="back-from-historial-detallado" class="w-full btn-gradient btn-blue-gradient">
+                        Volver
+                    </button>
                 </div>
-                <button id="back-from-historial-detallado" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300">
-                    Volver
-                </button>
             </div>
         </div>
 
@@ -502,13 +595,15 @@
             <div id="historial-por-fecha-list" class="space-y-3" style="width: 100%;">
                 <!-- Detalles del historial para la fecha seleccionada -->
             </div>
-             <div class="flex flex-col gap-4 mt-6">
-                <button id="download-pdf-historial-btn" class="w-full bg-red-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-red-700 transition-all duration-300 transform hover:scale-105">
+            <div class="flex flex-col gap-4 mt-6">
+                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                <button id="download-pdf-historial-btn" class="w-full btn-gradient btn-red-gradient">
                     Descargar como PDF
                 </button>
-                <button id="back-from-historial-por-fecha" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300">
+                <button id="back-from-historial-por-fecha" class="w-full btn-gradient btn-blue-gradient">
                     Volver
                 </button>
+                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
 
@@ -537,9 +632,11 @@
                 <canvas id="evolution-line-chart"></canvas>
             </div>
 
-            <button id="back-from-reports" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition-all duration-300">
+            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+            <button id="back-from-reports" class="w-full btn-gradient btn-blue-gradient">
                 Volver
             </button>
+            <!-- FIN: CAMBIO SOLICITADO -->
         </div>
 
 
@@ -751,6 +848,7 @@
         // Variables para almacenar el estado de la aplicación
         let selectedColecta = '';
         let historialData = [];
+        let cargasPendientes = []; // NUEVO: Array para guardar las cargas antes de la confirmación final
         let selectedDate = '';
         let itemToModify = null;
         let itemToDeleteId = null;
@@ -799,11 +897,11 @@
             'Intenciones y Sacramento',
             'Donaciones',
             'Alcancias',
-            'Secretaría',
             'Colecta de Bonpland',
             'Gastos Padre Jorge',
             'Gastos Padre Adán',
-            'Otros gastos'
+            'Otros gastos',
+            'Secretaría'
         ];
 
         function sortItemsByCategory(a, b) {
@@ -903,14 +1001,15 @@
         const secretariaModal = document.getElementById('secretaria-modal');
         const secretariaModalTitle = document.getElementById('secretaria-modal-title');
         const secretariaMontoInput = document.getElementById('secretaria-monto-input');
-        // INICIO: CAMBIO SOLICITADO
         const secretariaDescripcionInput = document.getElementById('secretaria-descripcion-input');
-        // FIN: CAMBIO SOLICITADO
         const secretariaConfirmBtn = document.getElementById('secretaria-confirm-btn');
         const secretariaCancelBtn = document.getElementById('secretaria-cancel-btn');
-        // **NUEVO** - Campos de importe que necesitan formato
+        // Campos de importe que necesitan formato
         const amountInputs = document.querySelectorAll('#egreso-jorge-input, #egreso-adan-input, #egreso-otros-input, #secretaria-monto-input');
-
+        // Botón de confirmar carga final
+        const confirmarTodoBtn = document.getElementById('confirmar-todo-btn');
+        const bonplandColectaBtn = document.getElementById('bonpland-colecta-btn');
+        const egresosDirectBtn = document.getElementById('egresos-direct-btn');
 
         // --- Spinner Functions ---
         const showSpinner = () => spinner.classList.remove('hidden');
@@ -954,7 +1053,6 @@
         }
 
         function calcularTotalEgresos() {
-            // **MODIFICADO** - Usa la función `parseFormattedValue`
             const jorge = parseFormattedValue(egresoJorgeInput.value);
             const adan = parseFormattedValue(egresoAdanInput.value);
             const otros = parseFormattedValue(egresoOtrosInput.value);
@@ -972,7 +1070,7 @@
             egresoOtrosInput.value = '';
             calcularTotalEgresos();
         }
-
+        
         // --- Firestore Functions ---
         async function fetchDataFromFirestore() {
             showSpinner();
@@ -1007,7 +1105,7 @@
 
         // --- UI Rendering Functions ---
         function generateDetailedSummaryHTML(fecha, isForPdf = false) {
-            const itemsDelDia = historialData.filter(item => item.fecha === fecha);
+            const itemsDelDia = historialData.length > 0 ? historialData.filter(item => item.fecha === fecha) : cargasPendientes;
             itemsDelDia.sort(sortItemsByCategory);
             let totalIngresos = 0;
             let totalEgresos = 0;
@@ -1018,12 +1116,10 @@
                 ingresosDelDia.forEach(item => {
                     totalIngresos += item.monto;
                     let billetesHtml = '';
-                    // INICIO: CAMBIO SOLICITADO - Mostrar descripción
                     let descripcionHtml = '';
                     if (item.descripcion) {
                         descripcionHtml = `<div class="${isForPdf ? 'pdf-description' : 'ml-4 mt-1 text-xs text-gray-500 italic'}">${item.descripcion}</div>`;
                     }
-                    // FIN: CAMBIO SOLICITADO
                     if (item.billetes && Object.keys(item.billetes).length > 0) {
                         const billetesDetalle = Object.entries(item.billetes)
                             .filter(([, cantidad]) => cantidad > 0)
@@ -1187,9 +1283,10 @@
                 const backgroundColor = item.type === 'ingreso' ? 'bg-green-50' : 'bg-red-50';
                 const textColor = item.type === 'ingreso' ? 'text-green-700' : 'text-red-700';
                 
-                // INICIO: CAMBIO SOLICITADO - Mostrar descripción
-                const descripcionHtml = item.descripcion ? `<p class="text-xs text-gray-500 italic">${item.descripcion}</p>` : '';
-                // FIN: CAMBIO SOLICITADO
+                let descripcionHtml = '';
+                if (item.descripcion) {
+                    descripcionHtml = `<p class="text-xs text-gray-500 italic">${item.descripcion}</p>`;
+                }
                 
                 nuevaEntrada.className = `p-4 rounded-lg shadow-sm flex justify-between items-center ${backgroundColor}`;
 
@@ -1236,15 +1333,22 @@
             
             if (itemToModify.type === 'ingreso') {
                 if (itemToModify.categoria === 'Secretaría') {
-                    // **MODIFICADO** - Formatea el valor al popular el campo
+                    const existingEntry = cargasPendientes.find(item => item.categoria === 'Secretaría');
+                    if (existingEntry && existingEntry.id !== id) {
+                        showToast('Ya existe un ingreso de Secretaría en la lista pendiente.', 'error');
+                        return;
+                    }
                     secretariaMontoInput.value = formatWithSeparators(itemToModify.monto);
-                    // INICIO: CAMBIO SOLICITADO - Popular descripción
                     secretariaDescripcionInput.value = itemToModify.descripcion || '';
-                    // FIN: CAMBIO SOLICITADO
                     secretariaModalTitle.textContent = 'Modificar Ingreso de Secretaría';
                     historialPorFechaScreen.classList.add('hidden');
                     secretariaModal.classList.remove('hidden');
                 } else if (itemToModify.categoria === 'Colecta de Bonpland') {
+                    const existingEntry = cargasPendientes.find(item => item.categoria === 'Colecta de Bonpland');
+                    if (existingEntry && existingEntry.id !== id) {
+                        showToast('Ya existe un ingreso de Bonpland en la lista pendiente.', 'error');
+                        return;
+                    }
                     bonplandInputs.forEach(input => {
                         const denom = input.id.split('-')[1];
                         input.value = itemToModify.billetes[denom] || '';
@@ -1253,6 +1357,11 @@
                     historialPorFechaScreen.classList.add('hidden');
                     bonplandScreen.classList.remove('hidden');
                 } else { // Any other income type with banknotes
+                    const isDuplicate = cargasPendientes.some(item => item.categoria === itemToModify.categoria && item.id !== id);
+                    if (isDuplicate) {
+                         showToast(`La carga de "${itemToModify.categoria}" ya ha sido agregada a la lista pendiente.`, 'error');
+                         return;
+                    }
                     billeteInputs.forEach(input => {
                         const denom = input.id.split('-')[1];
                         input.value = itemToModify.billetes[denom] || '';
@@ -1264,8 +1373,12 @@
                     billetesScreen.classList.remove('hidden');
                 }
             } else if (itemToModify.type === 'egreso') {
+                const existingEntry = cargasPendientes.find(item => item.type === 'egreso');
+                if (existingEntry && existingEntry.id !== id) {
+                    showToast('Ya existe un egreso en la lista pendiente.', 'error');
+                    return;
+                }
                 resetEgresosScreen();
-                // **MODIFICADO** - Formatea los valores al popular los campos
                 if (itemToModify.categoria === 'Gastos Padre Jorge') {
                     egresoJorgeInput.value = formatWithSeparators(itemToModify.monto);
                 } else if (itemToModify.categoria === 'Gastos Padre Adán') {
@@ -1283,14 +1396,11 @@
         onAuthStateChanged(auth, async (user) => {
             showSpinner();
             if (user) {
-                // User is signed in.
                 await fetchDataFromFirestore();
                 loginScreen.classList.add('hidden');
                 initialScreen.classList.remove('hidden');
                 errorMessage.classList.add('hidden');
             } else {
-                // User is signed out.
-                // Hide all main screens and show login
                 initialScreen.classList.add('hidden');
                 selectColectaScreen.classList.add('hidden');
                 billetesScreen.classList.add('hidden');
@@ -1313,22 +1423,19 @@
             const password = "sanjose2025";
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged will handle showing the main screen
                 showToast('¡Bienvenido!', 'success');
             } catch (error) {
                 console.error("Error de autenticación:", error);
                 errorMessage.textContent = "Error de autenticación. Verifique las credenciales.";
                 errorMessage.classList.remove('hidden');
                 showToast('Error al ingresar.', 'error');
-                hideSpinner(); // Hide spinner on error
+                hideSpinner();
             }
-            // Spinner will be hidden by onAuthStateChanged on success
         });
 
         logoutBtn.addEventListener('click', async () => {
             try {
                 await signOut(auth);
-                // onAuthStateChanged will handle showing the login screen
                 showToast('Sesión cerrada.', 'info');
             } catch (error) {
                 console.error("Error al cerrar sesión:", error);
@@ -1353,6 +1460,7 @@
             initialScreen.classList.add('hidden');
             selectColectaScreen.classList.remove('hidden');
             document.getElementById('colecta-selected-date').textContent = `Fecha seleccionada: ${selectedDate}`;
+            cargasPendientes = [];
         });
 
         dateCancelBtn.addEventListener('click', () => {
@@ -1362,14 +1470,12 @@
         colectaOptionBtns.forEach(button => {
             button.addEventListener('click', (event) => {
                 const colectaType = event.target.dataset.colecta;
-                
-                // Check for duplicates before proceeding
-                const isDuplicate = historialData.some(item => item.fecha === selectedDate && item.categoria === colectaType);
+                const isDuplicate = cargasPendientes.some(item => item.categoria === colectaType);
                 if (isDuplicate) {
-                    showToast('Esta colecta ya ha sido cargada para esta fecha.', 'error');
+                    showToast(`La carga de "${colectaType}" ya ha sido agregada a la lista pendiente.`, 'error');
                     return;
                 }
-
+                
                 if (colectaType === 'Colecta Especial') {
                     colectaEspecialInput.value = '';
                     colectaEspecialPromptModal.classList.remove('hidden');
@@ -1390,11 +1496,9 @@
                 return;
             }
             selectedColecta = `Colecta Especial - ${tipoColectaEspecial}`;
-
-            // Check for duplicates for special collections
-            const isDuplicate = historialData.some(item => item.fecha === selectedDate && item.categoria === selectedColecta);
+            const isDuplicate = cargasPendientes.some(item => item.categoria === selectedColecta);
             if (isDuplicate) {
-                showToast('Esta colecta especial ya ha sido cargada para esta fecha.', 'error');
+                showToast('Esta colecta especial ya ha sido agregada a la lista pendiente.', 'error');
                 return;
             }
 
@@ -1408,24 +1512,42 @@
         colectaEspecialCancelBtn.addEventListener('click', () => {
             colectaEspecialPromptModal.classList.add('hidden');
         });
-
+        
+        bonplandColectaBtn.addEventListener('click', () => {
+            const colectaType = 'Colecta de Bonpland';
+            const isDuplicate = cargasPendientes.some(item => item.categoria === colectaType);
+            if (isDuplicate) {
+                showToast(`La carga de "${colectaType}" ya ha sido agregada a la lista pendiente.`, 'error');
+                return;
+            }
+            bonplandScreen.classList.remove('hidden');
+            selectColectaScreen.classList.add('hidden');
+            bonplandInputs.forEach(input => input.value = '');
+            calcularTotalBonpland();
+        });
+        
+        egresosDirectBtn.addEventListener('click', () => {
+            const colectaType = 'Egresos';
+            const existingEntry = cargasPendientes.find(item => item.categoria.includes('Gastos') || item.categoria.includes('Otros gastos'));
+            if (existingEntry) {
+                 showToast('Los egresos ya han sido agregados a la lista pendiente. Por favor, elimina el registro anterior para modificarlos.', 'error');
+                return;
+            }
+            egresosScreen.classList.remove('hidden');
+            selectColectaScreen.classList.add('hidden');
+            resetEgresosScreen();
+        });
+        
         billeteInputs.forEach(input => input.addEventListener('input', calcularTotalColecta));
         bonplandInputs.forEach(input => input.addEventListener('input', calcularTotalBonpland));
         
-        // **MODIFICADO** - Se quitan los listeners individuales de egresos, se manejarán con el listener `amountInputs`
-        // egresoJorgeInput.addEventListener('input', calcularTotalEgresos);
-        // egresoAdanInput.addEventListener('input', calcularTotalEgresos);
-        // egresoOtrosInput.addEventListener('input', calcularTotalEgresos);
-
-        // **NUEVO** - Listener para formatear los campos de importe en tiempo real
         amountInputs.forEach(input => {
             input.addEventListener('input', (event) => {
                 const input = event.target;
-                let value = input.value.replace(/\./g, ''); // Quita los puntos para obtener el número real
+                let value = input.value.replace(/\./g, '');
                 
                 if (isNaN(value) || value === '') {
                     input.value = '';
-                    // Dispara un evento input para que el total se recalcule a 0
                     input.dispatchEvent(new Event('input', { bubbles: true }));
                     return;
                 }
@@ -1433,19 +1555,15 @@
                 const numberValue = parseInt(value, 10);
                 input.value = formatWithSeparators(numberValue);
 
-                // Llama a la función de cálculo correspondiente después de formatear
                 if (input.id.startsWith('egreso')) {
                     calcularTotalEgresos();
                 }
             });
         });
 
-        confirmarCargaBtn.addEventListener('click', () => confirmationModal.classList.remove('hidden'));
-        confirmCancelBtn.addEventListener('click', () => confirmationModal.classList.add('hidden'));
-
-        confirmOkBtn.addEventListener('click', async () => {
+        // NUEVO: El botón de confirmar carga ahora agrega a la lista pendiente sin confirmación extra
+        confirmarCargaBtn.addEventListener('click', async () => {
             showSpinner();
-            confirmationModal.classList.add('hidden');
             try {
                 const totalMonto = parseFloat(totalColectaSpan.textContent.replace(/\$|\./g, '').replace(',', '.')) || 0;
                 const billetes = {};
@@ -1464,15 +1582,10 @@
                     verDetallePorFecha(selectedDate);
                     showToast('Registro modificado con éxito.', 'success');
                 } else {
-                    await saveDataToFirestore(data);
-                    await fetchDataFromFirestore();
+                    cargasPendientes.push(data);
                     billetesScreen.classList.add('hidden');
-                    showToast('Colecta guardada con éxito.', 'success');
-                    if (selectedColecta.includes("domingo 19:30h")) {
-                        egresosPromptModal.classList.remove('hidden');
-                    } else {
-                        selectColectaScreen.classList.remove('hidden');
-                    }
+                    selectColectaScreen.classList.remove('hidden');
+                    showToast(`Colecta "${selectedColecta}" agregada a la lista pendiente.`, 'success');
                 }
             } catch (error) {
                 console.error("Error confirming charge:", error);
@@ -1482,56 +1595,58 @@
             }
         });
 
-        egresosYesBtn.addEventListener('click', () => {
-            egresosPromptModal.classList.add('hidden');
-            egresosScreen.classList.remove('hidden');
-            resetEgresosScreen();
-        });
-
-        egresosNoBtn.addEventListener('click', () => {
-            egresosPromptModal.classList.add('hidden');
-            bonplandPromptModal.classList.remove('hidden');
-        });
-        
         confirmarEgresosBtn.addEventListener('click', async () => {
             showSpinner();
             try {
-                // **MODIFICADO** - Usa `parseFormattedValue` para obtener los valores correctos
                 const egresoJorge = parseFormattedValue(egresoJorgeInput.value);
                 const egresoAdan = parseFormattedValue(egresoAdanInput.value);
                 const egresoOtros = parseFormattedValue(egresoOtrosInput.value);
-
+                
                 if (egresoJorge <= 0 && egresoAdan <= 0 && egresoOtros <= 0 && !itemToModify) {
                     showToast('Introduce al menos un monto de egreso.', 'error');
-                    hideSpinner(); // Hide spinner if validation fails
+                    hideSpinner();
                     return;
                 }
                 
-                const batch = writeBatch(db);
-                const egresos = [
-                    { tipo: 'Gastos Padre Jorge', monto: egresoJorge },
-                    { tipo: 'Gastos Padre Adán', monto: egresoAdan },
-                    { tipo: 'Otros gastos', monto: egresoOtros }
-                ];
+                if (itemToModify) {
+                    const batch = writeBatch(db);
+                    const egresos = [
+                         { tipo: 'Gastos Padre Jorge', monto: egresoJorge, id: itemToModify.id },
+                         { tipo: 'Gastos Padre Adán', monto: egresoAdan, id: itemToModify.id },
+                         { tipo: 'Otros gastos', monto: egresoOtros, id: itemToModify.id }
+                    ];
 
-                for (const egreso of egresos) {
-                    if (egreso.monto > 0) {
-                        const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
-                        if (itemToModify && itemToModify.categoria === egreso.tipo) {
-                            batch.update(doc(db, "colectas", itemToModify.id), data);
-                        } else {
-                            batch.set(doc(colectasCollection), data);
+                    for (const egreso of egresos) {
+                        if (egreso.monto > 0 && itemToModify.categoria === egreso.tipo) {
+                             const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
+                             batch.update(doc(db, "colectas", itemToModify.id), data);
+                        } else if (egreso.monto > 0) {
+                             const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
+                             batch.set(doc(colectasCollection), data);
                         }
                     }
-                }
-                await batch.commit();
-                showToast('Egresos guardados con éxito.', 'success');
-                await fetchDataFromFirestore();
-                egresosScreen.classList.add('hidden');
-                if(itemToModify){
+
+                    await batch.commit();
+                    showToast('Egresos modificados con éxito.', 'success');
+                    await fetchDataFromFirestore();
+                    egresosScreen.classList.add('hidden');
                     verDetallePorFecha(selectedDate);
                 } else {
-                     bonplandPromptModal.classList.remove('hidden');
+                    const egresos = [
+                        { tipo: 'Gastos Padre Jorge', monto: egresoJorge },
+                        { tipo: 'Gastos Padre Adán', monto: egresoAdan },
+                        { tipo: 'Otros gastos', monto: egresoOtros }
+                    ];
+                    cargasPendientes = cargasPendientes.filter(item => item.type !== 'egreso');
+                    for (const egreso of egresos) {
+                        if (egreso.monto > 0) {
+                             const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
+                             cargasPendientes.push(data);
+                        }
+                    }
+                    showToast('Egresos agregados a la lista pendiente.', 'success');
+                    egresosScreen.classList.add('hidden');
+                    selectColectaScreen.classList.remove('hidden');
                 }
                 itemToModify = null;
                 resetEgresosScreen();
@@ -1543,27 +1658,14 @@
             }
         });
         
-        bonplandYesBtn.addEventListener('click', () => {
-            bonplandPromptModal.classList.add('hidden');
-            bonplandScreen.classList.remove('hidden');
-            bonplandInputs.forEach(input => input.value = '');
-            calcularTotalBonpland();
-        });
-
-        bonplandNoBtn.addEventListener('click', async () => {
-            bonplandPromptModal.classList.add('hidden');
-            finalConfirmationModal.classList.remove('hidden');
-        });
-        
         confirmarBonplandBtn.addEventListener('click', async () => {
             showSpinner();
             try {
                 const montoBonpland = parseFloat(bonplandTotalSpan.textContent.replace(/\$|\./g, '').replace(',', '.')) || 0;
                 
                 if (montoBonpland <= 0 && !itemToModify) {
-                    bonplandScreen.classList.add('hidden');
-                    finalConfirmationModal.classList.remove('hidden');
-                    hideSpinner(); // Hide spinner if no action is taken
+                    showToast('Introduce al menos un monto para Bonpland.', 'error');
+                    hideSpinner();
                     return;
                 }
 
@@ -1583,19 +1685,48 @@
                     showToast('Colecta de Bonpland modificada.', 'success');
                     itemToModify = null;
                 } else {
-                    if (montoBonpland > 0) {
-                        await saveDataToFirestore(data);
-                    }
+                    cargasPendientes.push(data);
                     await fetchDataFromFirestore();
                     bonplandScreen.classList.add('hidden');
-                    finalConfirmationModal.classList.remove('hidden');
-                    if (montoBonpland > 0) {
-                        showToast('Colecta de Bonpland guardada.', 'success');
-                    }
+                    selectColectaScreen.classList.remove('hidden');
+                    showToast('Colecta de Bonpland agregada a la lista pendiente.', 'success');
                 }
             } catch (error) {
                 console.error("Error saving Bonpland collection:", error);
                 showToast('Error al guardar Colecta de Bonpland.', 'error');
+            } finally {
+                hideSpinner();
+            }
+        });
+        
+        confirmarTodoBtn.addEventListener('click', async () => {
+            if (cargasPendientes.length === 0) {
+                showToast('No hay cargas pendientes. Por favor, agrega al menos una.', 'error');
+                return;
+            }
+
+            showSpinner();
+            try {
+                const batch = writeBatch(db);
+                cargasPendientes.forEach(item => {
+                    batch.set(doc(colectasCollection), item);
+                });
+                await batch.commit();
+
+                showToast('Todas las cargas han sido guardadas con éxito.', 'success');
+                selectColectaScreen.classList.add('hidden');
+                
+                historialData = [];
+                cargasPendientes = [];
+                
+                await fetchDataFromFirestore();
+                
+                summaryScreen.classList.remove('hidden');
+                renderDetailedSummary();
+                
+            } catch (error) {
+                console.error("Error al guardar todas las cargas:", error);
+                showToast('Error al guardar las cargas.', 'error');
             } finally {
                 hideSpinner();
             }
@@ -1650,7 +1781,7 @@
                 verDetallePorFecha(itemToModify.fecha);
                 itemToModify = null;
             } else {
-                 selectColectaScreen.classList.remove('hidden');
+                selectColectaScreen.classList.remove('hidden');
             }
         });
         
@@ -1765,9 +1896,7 @@
                     'Fecha': item.fecha,
                     'Tipo': item.type === 'ingreso' ? 'Ingreso' : 'Egreso',
                     'Categoría': item.categoria,
-                    // INICIO: CAMBIO SOLICITADO - Añadir descripción a Excel
                     'Descripción': item.descripcion || '',
-                    // FIN: CAMBIO SOLICITADO
                     'Monto': item.monto,
                     'Detalle de Billetes': billetesDetalle
                 });
@@ -1822,8 +1951,8 @@
 
         exportPdfBackupBtn.addEventListener('click', () => {
             const allDates = [...new Set(historialData.map(item => item.fecha))].sort((a, b) => {
-                const dateA = new Date(a.split('/').reverse().join('-'));
-                const dateB = new Date(b.split('/').reverse().join('-'));
+                const dateA = new Date(a.fecha.split('/').reverse().join('-'));
+                const dateB = new Date(b.fecha.split('/').reverse().join('-'));
                 return dateB - dateA;
             });
 
@@ -2012,31 +2141,25 @@
         // --- Secretaría Logic ---
         secretariaBtn.addEventListener('click', () => {
             const colectaType = 'Secretaría';
-            // No se puede duplicar un ingreso de secretaría en el mismo día, se debe modificar el existente.
-            const existingEntry = historialData.find(item => item.fecha === selectedDate && item.categoria === colectaType);
+            const existingEntry = cargasPendientes.find(item => item.categoria === colectaType);
             if (existingEntry) {
-                showToast('Ya existe un ingreso de Secretaría para hoy. Puede modificarlo desde el historial.', 'error');
+                showToast('Ya existe un ingreso de Secretaría en la lista pendiente.', 'error');
                 return;
             }
             secretariaMontoInput.value = '';
-            // INICIO: CAMBIO SOLICITADO
             secretariaDescripcionInput.value = '';
-            // FIN: CAMBIO SOLICITADO
             secretariaModalTitle.textContent = 'Ingreso de Secretaría';
             secretariaModal.classList.remove('hidden');
         });
 
         secretariaCancelBtn.addEventListener('click', () => {
             secretariaModal.classList.add('hidden');
-            itemToModify = null; // Clear modification state
+            itemToModify = null;
         });
 
         secretariaConfirmBtn.addEventListener('click', async () => {
-            // **MODIFICADO** - Usa `parseFormattedValue` para obtener el valor correcto
             const monto = parseFormattedValue(secretariaMontoInput.value);
-            // INICIO: CAMBIO SOLICITADO
             const descripcion = secretariaDescripcionInput.value.trim();
-            // FIN: CAMBIO SOLICITADO
             
             if (isNaN(monto) || monto <= 0) {
                 showToast('Por favor, ingresa un monto válido.', 'error');
@@ -2049,26 +2172,24 @@
             try {
                 const data = { type: 'ingreso', categoria: 'Secretaría', monto: monto, descripcion: descripcion, fecha: selectedDate };
                 
-                if (itemToModify) { // If we are modifying
+                if (itemToModify) {
                     await updateDataInFirestore(itemToModify.id, data);
                     await fetchDataFromFirestore();
-                    verDetallePorFecha(selectedDate); // Go back to the detail view
+                    verDetallePorFecha(selectedDate);
                     showToast('Ingreso de Secretaría modificado.', 'success');
-                } else { // If we are creating a new one
-                    await saveDataToFirestore(data);
-                    await fetchDataFromFirestore();
-                    selectColectaScreen.classList.remove('hidden'); // Go back to selection
-                    showToast('Ingreso de Secretaría guardado.', 'success');
+                } else {
+                    cargasPendientes.push(data);
+                    selectColectaScreen.classList.remove('hidden');
+                    showToast('Ingreso de Secretaría guardado en la lista pendiente.', 'success');
                 }
             } catch (error) {
                 console.error("Error saving Secretaría income:", error);
                 showToast('Error al guardar el ingreso.', 'error');
             } finally {
-                itemToModify = null; // Reset modification state
+                itemToModify = null;
                 hideSpinner();
             }
         });
 
     </script>
-</body>
 </html>
