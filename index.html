@@ -208,7 +208,10 @@
 
     <!-- Spinner/Cargador -->
     <div id="spinner" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white"></div>
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-white mx-auto"></div>
+            <p id="spinner-message" class="text-white mt-4 font-semibold">Cargando...</p>
+        </div>
     </div>
 
     <!-- Contenedor principal de la aplicación -->
@@ -216,26 +219,22 @@
         
         <!-- Título de la aplicación -->
         <div class="text-center mb-8">
-            <!-- INICIO: CAMBIO SOLICITADO - Logo actualizado -->
             <div class="flex justify-center items-center gap-3">
                 <img src="https://i.postimg.cc/vTQjffhK/NUEVO-LOGO.png" alt="Logo Parroquia San José" class="h-12">
                 <h1 class="text-3xl font-extrabold text-slate-800">Parroquia San José</h1>
             </div>
-            <!-- FIN: CAMBIO SOLICITADO -->
             <p class="text-2xl font-semibold text-gray-500 mt-1">Colectas</p>
         </div>
         
         <!-- Pantalla de inicio de sesión -->
-        <div id="login-screen" class="hidden">
+        <div id="login-screen" class="">
             <div class="flex flex-col items-center justify-center">
                 <div class="w-full max-w-xs">
                     <div class="flex flex-col gap-4">
                         <p class="text-center text-gray-600">Bienvenido. Presione para continuar.</p>
-                        <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
-                        <button id="login-btn" class="w-full btn-gradient bg-green-500 to-green-700">
+                        <button id="login-btn" class="w-full btn-gradient btn-green-gradient">
                             Ingresar
                         </button>
-                        <!-- FIN: CAMBIO SOLICITADO -->
                     </div>
                     <p id="error-message" class="text-red-500 text-sm mt-4 hidden text-center">Error de autenticación.</p>
                 </div>
@@ -262,33 +261,36 @@
                 </div>
             </div>
 
-            <h2 class="text-xl font-bold text-gray-700 mb-4">Carga de Colectas</h2>
-            <p class="text-gray-500 mb-6">Haz clic en "Cargar" para seleccionar el tipo de colecta.</p>
-            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
-            <button id="cargar-btn" class="w-full btn-gradient btn-blue-gradient">
-                Cargar
-            </button>
-            <!-- FIN: CAMBIO SOLICITADO -->
+            <!-- INICIO: Nueva sección de carga -->
+            <div class="space-y-4">
+                 <div>
+                    <label for="main-date-input" class="block text-sm font-medium text-gray-700 mb-1">Fecha de la Carga</label>
+                    <input type="date" id="main-date-input" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button id="cargar-por-foto-btn" class="w-full btn-gradient btn-green-gradient flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/><path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zM2.5 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/></svg>
+                    Carga por Foto
+                </button>
+                 <button id="cargar-manual-btn" class="w-full btn-gradient btn-blue-gradient">
+                    Carga Manual
+                </button>
+            </div>
+            <input type="file" id="planilla-upload-input" class="hidden" accept="image/*" capture>
+            <!-- FIN: Nueva sección de carga -->
             
             <hr class="my-8 border-gray-300">
             
-            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
             <button id="historial-detallado-btn" class="mt-4 w-full btn-gradient btn-gray-gradient">
                 Historial Detallado
             </button>
-            <!-- FIN: CAMBIO SOLICITADO -->
             
-            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
             <button id="reports-btn" class="mt-4 w-full btn-gradient btn-purple-gradient">
                 Ver Reportes
             </button>
-            <!-- FIN: CAMBIO SOLICITADO -->
 
-            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
             <button id="logout-btn" class="mt-4 w-full btn-gradient btn-red-gradient">
                 Cerrar Sesión
             </button>
-            <!-- FIN: CAMBIO SOLICITADO -->
         </div>
 
         <!-- Sección para seleccionar el tipo de colecta (inicialmente oculta) -->
@@ -297,7 +299,6 @@
             <p id="colecta-selected-date" class="text-sm text-gray-500 text-center mb-4"></p>
             <div class="flex flex-col gap-3">
                 <!-- Botones para cada tipo de colecta -->
-                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón para selección -->
                 <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Colecta entre semana">
                     Colecta entre semana
                 </button>
@@ -328,28 +329,25 @@
                 <button id="bonpland-colecta-btn" class="w-full colecta-option-btn-style">
                     Colecta de Bonpland
                 </button>
-                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
                 <button id="egresos-direct-btn" class="w-full btn-gradient btn-orange-gradient">
                     Egresos
                 </button>
-                <!-- FIN: CAMBIO SOLICITADO -->
                 <button id="secretaria-btn" class="w-full colecta-option-btn-style">
                     Secretaría
                 </button>
-                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
                 <button id="confirmar-todo-btn" class="mt-4 w-full btn-gradient btn-green-gradient">
                     Confirmar Carga
                 </button>
                 <button id="back-from-select" class="mt-4 w-full btn-gradient btn-red-gradient">
                     Volver
                 </button>
-                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
 
         <!-- Sección para la carga de billetes (inicialmente oculta) -->
         <div id="billetes-screen" class="hidden">
             <h2 id="billetes-title" class="text-xl font-bold text-gray-700 mb-4"></h2>
+            
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <!-- Billetes de 20000 -->
                 <div>
@@ -410,14 +408,12 @@
 
             <!-- Botones de acción -->
             <div class="flex flex-col gap-4">
-                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
                 <button id="confirmar-carga-btn" class="w-full btn-gradient btn-green-gradient">
                     Confirmar Carga
                 </button>
                 <button id="back-from-billetes" class="w-full btn-gradient btn-red-gradient">
                     Volver
                 </button>
-                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
         
@@ -448,20 +444,19 @@
             </div>
 
             <div class="flex flex-col gap-4">
-                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
                 <button id="confirmar-egresos-btn" class="w-full btn-gradient btn-green-gradient">
                     Confirmar Egresos
                 </button>
                 <button id="back-from-egresos" class="w-full btn-gradient btn-red-gradient">
                     Volver
                 </button>
-                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
 
         <!-- Sección para la colecta de Bonpland (inicialmente oculta) -->
         <div id="bonpland-screen" class="hidden">
             <h2 class="text-xl font-bold text-gray-700 mb-4">Colecta de Bonpland</h2>
+
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <!-- Billetes de 20000 -->
                 <div>
@@ -520,14 +515,12 @@
             </div>
             
             <div class="flex flex-col gap-4">
-                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
                 <button id="confirmar-bonpland-btn" class="w-full btn-gradient btn-green-gradient">
                     Confirmar Colecta
                 </button>
                 <button id="back-from-bonpland" class="w-full btn-gradient btn-red-gradient">
                     Volver
                 </button>
-                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
         
@@ -547,14 +540,15 @@
             </div>
             
             <div class="flex flex-col gap-4">
-                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
+                 <button id="save-summary-btn" class="w-full btn-gradient btn-green-gradient">
+                    Confirmar
+                </button>
                 <button id="download-pdf-btn" class="w-full btn-gradient btn-red-gradient">
                     Descargar como PDF
                 </button>
                 <button id="back-from-summary" class="w-full btn-gradient btn-blue-gradient">
                     Volver a Pantalla Inicial
                 </button>
-                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
         
@@ -577,14 +571,12 @@
             </div>
             <div class="mt-6 space-y-4">
                 <div class="flex gap-2">
-                    <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
                     <button id="export-pdf-backup-btn" class="w-1/2 btn-gradient btn-red-gradient">Backup (PDF)</button>
                     <button id="export-excel-btn" class="w-1/2 btn-gradient btn-green-gradient">Backup (Excel)</button>
-                    <!-- FIN: CAMBIO SOLICITADO -->
-                    <button id="back-from-historial-detallado" class="w-full btn-gradient btn-blue-gradient">
-                        Volver
-                    </button>
                 </div>
+                 <button id="back-from-historial-detallado" class="w-full btn-gradient btn-blue-gradient">
+                    Volver
+                </button>
             </div>
         </div>
 
@@ -596,14 +588,12 @@
                 <!-- Detalles del historial para la fecha seleccionada -->
             </div>
             <div class="flex flex-col gap-4 mt-6">
-                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
                 <button id="download-pdf-historial-btn" class="w-full btn-gradient btn-red-gradient">
                     Descargar como PDF
                 </button>
                 <button id="back-from-historial-por-fecha" class="w-full btn-gradient btn-blue-gradient">
                     Volver
                 </button>
-                <!-- FIN: CAMBIO SOLICITADO -->
             </div>
         </div>
 
@@ -632,73 +622,32 @@
                 <canvas id="evolution-line-chart"></canvas>
             </div>
 
-            <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
             <button id="back-from-reports" class="w-full btn-gradient btn-blue-gradient">
                 Volver
             </button>
-            <!-- FIN: CAMBIO SOLICITADO -->
         </div>
 
-
-        <!-- Modal de confirmación (inicialmente oculta) -->
-        <div id="confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+        <!-- INICIO: Modal de Confirmación para Carga por Foto -->
+        <div id="confirm-photo-upload-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Confirmar Carga</h3>
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Confirmar Fecha</h3>
                     <div class="mt-2">
-                        <p class="text-sm text-gray-500">¿Estás seguro de que deseas confirmar esta carga?</p>
+                        <p class="text-sm text-gray-500">Se cargarán los datos de la planilla con la fecha:</p>
+                        <p id="confirm-upload-date" class="text-lg font-bold text-blue-600 mt-2"></p>
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
-                    <button id="confirm-ok-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                        Confirmar
+                    <button id="confirm-upload-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        Confirmar y Abrir Cámara
                     </button>
-                    <button id="confirm-cancel-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <button id="cancel-upload-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         Volver
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- Modal de egresos (inicialmente oculta) -->
-        <div id="egresos-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
-                <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Cargar Egresos</h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500">¿Deseas cargar egresos?</p>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-center gap-4">
-                    <button id="egresos-yes-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Sí
-                    </button>
-                    <button id="egresos-no-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        No
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de Bonpland (inicialmente oculta) -->
-        <div id="bonpland-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
-                <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Cargar Colecta de Bonpland</h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500">¿Quieres cargar la colecta de Bonpland?</p>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-center gap-4">
-                    <button id="bonpland-yes-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Sí
-                    </button>
-                    <button id="bonpland-no-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        No
-                    </button>
-                </div>
-            </div>
-        </div>
+        <!-- FIN: Modal de Confirmación para Carga por Foto -->
 
         <!-- Modal de Colecta Especial (inicialmente oculta) -->
         <div id="colecta-especial-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
@@ -721,26 +670,6 @@
             </div>
         </div>
         
-        <!-- Modal para elegir la fecha (inicialmente oculta) -->
-        <div id="date-picker-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
-                <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Seleccionar Fecha</h3>
-                    <div class="mt-2">
-                        <input type="date" id="colecta-date-input" class="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-center gap-4">
-                    <button id="date-ok-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                        Confirmar
-                    </button>
-                    <button id="date-cancel-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        Volver
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Modal de Confirmación de Eliminación -->
         <div id="delete-confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
@@ -761,31 +690,10 @@
             </div>
         </div>
 
-        <!-- Modal de Confirmación Final -->
-        <div id="final-confirmation-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
-                <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Confirmar Todo</h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500">¿Deseas confirmar todas las cargas y ver el resumen final?</p>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-center gap-4">
-                    <button id="final-confirm-yes-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                        Sí, ver resumen
-                    </button>
-                    <button id="final-confirm-no-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        No, modificar
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Modal de Secretaría (inicialmente oculta) -->
         <div id="secretaria-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
                 <h3 id="secretaria-modal-title" class="text-xl font-bold leading-6 text-gray-900 mb-4 text-center">Ingreso de Secretaría</h3>
-                <!-- INICIO: CAMBIO SOLICITADO -->
                 <div class="mt-2 space-y-4">
                     <div>
                         <label for="secretaria-monto-input" class="block text-sm font-medium text-gray-700">Monto</label>
@@ -796,7 +704,6 @@
                         <input type="text" id="secretaria-descripcion-input" placeholder="Ej: Bautismo, Certificado..." class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
-                <!-- FIN: CAMBIO SOLICITADO -->
                 <div class="mt-6 flex justify-center gap-4">
                     <button id="secretaria-confirm-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
                         Confirmar
@@ -848,7 +755,7 @@
         // Variables para almacenar el estado de la aplicación
         let selectedColecta = '';
         let historialData = [];
-        let cargasPendientes = []; // NUEVO: Array para guardar las cargas antes de la confirmación final
+        let cargasPendientes = []; 
         let selectedDate = '';
         let itemToModify = null;
         let itemToDeleteId = null;
@@ -871,19 +778,15 @@
             return `${day}/${month}/${year}`;
         }
 
-        // **NUEVO** - Función para formatear números con separador de miles
         function formatWithSeparators(number) {
             if (number === null || number === undefined || isNaN(number)) {
                 return '';
             }
-            // Usa un punto como separador de miles
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        // **NUEVO** - Función para quitar el formato y obtener el número
         function parseFormattedValue(value) {
             if (typeof value !== 'string') return 0;
-            // Quita los puntos antes de convertir a número
             return parseFloat(value.replace(/\./g, '')) || 0;
         }
 
@@ -919,6 +822,7 @@
         
         // --- DOM Element References ---
         const spinner = document.getElementById('spinner');
+        const spinnerMessage = document.getElementById('spinner-message');
         const loginScreen = document.getElementById('login-screen');
         const loginBtn = document.getElementById('login-btn');
         const errorMessage = document.getElementById('error-message');
@@ -931,19 +835,11 @@
         const historialDetalladoScreen = document.getElementById('historial-detallado-screen');
         const historialPorFechaScreen = document.getElementById('historial-por-fecha-screen');
         const reportsScreen = document.getElementById('reports-screen');
-        const confirmationModal = document.getElementById('confirmation-modal');
-        const egresosPromptModal = document.getElementById('egresos-prompt-modal');
-        const bonplandPromptModal = document.getElementById('bonpland-prompt-modal');
         const colectaEspecialPromptModal = document.getElementById('colecta-especial-prompt-modal');
-        const datePickerModal = document.getElementById('date-picker-modal');
         const deleteConfirmationModal = document.getElementById('delete-confirmation-modal');
         const deleteConfirmationMessage = document.getElementById('delete-confirmation-message');
         const deleteConfirmBtn = document.getElementById('delete-confirm-btn');
         const deleteCancelBtn = document.getElementById('delete-cancel-btn');
-        const finalConfirmationModal = document.getElementById('final-confirmation-modal');
-        const finalConfirmYesBtn = document.getElementById('final-confirm-yes-btn');
-        const finalConfirmNoBtn = document.getElementById('final-confirm-no-btn');
-        const cargarBtn = document.getElementById('cargar-btn');
         const backFromSelectBtn = document.getElementById('back-from-select');
         const backFromBilletesBtn = document.getElementById('back-from-billetes');
         const backFromEgresosBtn = document.getElementById('back-from-egresos');
@@ -965,12 +861,6 @@
         const billetesTitle = document.getElementById('billetes-title');
         const totalColectaSpan = document.getElementById('total-colecta');
         const confirmarCargaBtn = document.getElementById('confirmar-carga-btn');
-        const confirmOkBtn = document.getElementById('confirm-ok-btn');
-        const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
-        const egresosYesBtn = document.getElementById('egresos-yes-btn');
-        const egresosNoBtn = document.getElementById('egresos-no-btn');
-        const bonplandYesBtn = document.getElementById('bonpland-yes-btn');
-        const bonplandNoBtn = document.getElementById('bonpland-no-btn');
         const confirmarEgresosBtn = document.getElementById('confirmar-egresos-btn');
         const confirmarBonplandBtn = document.getElementById('confirmar-bonpland-btn');
         const billeteInputs = document.querySelectorAll('#billetes-screen input[type="number"]');
@@ -985,9 +875,6 @@
         const aclaracionesTextarea = document.getElementById('aclaraciones-text');
         const downloadPdfBtn = document.getElementById('download-pdf-btn');
         const downloadPdfHistorialBtn = document.getElementById('download-pdf-historial-btn');
-        const colectaDateInput = document.getElementById('colecta-date-input');
-        const dateOkBtn = document.getElementById('date-ok-btn');
-        const dateCancelBtn = document.getElementById('date-cancel-btn');
         const colectaEspecialInput = document.getElementById('colecta-especial-input');
         const colectaEspecialConfirmBtn = document.getElementById('colecta-especial-confirm-btn');
         const colectaEspecialCancelBtn = document.getElementById('colecta-especial-cancel-btn');
@@ -996,7 +883,6 @@
         const dashboardTodayTotal = document.getElementById('dashboard-today-total');
         const dashboardMonthBalance = document.getElementById('dashboard-month-balance');
         const dashboardLastUpload = document.getElementById('dashboard-last-upload');
-        // New elements for Secretaría
         const secretariaBtn = document.getElementById('secretaria-btn');
         const secretariaModal = document.getElementById('secretaria-modal');
         const secretariaModalTitle = document.getElementById('secretaria-modal-title');
@@ -1004,15 +890,27 @@
         const secretariaDescripcionInput = document.getElementById('secretaria-descripcion-input');
         const secretariaConfirmBtn = document.getElementById('secretaria-confirm-btn');
         const secretariaCancelBtn = document.getElementById('secretaria-cancel-btn');
-        // Campos de importe que necesitan formato
         const amountInputs = document.querySelectorAll('#egreso-jorge-input, #egreso-adan-input, #egreso-otros-input, #secretaria-monto-input');
-        // Botón de confirmar carga final
         const confirmarTodoBtn = document.getElementById('confirmar-todo-btn');
         const bonplandColectaBtn = document.getElementById('bonpland-colecta-btn');
         const egresosDirectBtn = document.getElementById('egresos-direct-btn');
+        const saveSummaryBtn = document.getElementById('save-summary-btn');
+        // --- NUEVOS ELEMENTOS ---
+        const mainDateInput = document.getElementById('main-date-input');
+        const cargarManualBtn = document.getElementById('cargar-manual-btn');
+        const cargarPorFotoBtn = document.getElementById('cargar-por-foto-btn');
+        const planillaUploadInput = document.getElementById('planilla-upload-input');
+        const confirmPhotoUploadModal = document.getElementById('confirm-photo-upload-modal');
+        const confirmUploadDate = document.getElementById('confirm-upload-date');
+        const confirmUploadBtn = document.getElementById('confirm-upload-btn');
+        const cancelUploadBtn = document.getElementById('cancel-upload-btn');
+
 
         // --- Spinner Functions ---
-        const showSpinner = () => spinner.classList.remove('hidden');
+        const showSpinner = (message = 'Cargando...') => {
+            spinnerMessage.textContent = message;
+            spinner.classList.remove('hidden');
+        }
         const hideSpinner = () => spinner.classList.add('hidden');
 
         // --- Toast Notification Function ---
@@ -1088,21 +986,7 @@
                 hideSpinner();
             }
         }
-
-        async function saveDataToFirestore(data) {
-            await addDoc(colectasCollection, data);
-        }
         
-        async function updateDataInFirestore(id, data) {
-            const docRef = doc(db, "colectas", id);
-            await updateDoc(docRef, data);
-        }
-
-        async function deleteDataFromFirestore(id) {
-            const docRef = doc(db, "colectas", id);
-            await deleteDoc(docRef);
-        }
-
         // --- UI Rendering Functions ---
         function generateDetailedSummaryHTML(fecha, isForPdf = false) {
             const itemsDelDia = historialData.length > 0 ? historialData.filter(item => item.fecha === fecha) : cargasPendientes;
@@ -1171,7 +1055,6 @@
                     </div>`;
             }
 
-            // Original HTML for on-screen display
             return `
                 <div class="p-4 bg-green-50 rounded-lg shadow-sm">${ingresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-green-800 mb-2 border-b pb-1 border-green-200">Ingresos</h3><div class="space-y-2 text-sm">${ingresosHtml}</div>` : '<p class="text-sm text-gray-500 italic">No hay ingresos registrados.</p>'}<hr class="my-3 border-green-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal de Ingresos:</p><span class="text-green-700">${formatCurrency(totalIngresos)}</span></div></div>
                 <div class="p-4 bg-red-50 rounded-lg shadow-sm">${egresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-red-800 mb-2 border-b pb-1 border-red-200">Egresos</h3><div class="space-y-2 text-sm">${egresosHtml}</div>` : '<p class="text-sm text-gray-500 italic">No hay egresos registrados.</p>'}<hr class="my-3 border-red-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal de Egresos:</p><span class="text-red-700">${formatCurrency(totalEgresos)}</span></div></div>
@@ -1400,6 +1283,7 @@
                 loginScreen.classList.add('hidden');
                 initialScreen.classList.remove('hidden');
                 errorMessage.classList.add('hidden');
+                mainDateInput.value = new Date().toISOString().split('T')[0];
             } else {
                 initialScreen.classList.add('hidden');
                 selectColectaScreen.classList.add('hidden');
@@ -1444,29 +1328,18 @@
         });
         
         // --- Event Listeners ---
-        cargarBtn.addEventListener('click', () => {
-            const now = new Date();
-            colectaDateInput.value = now.toISOString().split('T')[0];
-            datePickerModal.classList.remove('hidden');
-        });
-        
-        dateOkBtn.addEventListener('click', () => {
-            selectedDate = formatDate(colectaDateInput.value);
+        cargarManualBtn.addEventListener('click', () => {
+            selectedDate = formatDate(mainDateInput.value);
             if (!selectedDate) {
-                showToast('Por favor, selecciona una fecha.', 'error');
+                showToast('Por favor, selecciona una fecha válida.', 'error');
                 return;
             }
-            datePickerModal.classList.add('hidden');
+            cargasPendientes = [];
             initialScreen.classList.add('hidden');
             selectColectaScreen.classList.remove('hidden');
             document.getElementById('colecta-selected-date').textContent = `Fecha seleccionada: ${selectedDate}`;
-            cargasPendientes = [];
         });
-
-        dateCancelBtn.addEventListener('click', () => {
-            datePickerModal.classList.add('hidden');
-        });
-
+        
         colectaOptionBtns.forEach(button => {
             button.addEventListener('click', (event) => {
                 const colectaType = event.target.dataset.colecta;
@@ -1548,7 +1421,9 @@
                 
                 if (isNaN(value) || value === '') {
                     input.value = '';
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    if (input.id.startsWith('egreso')) {
+                        calcularTotalEgresos();
+                    }
                     return;
                 }
 
@@ -1561,7 +1436,6 @@
             });
         });
 
-        // NUEVO: El botón de confirmar carga ahora agrega a la lista pendiente sin confirmación extra
         confirmarCargaBtn.addEventListener('click', async () => {
             showSpinner();
             try {
@@ -1611,9 +1485,9 @@
                 if (itemToModify) {
                     const batch = writeBatch(db);
                     const egresos = [
-                         { tipo: 'Gastos Padre Jorge', monto: egresoJorge, id: itemToModify.id },
-                         { tipo: 'Gastos Padre Adán', monto: egresoAdan, id: itemToModify.id },
-                         { tipo: 'Otros gastos', monto: egresoOtros, id: itemToModify.id }
+                        { tipo: 'Gastos Padre Jorge', monto: egresoJorge, id: itemToModify.id },
+                        { tipo: 'Gastos Padre Adán', monto: egresoAdan, id: itemToModify.id },
+                        { tipo: 'Otros gastos', monto: egresoOtros, id: itemToModify.id }
                     ];
 
                     for (const egreso of egresos) {
@@ -1700,12 +1574,22 @@
         });
         
         confirmarTodoBtn.addEventListener('click', async () => {
-            if (cargasPendientes.length === 0) {
-                showToast('No hay cargas pendientes. Por favor, agrega al menos una.', 'error');
+             if (cargasPendientes.length === 0) {
+                showToast('No hay cargas pendientes para confirmar.', 'error');
                 return;
             }
+            initialScreen.classList.add('hidden');
+            selectColectaScreen.classList.add('hidden');
+            summaryScreen.classList.remove('hidden');
+            renderDetailedSummary();
+        });
 
-            showSpinner();
+        saveSummaryBtn.addEventListener('click', async () => {
+            if (cargasPendientes.length === 0) {
+                showToast('No hay nada que guardar.', 'error');
+                return;
+            }
+            showSpinner('Guardando en la nube...');
             try {
                 const batch = writeBatch(db);
                 cargasPendientes.forEach(item => {
@@ -1714,16 +1598,8 @@
                 await batch.commit();
 
                 showToast('Todas las cargas han sido guardadas con éxito.', 'success');
-                selectColectaScreen.classList.add('hidden');
-                
-                historialData = [];
                 cargasPendientes = [];
-                
                 await fetchDataFromFirestore();
-                
-                summaryScreen.classList.remove('hidden');
-                renderDetailedSummary();
-                
             } catch (error) {
                 console.error("Error al guardar todas las cargas:", error);
                 showToast('Error al guardar las cargas.', 'error');
@@ -1788,6 +1664,7 @@
         backFromSummaryBtn.addEventListener('click', () => {
             summaryScreen.classList.add('hidden');
             initialScreen.classList.remove('hidden');
+            cargasPendientes = [];
         });
 
         downloadPdfHistorialBtn.addEventListener('click', () => {
@@ -1845,18 +1722,6 @@
             }
         });
 
-        // --- Final Confirmation Modal Listeners ---
-        finalConfirmYesBtn.addEventListener('click', () => {
-            finalConfirmationModal.classList.add('hidden');
-            summaryScreen.classList.remove('hidden');
-            renderDetailedSummary();
-        });
-
-        finalConfirmNoBtn.addEventListener('click', () => {
-            finalConfirmationModal.classList.add('hidden');
-            verDetallePorFecha(selectedDate);
-        });
-
         // --- Search and Filter Listeners ---
         searchHistorialInput.addEventListener('input', renderHistorialDetallado);
 
@@ -1904,29 +1769,24 @@
 
             const worksheet = XLSX.utils.json_to_sheet(dataToExport, { origin: 'A3', skipHeader: true });
             
-            // Add Main Header
             XLSX.utils.sheet_add_aoa(worksheet, [['Parroquia San José - Resumen de Colectas']], { origin: 'A1' });
-            worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }]; // Merge A1 to F1
+            worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }]; 
             
-            // Add Column Headers
             XLSX.utils.sheet_add_aoa(worksheet, [['Fecha', 'Tipo', 'Categoría', 'Descripción', 'Monto', 'Detalle de Billetes']], { origin: 'A2' });
 
             const dataRangeEnd = dataToExport.length + 2;
             const totalRowStart = dataRangeEnd + 2;
 
-            // Add Totals Section
             XLSX.utils.sheet_add_aoa(worksheet, [
                 ['', '', '', 'Subtotal Ingresos'],
                 ['', '', '', 'Subtotal Egresos'],
                 ['', '', '', 'SALDO TOTAL']
             ], { origin: `B${totalRowStart}` });
 
-            // Add Formulas
             worksheet[`E${totalRowStart}`] = { t: 'n', f: `SUMIF(B3:B${dataRangeEnd},"Ingreso",E3:E${dataRangeEnd})`, z: '$#,##0' };
             worksheet[`E${totalRowStart + 1}`] = { t: 'n', f: `SUMIF(B3:B${dataRangeEnd},"Egreso",E3:E${dataRangeEnd})`, z: '$#,##0' };
             worksheet[`E${totalRowStart + 2}`] = { t: 'n', f: `E${totalRowStart}-E${totalRowStart + 1}`, z: '$#,##0' };
             
-            // Apply currency format to the Monto column
             for (let i = 3; i <= dataRangeEnd; i++) {
                 const cellAddress = `E${i}`;
                 if (worksheet[cellAddress]) {
@@ -1934,14 +1794,8 @@
                 }
             }
 
-            // Set column widths
             worksheet['!cols'] = [
-                { wch: 12 }, // Fecha
-                { wch: 10 }, // Tipo
-                { wch: 30 }, // Categoría
-                { wch: 30 }, // Descripción
-                { wch: 15 }, // Monto
-                { wch: 40 }  // Detalle de Billetes
+                { wch: 12 }, { wch: 10 }, { wch: 30 }, { wch: 30 }, { wch: 15 }, { wch: 40 }
             ];
 
             const workbook = XLSX.utils.book_new();
@@ -1951,8 +1805,8 @@
 
         exportPdfBackupBtn.addEventListener('click', () => {
             const allDates = [...new Set(historialData.map(item => item.fecha))].sort((a, b) => {
-                const dateA = new Date(a.fecha.split('/').reverse().join('-'));
-                const dateB = new Date(b.fecha.split('/').reverse().join('-'));
+                const dateA = new Date(a.split('/').reverse().join('-'));
+                const dateB = new Date(b.split('/').reverse().join('-'));
                 return dateB - dateA;
             });
 
@@ -2190,6 +2044,194 @@
                 hideSpinner();
             }
         });
+
+        // --- INICIO: LÓGICA PARA CARGA POR FOTO (PLANILLA) ---
+
+        cargarPorFotoBtn.addEventListener('click', () => {
+            selectedDate = formatDate(mainDateInput.value);
+             if (!selectedDate) {
+                showToast('Por favor, selecciona una fecha válida.', 'error');
+                return;
+            }
+            confirmUploadDate.textContent = selectedDate;
+            confirmPhotoUploadModal.classList.remove('hidden');
+        });
+
+        cancelUploadBtn.addEventListener('click', () => {
+            confirmPhotoUploadModal.classList.add('hidden');
+        });
+
+        confirmUploadBtn.addEventListener('click', () => {
+            confirmPhotoUploadModal.classList.add('hidden');
+            planillaUploadInput.click();
+        });
+
+        planillaUploadInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            showSpinner('Analizando planilla con IA...');
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64Data = reader.result.split(',')[1];
+                processPlanillaWithAI(base64Data);
+            };
+            reader.readAsDataURL(file);
+            event.target.value = ''; // Reset input
+        });
+
+        async function processPlanillaWithAI(base64ImageData) {
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{
+                    parts: [{
+                        text: `Analiza la imagen de la planilla de ingresos y egresos. Extrae los datos de cada fila de colecta y de gastos. Para cada colecta, extrae la cantidad de billetes de cada denominación. Para los gastos, solo extrae el monto total. Devuelve un objeto JSON con la siguiente estructura. No incluyas filas vacías o con valor cero. No incluyas los subtotales ni totales generales.
+                        {
+                          "colectas": [
+                            { "nombre": "ENTRE SEMANA", "billetes": { "20000": 0, "10000": 0, ... } },
+                            { "nombre": "SABADO (Noche)", "billetes": { ... } }
+                          ],
+                          "bonpland": { "billetes": { ... } },
+                          "secretaria": { "monto": 0 },
+                          "egresos": [
+                            { "nombre": "REINTEGRO P. JORGE", "monto": 0 },
+                            { "nombre": "REINTEGRO P. ADAN", "monto": 0 }
+                          ]
+                        }`
+                    }, {
+                        inlineData: { mimeType: "image/jpeg", data: base64ImageData }
+                    }]
+                }],
+                 generationConfig: {
+                    responseMimeType: "application/json",
+                 }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    throw new Error(`Error de la API: ${response.statusText} - ${errorBody}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates[0].content.parts[0].text) {
+                    const planillaData = JSON.parse(result.candidates[0].content.parts[0].text);
+                    handleAIResponse(planillaData);
+                } else {
+                    throw new Error("La respuesta de la IA no tiene el formato esperado.");
+                }
+
+            } catch (error) {
+                console.error("Error al procesar la planilla con IA:", error);
+                showToast('No se pudo analizar la planilla.', 'error');
+            } finally {
+                hideSpinner();
+            }
+        }
+
+        function handleAIResponse(aiData) {
+            cargasPendientes = []; // Limpiar cargas anteriores
+
+            // Mapeo de nombres de la planilla a categorías de la app
+            const categoryMap = {
+                "ENTRE SEMANA": "Colecta entre semana",
+                "SABADO (Noche)": "Colecta de sábado 19:30h",
+                // Asume que los domingos se mapean a los horarios específicos si es necesario
+                "DOMINGO (Mañana)": "Colecta de domingo 08h",
+                "DOMINGO (Catequesis)": "Colecta de domingo 10:30h",
+                "DOMINGO (Noche)": "Colecta de domingo 19:30h",
+                "INTENCIONES Y SACRAMENTOS": "Intenciones y Sacramento",
+                "DONACIONES": "Donaciones",
+                "ALCANCIAS": "Alcancias",
+                "BONPLAND": "Colecta de Bonpland",
+                "SECRETARIA": "Secretaría",
+                "REINTEGRO P. JORGE": "Gastos Padre Jorge",
+                "REINTEGRO P. ADAN": "Gastos Padre Adán"
+            };
+
+            // Procesar Colectas
+            if (aiData.colectas) {
+                aiData.colectas.forEach(colecta => {
+                    const billetes = colecta.billetes || {};
+                    let monto = 0;
+                    for (const denom in billetes) {
+                        monto += parseInt(denom) * (billetes[denom] || 0);
+                    }
+                    if (monto > 0) {
+                        cargasPendientes.push({
+                            type: 'ingreso',
+                            categoria: categoryMap[colecta.nombre] || colecta.nombre,
+                            monto,
+                            billetes,
+                            fecha: selectedDate
+                        });
+                    }
+                });
+            }
+
+            // Procesar Bonpland
+            if (aiData.bonpland && aiData.bonpland.billetes) {
+                 let monto = 0;
+                 const billetes = aiData.bonpland.billetes;
+                 for (const denom in billetes) {
+                    monto += parseInt(denom) * (billetes[denom] || 0);
+                 }
+                 if (monto > 0) {
+                    cargasPendientes.push({
+                        type: 'ingreso',
+                        categoria: 'Colecta de Bonpland',
+                        monto,
+                        billetes,
+                        fecha: selectedDate
+                    });
+                 }
+            }
+
+            // Procesar Secretaría
+            if (aiData.secretaria && aiData.secretaria.monto > 0) {
+                cargasPendientes.push({
+                    type: 'ingreso',
+                    categoria: 'Secretaría',
+                    monto: aiData.secretaria.monto,
+                    descripcion: 'Cargado por foto',
+                    fecha: selectedDate
+                });
+            }
+
+            // Procesar Egresos
+            if (aiData.egresos) {
+                aiData.egresos.forEach(egreso => {
+                    if (egreso.monto > 0) {
+                        cargasPendientes.push({
+                            type: 'egreso',
+                            categoria: categoryMap[egreso.nombre] || egreso.nombre,
+                            monto: egreso.monto,
+                            fecha: selectedDate
+                        });
+                    }
+                });
+            }
+            
+            if (cargasPendientes.length === 0) {
+                showToast('La IA no encontró datos para cargar en la planilla.', 'info');
+                return;
+            }
+
+            showToast('¡Planilla analizada! Revisa el resumen.', 'success');
+            initialScreen.classList.add('hidden');
+            summaryScreen.classList.remove('hidden');
+            renderDetailedSummary();
+        }
+        // --- FIN: LÓGICA PARA CARGA POR FOTO (PLANILLA) ---
 
     </script>
 </html>
