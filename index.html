@@ -185,15 +185,15 @@
 
         /* Estilos para botones de selección de colecta */
         .colecta-option-btn-style {
-             background-color: #e5e7eb; /* gray-200 */
-             color: #1f2937; /* gray-800 */
-             font-weight: 600;
-             padding-top: 0.5rem;
-             padding-bottom: 0.5rem;
-             border-radius: 0.75rem;
-             transition-property: background-color;
-             transition-duration: 300ms;
-             border: 2px solid transparent;
+              background-color: #e5e7eb; /* gray-200 */
+              color: #1f2937; /* gray-800 */
+              font-weight: 600;
+              padding-top: 0.5rem;
+              padding-bottom: 0.5rem;
+              border-radius: 0.75rem;
+              transition-property: background-color;
+              transition-duration: 300ms;
+              border: 2px solid transparent;
         }
 
         .colecta-option-btn-style:hover {
@@ -325,7 +325,7 @@
                 <button class="colecta-option-btn w-full colecta-option-btn-style" data-colecta="Alcancias">
                     Alcancias
                 </button>
-                <button id="bonpland-colecta-btn" class="w-full colecta-option-btn-style">
+                <button id="bonpland-btn" class="w-full colecta-option-btn-style">
                     Colecta de Bonpland
                 </button>
                 <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
@@ -459,77 +459,6 @@
             </div>
         </div>
 
-        <!-- Sección para la colecta de Bonpland (inicialmente oculta) -->
-        <div id="bonpland-screen" class="hidden">
-            <h2 class="text-xl font-bold text-gray-700 mb-4">Colecta de Bonpland</h2>
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <!-- Billetes de 20000 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">20000</label>
-                    <input type="number" id="bonpland-20000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <!-- Billetes de 10000 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">10000</label>
-                    <input type="number" id="bonpland-10000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <!-- Billetes de 2000 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">2000</label>
-                    <input type="number" id="bonpland-2000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <!-- Billetes de 1000 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">1000</label>
-                    <input type="number" id="bonpland-1000-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <!-- Billetes de 500 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">500</label>
-                    <input type="number" id="bonpland-500-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <!-- Billetes de 200 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">200</label>
-                    <input type="number" id="bonpland-200-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <!-- Billetes de 100 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">100</label>
-                    <input type="number" id="bonpland-100-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <!-- Billetes de 50 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">50</label>
-                    <input type="number" id="bonpland-50-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <!-- Billetes de 20 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">20</label>
-                    <input type="number" id="bonpland-20-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <!-- Billetes de 10 -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">10</label>
-                    <input type="number" id="bonpland-10-input" min="0" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-            </div>
-
-            <div class="mb-6 p-4 bg-gray-100 rounded-lg shadow-inner">
-                <p class="text-lg font-bold text-gray-800">Total: <span id="bonpland-total" class="text-blue-600">$0</span></p>
-            </div>
-            
-            <div class="flex flex-col gap-4">
-                <!-- INICIO: CAMBIO SOLICITADO - Estilo del botón con degradado -->
-                <button id="confirmar-bonpland-btn" class="w-full btn-gradient btn-green-gradient">
-                    Confirmar Colecta
-                </button>
-                <button id="back-from-bonpland" class="w-full btn-gradient btn-red-gradient">
-                    Volver
-                </button>
-                <!-- FIN: CAMBIO SOLICITADO -->
-            </div>
-        </div>
         
         <!-- Sección de resumen (inicialmente oculta) -->
         <div id="summary-screen" class="hidden">
@@ -808,6 +737,27 @@
             </div>
         </div>
 
+        <!-- Modal de Bonpland (para monto directo) -->
+        <div id="bonpland-monto-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+                <h3 id="bonpland-modal-title" class="text-xl font-bold leading-6 text-gray-900 mb-4 text-center">Colecta de Bonpland</h3>
+                <div class="mt-2 space-y-4">
+                    <div>
+                        <label for="bonpland-monto-input" class="block text-sm font-medium text-gray-700">Monto</label>
+                        <input type="text" inputmode="numeric" id="bonpland-monto-input" placeholder="Monto Total" class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-center gap-4">
+                    <button id="bonpland-monto-confirm-btn" type="button" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        Confirmar
+                    </button>
+                    <button id="bonpland-monto-cancel-btn" type="button" class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Volver
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
     </body>
     <script type="module">
@@ -926,7 +876,6 @@
         const selectColectaScreen = document.getElementById('select-colecta-screen');
         const billetesScreen = document.getElementById('billetes-screen');
         const egresosScreen = document.getElementById('egresos-screen');
-        const bonplandScreen = document.getElementById('bonpland-screen');
         const summaryScreen = document.getElementById('summary-screen');
         const historialDetalladoScreen = document.getElementById('historial-detallado-screen');
         const historialPorFechaScreen = document.getElementById('historial-por-fecha-screen');
@@ -947,7 +896,6 @@
         const backFromSelectBtn = document.getElementById('back-from-select');
         const backFromBilletesBtn = document.getElementById('back-from-billetes');
         const backFromEgresosBtn = document.getElementById('back-from-egresos');
-        const backFromBonplandBtn = document.getElementById('back-from-bonpland');
         const backFromSummaryBtn = document.getElementById('back-from-summary');
         const backFromHistorialDetalladoBtn = document.getElementById('back-from-historial-detallado');
         const backFromHistorialPorFechaBtn = document.getElementById('back-from-historial-por-fecha');
@@ -972,14 +920,11 @@
         const bonplandYesBtn = document.getElementById('bonpland-yes-btn');
         const bonplandNoBtn = document.getElementById('bonpland-no-btn');
         const confirmarEgresosBtn = document.getElementById('confirmar-egresos-btn');
-        const confirmarBonplandBtn = document.getElementById('confirmar-bonpland-btn');
         const billeteInputs = document.querySelectorAll('#billetes-screen input[type="number"]');
-        const bonplandInputs = document.querySelectorAll('#bonpland-screen input[type="number"]');
         const egresoJorgeInput = document.getElementById('egreso-jorge-input');
         const egresoAdanInput = document.getElementById('egreso-adan-input');
         const egresoOtrosInput = document.getElementById('egreso-otros-input');
         const totalEgresosSpan = document.getElementById('total-egresos');
-        const bonplandTotalSpan = document.getElementById('bonpland-total');
         const summaryDateElement = document.getElementById('summary-date');
         const summaryContent = document.getElementById('summary-content');
         const aclaracionesTextarea = document.getElementById('aclaraciones-text');
@@ -1004,11 +949,16 @@
         const secretariaDescripcionInput = document.getElementById('secretaria-descripcion-input');
         const secretariaConfirmBtn = document.getElementById('secretaria-confirm-btn');
         const secretariaCancelBtn = document.getElementById('secretaria-cancel-btn');
+        // New elements for Bonpland
+        const bonplandBtn = document.getElementById('bonpland-btn');
+        const bonplandMontoModal = document.getElementById('bonpland-monto-modal');
+        const bonplandMontoInput = document.getElementById('bonpland-monto-input');
+        const bonplandMontoConfirmBtn = document.getElementById('bonpland-monto-confirm-btn');
+        const bonplandMontoCancelBtn = document.getElementById('bonpland-monto-cancel-btn');
         // Campos de importe que necesitan formato
-        const amountInputs = document.querySelectorAll('#egreso-jorge-input, #egreso-adan-input, #egreso-otros-input, #secretaria-monto-input');
+        const amountInputs = document.querySelectorAll('#egreso-jorge-input, #egreso-adan-input, #egreso-otros-input, #secretaria-monto-input, #bonpland-monto-input');
         // Botón de confirmar carga final
         const confirmarTodoBtn = document.getElementById('confirmar-todo-btn');
-        const bonplandColectaBtn = document.getElementById('bonpland-colecta-btn');
         const egresosDirectBtn = document.getElementById('egresos-direct-btn');
 
         // --- Spinner Functions ---
@@ -1040,16 +990,6 @@
                 total += value * denomination;
             });
             totalColectaSpan.textContent = formatCurrency(total);
-        }
-
-        function calcularTotalBonpland() {
-            let total = 0;
-            bonplandInputs.forEach(input => {
-                const value = parseInt(input.value) || 0;
-                const denomination = parseInt(input.id.split('-')[1]);
-                total += value * denomination;
-            });
-            bonplandTotalSpan.textContent = formatCurrency(total);
         }
 
         function calcularTotalEgresos() {
@@ -1349,13 +1289,9 @@
                         showToast('Ya existe un ingreso de Bonpland en la lista pendiente.', 'error');
                         return;
                     }
-                    bonplandInputs.forEach(input => {
-                        const denom = input.id.split('-')[1];
-                        input.value = itemToModify.billetes[denom] || '';
-                    });
-                    calcularTotalBonpland();
+                    bonplandMontoInput.value = formatWithSeparators(itemToModify.monto);
                     historialPorFechaScreen.classList.add('hidden');
-                    bonplandScreen.classList.remove('hidden');
+                    bonplandMontoModal.classList.remove('hidden');
                 } else { // Any other income type with banknotes
                     const isDuplicate = cargasPendientes.some(item => item.categoria === itemToModify.categoria && item.id !== id);
                     if (isDuplicate) {
@@ -1405,7 +1341,6 @@
                 selectColectaScreen.classList.add('hidden');
                 billetesScreen.classList.add('hidden');
                 egresosScreen.classList.add('hidden');
-                bonplandScreen.classList.add('hidden');
                 summaryScreen.classList.add('hidden');
                 historialDetalladoScreen.classList.add('hidden');
                 historialPorFechaScreen.classList.add('hidden');
@@ -1512,18 +1447,16 @@
         colectaEspecialCancelBtn.addEventListener('click', () => {
             colectaEspecialPromptModal.classList.add('hidden');
         });
-        
-        bonplandColectaBtn.addEventListener('click', () => {
+
+        bonplandBtn.addEventListener('click', () => {
             const colectaType = 'Colecta de Bonpland';
             const isDuplicate = cargasPendientes.some(item => item.categoria === colectaType);
             if (isDuplicate) {
                 showToast(`La carga de "${colectaType}" ya ha sido agregada a la lista pendiente.`, 'error');
                 return;
             }
-            bonplandScreen.classList.remove('hidden');
-            selectColectaScreen.classList.add('hidden');
-            bonplandInputs.forEach(input => input.value = '');
-            calcularTotalBonpland();
+            bonplandMontoInput.value = '';
+            bonplandMontoModal.classList.remove('hidden');
         });
         
         egresosDirectBtn.addEventListener('click', () => {
@@ -1539,7 +1472,6 @@
         });
         
         billeteInputs.forEach(input => input.addEventListener('input', calcularTotalColecta));
-        bonplandInputs.forEach(input => input.addEventListener('input', calcularTotalBonpland));
         
         amountInputs.forEach(input => {
             input.addEventListener('input', (event) => {
@@ -1658,47 +1590,44 @@
             }
         });
         
-        confirmarBonplandBtn.addEventListener('click', async () => {
-            showSpinner();
-            try {
-                const montoBonpland = parseFloat(bonplandTotalSpan.textContent.replace(/\$|\./g, '').replace(',', '.')) || 0;
-                
-                if (montoBonpland <= 0 && !itemToModify) {
-                    showToast('Introduce al menos un monto para Bonpland.', 'error');
-                    hideSpinner();
-                    return;
-                }
+        bonplandMontoCancelBtn.addEventListener('click', () => {
+            bonplandMontoModal.classList.add('hidden');
+            itemToModify = null;
+        });
 
-                const billetes = {};
-                bonplandInputs.forEach(input => {
-                    const denomination = input.id.split('-')[1];
-                    billetes[denomination] = parseInt(input.value) || 0;
-                });
-                
-                const data = { type: 'ingreso', categoria: 'Colecta de Bonpland', monto: montoBonpland, billetes, fecha: selectedDate };
+        bonplandMontoConfirmBtn.addEventListener('click', async () => {
+            const monto = parseFormattedValue(bonplandMontoInput.value);
+            
+            if (isNaN(monto) || monto <= 0) {
+                showToast('Por favor, ingresa un monto válido.', 'error');
+                return;
+            }
+            
+            showSpinner();
+            bonplandMontoModal.classList.add('hidden');
+
+            try {
+                const data = { type: 'ingreso', categoria: 'Colecta de Bonpland', monto: monto, fecha: selectedDate };
                 
                 if (itemToModify) {
                     await updateDataInFirestore(itemToModify.id, data);
                     await fetchDataFromFirestore();
-                    bonplandScreen.classList.add('hidden');
                     verDetallePorFecha(selectedDate);
                     showToast('Colecta de Bonpland modificada.', 'success');
-                    itemToModify = null;
                 } else {
                     cargasPendientes.push(data);
-                    await fetchDataFromFirestore();
-                    bonplandScreen.classList.add('hidden');
                     selectColectaScreen.classList.remove('hidden');
-                    showToast('Colecta de Bonpland agregada a la lista pendiente.', 'success');
+                    showToast('Colecta de Bonpland guardada en la lista pendiente.', 'success');
                 }
             } catch (error) {
                 console.error("Error saving Bonpland collection:", error);
-                showToast('Error al guardar Colecta de Bonpland.', 'error');
+                showToast('Error al guardar el ingreso.', 'error');
             } finally {
+                itemToModify = null;
                 hideSpinner();
             }
         });
-        
+
         confirmarTodoBtn.addEventListener('click', async () => {
             if (cargasPendientes.length === 0) {
                 showToast('No hay cargas pendientes. Por favor, agrega al menos una.', 'error');
@@ -1767,16 +1696,6 @@
         
         backFromEgresosBtn.addEventListener('click', () => {
             egresosScreen.classList.add('hidden');
-            if(itemToModify){
-                verDetallePorFecha(itemToModify.fecha);
-                itemToModify = null;
-            } else {
-                selectColectaScreen.classList.remove('hidden');
-            }
-        });
-        
-        backFromBonplandBtn.addEventListener('click', () => {
-            bonplandScreen.classList.add('hidden');
             if(itemToModify){
                 verDetallePorFecha(itemToModify.fecha);
                 itemToModify = null;
