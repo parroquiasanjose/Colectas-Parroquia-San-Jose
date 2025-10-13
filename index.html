@@ -236,12 +236,10 @@
         
         <!-- Título de la aplicación -->
         <div class="text-center mb-8">
-            <!-- INICIO: CAMBIO SOLICITADO - Logo actualizado -->
             <div class="flex justify-center items-center gap-3">
                 <img src="https://i.postimg.cc/vTQjffhK/NUEVO-LOGO.png" alt="Logo Parroquia San José" class="h-12">
                 <h1 class="text-3xl font-extrabold text-slate-800">Parroquia San José</h1>
             </div>
-            <!-- FIN: CAMBIO SOLICITADO -->
             <p class="text-2xl font-semibold text-gray-500 mt-1">Colectas</p>
         </div>
         
@@ -434,17 +432,17 @@
             <h2 class="text-xl font-bold text-gray-700 mb-4">Egresos</h2>
             <div class="flex flex-col gap-4 mb-6">
                 <!-- Egresos Padre Jorge -->
-                <div>
+                <div id="egreso-jorge-container">
                     <label class="block text-sm font-medium text-gray-700">Gastos Padre Jorge</label>
                     <input type="text" inputmode="numeric" id="egreso-jorge-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Egresos Padre Adán -->
-                <div>
+                <div id="egreso-adan-container">
                     <label class="block text-sm font-medium text-gray-700">Gastos Padre Adán</label>
                     <input type="text" inputmode="numeric" id="egreso-adan-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                 <!-- Otros gastos -->
-                <div>
+                <div id="egreso-otros-container">
                     <label class="block text-sm font-medium text-gray-700">Otros gastos</label>
                     <input type="text" inputmode="numeric" id="egreso-otros-input" class="w-full mt-1 px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
@@ -607,26 +605,6 @@
             </div>
         </div>
 
-        <!-- Modal de Bonpland (inicialmente oculta) -->
-        <div id="bonpland-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
-                <div class="text-center">
-                    <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4">Cargar Colecta de Bonpland</h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500">¿Quieres cargar la colecta de Bonpland?</p>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-center gap-4">
-                    <button id="bonpland-yes-btn" type="button" class="flex-1 btn-gradient btn-blue-gradient text-sm py-2">
-                        Sí
-                    </button>
-                    <button id="bonpland-no-btn" type="button" class="flex-1 btn-gradient btn-neutral-gradient text-sm py-2">
-                        No
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Modal de Colecta Especial (inicialmente oculta) -->
         <div id="colecta-especial-prompt-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
@@ -732,64 +710,22 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal de Bonpland (para monto directo) -->
-        <div id="bonpland-monto-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
-                <h3 id="bonpland-modal-title" class="text-xl font-bold leading-6 text-gray-900 mb-4 text-center">Colecta de Bonpland</h3>
-                <div class="mt-2 space-y-4">
-                    <div>
-                        <label for="bonpland-monto-input" class="block text-sm font-medium text-gray-700">Monto</label>
-                        <input type="text" inputmode="numeric" id="bonpland-monto-input" placeholder="Monto Total" class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-center gap-4">
-                    <button id="bonpland-monto-confirm-btn" type="button" class="flex-1 btn-gradient btn-green-gradient text-sm py-2">
-                        Confirmar
-                    </button>
-                    <button id="bonpland-monto-cancel-btn" type="button" class="flex-1 btn-gradient btn-neutral-gradient text-sm py-2">
-                        Volver
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de Mercado Pago (para monto directo) -->
-        <div id="mercado-pago-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
-                <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4 text-center">Ingreso por Mercado Pago</h3>
-                <div class="mt-2 space-y-4">
-                    <div>
-                        <label for="mercado-pago-monto-input" class="block text-sm font-medium text-gray-700">Monto</label>
-                        <input type="text" inputmode="numeric" id="mercado-pago-monto-input" placeholder="Monto Total" class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-center gap-4">
-                    <button id="mercado-pago-confirm-btn" type="button" class="flex-1 btn-gradient btn-green-gradient text-sm py-2">
-                        Confirmar
-                    </button>
-                    <button id="mercado-pago-cancel-btn" type="button" class="flex-1 btn-gradient btn-neutral-gradient text-sm py-2">
-                        Volver
-                    </button>
-                </div>
-            </div>
-        </div>
         
-        <!-- Modal de Beneficios (para monto directo) -->
-        <div id="beneficios-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+        <!-- Modal Genérico para Monto Directo (Refactorizado) -->
+        <div id="direct-amount-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
             <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
-                <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4 text-center">Ingreso por Beneficios</h3>
+                <h3 id="direct-amount-modal-title" class="text-xl font-bold leading-6 text-gray-900 mb-4 text-center"></h3>
                 <div class="mt-2 space-y-4">
                     <div>
-                        <label for="beneficios-monto-input" class="block text-sm font-medium text-gray-700">Monto</label>
-                        <input type="text" inputmode="numeric" id="beneficios-monto-input" placeholder="Monto Total" class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="direct-amount-input" class="block text-sm font-medium text-gray-700">Monto</label>
+                        <input type="text" inputmode="numeric" id="direct-amount-input" placeholder="Monto Total" class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
                 <div class="mt-6 flex justify-center gap-4">
-                    <button id="beneficios-confirm-btn" type="button" class="flex-1 btn-gradient btn-green-gradient text-sm py-2">
+                    <button id="direct-amount-confirm-btn" type="button" class="flex-1 btn-gradient btn-green-gradient text-sm py-2">
                         Confirmar
                     </button>
-                    <button id="beneficios-cancel-btn" type="button" class="flex-1 btn-gradient btn-neutral-gradient text-sm py-2">
+                    <button id="direct-amount-cancel-btn" type="button" class="flex-1 btn-gradient btn-neutral-gradient text-sm py-2">
                         Volver
                     </button>
                 </div>
@@ -836,13 +772,14 @@
         // Variables para almacenar el estado de la aplicación
         let selectedColecta = '';
         let historialData = [];
-        let cargasPendientes = []; // NUEVO: Array para guardar las cargas antes de la confirmación final
+        let cargasPendientes = [];
         let selectedDate = '';
         let itemToModify = null;
         let itemToDeleteId = null;
         let dateToDelete = null;
         let currentFilter = 'todos';
         let incomeChart, expensesChart, evolutionChart;
+        let currentDirectAmountInfo = {}; // Para el modal genérico
 
         // --- Helper Functions ---
         function formatCurrency(amount) {
@@ -859,19 +796,15 @@
             return `${day}/${month}/${year}`;
         }
 
-        // **NUEVO** - Función para formatear números con separador de miles
         function formatWithSeparators(number) {
             if (number === null || number === undefined || isNaN(number)) {
                 return '';
             }
-            // Usa un punto como separador de miles
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        // **NUEVO** - Función para quitar el formato y obtener el número
         function parseFormattedValue(value) {
             if (typeof value !== 'string') return 0;
-            // Quita los puntos antes de convertir a número
             return parseFloat(value.replace(/\./g, '')) || 0;
         }
 
@@ -900,18 +833,14 @@
                 const index = categoryOrder.indexOf(baseCategory);
                 return index === -1 ? categoryOrder.length : index;
             };
-
             const indexA = getOrderIndex(a.categoria);
             const indexB = getOrderIndex(b.categoria);
-
             return indexA - indexB;
         }
         
         // --- DOM Element References ---
         const spinner = document.getElementById('spinner');
         const loginScreen = document.getElementById('login-screen');
-        const loginBtn = document.getElementById('login-btn');
-        const errorMessage = document.getElementById('error-message');
         const initialScreen = document.getElementById('initial-screen');
         const selectColectaScreen = document.getElementById('select-colecta-screen');
         const billetesScreen = document.getElementById('billetes-screen');
@@ -920,19 +849,24 @@
         const historialDetalladoScreen = document.getElementById('historial-detallado-screen');
         const historialPorFechaScreen = document.getElementById('historial-por-fecha-screen');
         const reportsScreen = document.getElementById('reports-screen');
-        const confirmationModal = document.getElementById('confirmation-modal');
-        const egresosPromptModal = document.getElementById('egresos-prompt-modal');
-        const bonplandPromptModal = document.getElementById('bonpland-prompt-modal');
         const colectaEspecialPromptModal = document.getElementById('colecta-especial-prompt-modal');
         const datePickerModal = document.getElementById('date-picker-modal');
         const deleteConfirmationModal = document.getElementById('delete-confirmation-modal');
-        const deleteConfirmationMessage = document.getElementById('delete-confirmation-message');
-        const deleteConfirmBtn = document.getElementById('delete-confirm-btn');
-        const deleteCancelBtn = document.getElementById('delete-cancel-btn');
         const finalConfirmationModal = document.getElementById('final-confirmation-modal');
-        const finalConfirmYesBtn = document.getElementById('final-confirm-yes-btn');
-        const finalConfirmNoBtn = document.getElementById('final-confirm-no-btn');
+        const secretariaModal = document.getElementById('secretaria-modal');
+        
+        // --- Botones ---
+        const loginBtn = document.getElementById('login-btn');
         const cargarBtn = document.getElementById('cargar-btn');
+        const historialDetalladoBtn = document.getElementById('historial-detallado-btn');
+        const reportsBtn = document.getElementById('reports-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const bonplandBtn = document.getElementById('bonpland-btn');
+        const beneficiosBtn = document.getElementById('beneficios-btn');
+        const mercadoPagoBtn = document.getElementById('mercado-pago-btn');
+        const egresosDirectBtn = document.getElementById('egresos-direct-btn');
+        const secretariaBtn = document.getElementById('secretaria-btn');
+        const confirmarTodoBtn = document.getElementById('confirmar-todo-btn');
         const backFromSelectBtn = document.getElementById('back-from-select');
         const backFromBilletesBtn = document.getElementById('back-from-billetes');
         const backFromEgresosBtn = document.getElementById('back-from-egresos');
@@ -940,11 +874,27 @@
         const backFromHistorialDetalladoBtn = document.getElementById('back-from-historial-detallado');
         const backFromHistorialPorFechaBtn = document.getElementById('back-from-historial-por-fecha');
         const backFromReportsBtn = document.getElementById('back-from-reports');
-        const historialDetalladoList = document.getElementById('historial-detallado-list');
-        const historialDetalladoBtn = document.getElementById('historial-detallado-btn');
-        const reportsBtn = document.getElementById('reports-btn');
+        const confirmarCargaBtn = document.getElementById('confirmar-carga-btn');
+        const confirmarEgresosBtn = document.getElementById('confirmar-egresos-btn');
+        const deleteConfirmBtn = document.getElementById('delete-confirm-btn');
+        const deleteCancelBtn = document.getElementById('delete-cancel-btn');
+        const finalConfirmYesBtn = document.getElementById('final-confirm-yes-btn');
+        const finalConfirmNoBtn = document.getElementById('final-confirm-no-btn');
+        const dateOkBtn = document.getElementById('date-ok-btn');
+        const dateCancelBtn = document.getElementById('date-cancel-btn');
+        const colectaEspecialConfirmBtn = document.getElementById('colecta-especial-confirm-btn');
+        const colectaEspecialCancelBtn = document.getElementById('colecta-especial-cancel-btn');
+        const secretariaConfirmBtn = document.getElementById('secretaria-confirm-btn');
+        const secretariaCancelBtn = document.getElementById('secretaria-cancel-btn');
+        const downloadPdfHistorialBtn = document.getElementById('download-pdf-historial-btn');
+        const downloadPdfBtn = document.getElementById('download-pdf-btn');
         const exportExcelBtn = document.getElementById('export-excel-btn');
         const exportPdfBackupBtn = document.getElementById('export-pdf-backup-btn');
+
+        // --- Inputs & Displays ---
+        const errorMessage = document.getElementById('error-message');
+        const deleteConfirmationMessage = document.getElementById('delete-confirmation-message');
+        const historialDetalladoList = document.getElementById('historial-detallado-list');
         const searchHistorialInput = document.getElementById('search-historial-input');
         const filterBtns = document.querySelectorAll('.filter-btn');
         const historialPorFechaList = document.getElementById('historial-por-fecha-list');
@@ -952,66 +902,36 @@
         const colectaOptionBtns = document.querySelectorAll('.colecta-option-btn');
         const billetesTitle = document.getElementById('billetes-title');
         const totalColectaSpan = document.getElementById('total-colecta');
-        const confirmarCargaBtn = document.getElementById('confirmar-carga-btn');
-        const confirmOkBtn = document.getElementById('confirm-ok-btn');
-        const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
-        const egresosYesBtn = document.getElementById('egresos-yes-btn');
-        const egresosNoBtn = document.getElementById('egresos-no-btn');
-        const bonplandYesBtn = document.getElementById('bonpland-yes-btn');
-        const bonplandNoBtn = document.getElementById('bonpland-no-btn');
-        const confirmarEgresosBtn = document.getElementById('confirmar-egresos-btn');
         const billeteInputs = document.querySelectorAll('#billetes-screen input[type="number"]');
         const egresoJorgeInput = document.getElementById('egreso-jorge-input');
         const egresoAdanInput = document.getElementById('egreso-adan-input');
         const egresoOtrosInput = document.getElementById('egreso-otros-input');
+        const egresoJorgeContainer = document.getElementById('egreso-jorge-container');
+        const egresoAdanContainer = document.getElementById('egreso-adan-container');
+        const egresoOtrosContainer = document.getElementById('egreso-otros-container');
         const totalEgresosSpan = document.getElementById('total-egresos');
         const summaryDateElement = document.getElementById('summary-date');
         const summaryContent = document.getElementById('summary-content');
         const aclaracionesTextarea = document.getElementById('aclaraciones-text');
-        const downloadPdfBtn = document.getElementById('download-pdf-btn');
-        const downloadPdfHistorialBtn = document.getElementById('download-pdf-historial-btn');
         const colectaDateInput = document.getElementById('colecta-date-input');
-        const dateOkBtn = document.getElementById('date-ok-btn');
-        const dateCancelBtn = document.getElementById('date-cancel-btn');
         const colectaEspecialInput = document.getElementById('colecta-especial-input');
-        const colectaEspecialConfirmBtn = document.getElementById('colecta-especial-confirm-btn');
-        const colectaEspecialCancelBtn = document.getElementById('colecta-especial-cancel-btn');
-        const logoutBtn = document.getElementById('logout-btn');
         const timeFilterSelect = document.getElementById('time-filter-select');
         const dashboardTodayTotal = document.getElementById('dashboard-today-total');
         const dashboardMonthBalance = document.getElementById('dashboard-month-balance');
         const dashboardLastUpload = document.getElementById('dashboard-last-upload');
-        // New elements for Secretaría
-        const secretariaBtn = document.getElementById('secretaria-btn');
-        const secretariaModal = document.getElementById('secretaria-modal');
         const secretariaModalTitle = document.getElementById('secretaria-modal-title');
         const secretariaMontoInput = document.getElementById('secretaria-monto-input');
         const secretariaDescripcionInput = document.getElementById('secretaria-descripcion-input');
-        const secretariaConfirmBtn = document.getElementById('secretaria-confirm-btn');
-        const secretariaCancelBtn = document.getElementById('secretaria-cancel-btn');
-        // New elements for Bonpland
-        const bonplandBtn = document.getElementById('bonpland-btn');
-        const bonplandMontoModal = document.getElementById('bonpland-monto-modal');
-        const bonplandMontoInput = document.getElementById('bonpland-monto-input');
-        const bonplandMontoConfirmBtn = document.getElementById('bonpland-monto-confirm-btn');
-        const bonplandMontoCancelBtn = document.getElementById('bonpland-monto-cancel-btn');
-        // New elements for Mercado Pago
-        const mercadoPagoBtn = document.getElementById('mercado-pago-btn');
-        const mercadoPagoModal = document.getElementById('mercado-pago-modal');
-        const mercadoPagoMontoInput = document.getElementById('mercado-pago-monto-input');
-        const mercadoPagoConfirmBtn = document.getElementById('mercado-pago-confirm-btn');
-        const mercadoPagoCancelBtn = document.getElementById('mercado-pago-cancel-btn');
-        // New elements for Beneficios
-        const beneficiosBtn = document.getElementById('beneficios-btn');
-        const beneficiosModal = document.getElementById('beneficios-modal');
-        const beneficiosMontoInput = document.getElementById('beneficios-monto-input');
-        const beneficiosConfirmBtn = document.getElementById('beneficios-confirm-btn');
-        const beneficiosCancelBtn = document.getElementById('beneficios-cancel-btn');
-        // Campos de importe que necesitan formato
-        const amountInputs = document.querySelectorAll('#egreso-jorge-input, #egreso-adan-input, #egreso-otros-input, #secretaria-monto-input, #bonpland-monto-input, #mercado-pago-monto-input, #beneficios-monto-input');
-        // Botón de confirmar carga final
-        const confirmarTodoBtn = document.getElementById('confirmar-todo-btn');
-        const egresosDirectBtn = document.getElementById('egresos-direct-btn');
+        
+        // --- Modal Genérico para Monto Directo ---
+        const directAmountModal = document.getElementById('direct-amount-modal');
+        const directAmountModalTitle = document.getElementById('direct-amount-modal-title');
+        const directAmountInput = document.getElementById('direct-amount-input');
+        const directAmountConfirmBtn = document.getElementById('direct-amount-confirm-btn');
+        const directAmountCancelBtn = document.getElementById('direct-amount-cancel-btn');
+
+        // --- Campos de importe que necesitan formato ---
+        const amountInputs = document.querySelectorAll('input[inputmode="numeric"]');
 
         // --- Spinner Functions ---
         const showSpinner = () => spinner.classList.remove('hidden');
@@ -1027,9 +947,7 @@
 
             setTimeout(() => {
                 toast.classList.add('hiding');
-                toast.addEventListener('animationend', () => {
-                    toast.remove();
-                });
+                toast.addEventListener('animationend', () => toast.remove());
             }, 3000);
         }
 
@@ -1081,10 +999,6 @@
             }
         }
 
-        async function saveDataToFirestore(data) {
-            await addDoc(colectasCollection, data);
-        }
-        
         async function updateDataInFirestore(id, data) {
             const docRef = doc(db, "colectas", id);
             await updateDoc(docRef, data);
@@ -1217,14 +1131,13 @@
         
         function eliminarPorFecha(fecha) {
             dateToDelete = fecha;
-            itemToDeleteId = null; // Ensure we're deleting a date, not a single item
+            itemToDeleteId = null; 
             deleteConfirmationMessage.textContent = `¿Estás seguro de que quieres eliminar TODOS los registros del día ${fecha}? Esta acción no se puede deshacer.`;
             deleteConfirmationModal.classList.remove('hidden');
         }
 
         function renderHistorialDetallado() {
             historialDetalladoList.innerHTML = '';
-
             const searchTerm = searchHistorialInput.value.toLowerCase();
             let filteredItems = historialData;
 
@@ -1244,45 +1157,31 @@
                 return;
             }
             
-            finalDates.sort((a, b) => {
-                const dateA = new Date(a.split('/').reverse().join('-'));
-                const dateB = new Date(b.split('/').reverse().join('-'));
-                return dateB - dateA;
-            });
+            finalDates.sort((a, b) => new Date(b.split('/').reverse().join('-')) - new Date(a.split('/').reverse().join('-')));
             
             finalDates.forEach(fecha => {
                 const nuevaEntrada = document.createElement('li');
                 nuevaEntrada.className = 'p-4 rounded-lg shadow-sm bg-gray-100 flex justify-between items-center';
-
-                const contentDiv = document.createElement('div');
-                contentDiv.innerHTML = `<p class="font-bold text-gray-800">Colectas del día: ${fecha}</p>`;
-
-                const actionsDiv = document.createElement('div');
-                actionsDiv.className = "flex space-x-2";
-
-                const verDetalleBtn = document.createElement('button');
-                verDetalleBtn.textContent = 'Ver Detalle';
-                verDetalleBtn.className = 'btn-gradient-sm btn-blue-gradient';
-                verDetalleBtn.onclick = () => verDetallePorFecha(fecha);
-                
-                const descargarPdfBtn = document.createElement('button');
-                descargarPdfBtn.textContent = 'Descargar PDF';
-                descargarPdfBtn.className = 'btn-gradient-sm btn-green-gradient';
-                descargarPdfBtn.onclick = () => descargarPdfPorFecha(fecha);
-
-                const eliminarFechaBtn = document.createElement('button');
-                eliminarFechaBtn.textContent = 'Eliminar';
-                eliminarFechaBtn.className = 'btn-gradient-sm btn-red-gradient';
-                eliminarFechaBtn.onclick = () => eliminarPorFecha(fecha);
-
-                actionsDiv.appendChild(verDetalleBtn);
-                actionsDiv.appendChild(descargarPdfBtn);
-                actionsDiv.appendChild(eliminarFechaBtn);
-                nuevaEntrada.appendChild(contentDiv);
-                nuevaEntrada.appendChild(actionsDiv);
+                nuevaEntrada.innerHTML = `
+                    <p class="font-bold text-gray-800">Colectas del día: ${fecha}</p>
+                    <div class="flex space-x-2">
+                        <button class="btn-gradient-sm btn-blue-gradient" data-fecha="${fecha}" data-action="ver">Ver Detalle</button>
+                        <button class="btn-gradient-sm btn-green-gradient" data-fecha="${fecha}" data-action="pdf">Descargar PDF</button>
+                        <button class="btn-gradient-sm btn-red-gradient" data-fecha="${fecha}" data-action="eliminar">Eliminar</button>
+                    </div>`;
                 historialDetalladoList.appendChild(nuevaEntrada);
             });
         }
+        
+        historialDetalladoList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const fecha = e.target.dataset.fecha;
+                const action = e.target.dataset.action;
+                if (action === 'ver') verDetallePorFecha(fecha);
+                else if (action === 'pdf') descargarPdfPorFecha(fecha);
+                else if (action === 'eliminar') eliminarPorFecha(fecha);
+            }
+        });
         
         function verDetallePorFecha(fecha) {
             historialDetalladoScreen.classList.add('hidden');
@@ -1299,45 +1198,35 @@
                 
                 const textColor = item.type === 'egreso' ? 'text-red-700' : (item.isCash === false ? 'text-blue-700' : 'text-green-700');
                 const bgColor = item.type === 'egreso' ? 'bg-red-50' : (item.isCash === false ? 'bg-blue-50' : 'bg-green-50');
-
-                let descripcionHtml = '';
-                if (item.descripcion) {
-                    descripcionHtml = `<p class="text-xs text-gray-500 italic">${item.descripcion}</p>`;
-                }
+                let descripcionHtml = item.descripcion ? `<p class="text-xs text-gray-500 italic">${item.descripcion}</p>` : '';
                 
                 nuevaEntrada.className = `p-4 rounded-lg shadow-sm flex justify-between items-center ${bgColor}`;
-
-                const contentDiv = document.createElement('div');
-                contentDiv.innerHTML = `
-                    <p class="font-medium text-gray-800">${item.categoria}</p>
-                    <p class="text-lg font-bold ${textColor}">${item.type === 'ingreso' ? '+' : '-'} ${formatCurrency(item.monto)}</p>
-                    ${descripcionHtml}
-                `;
-                
-                const actionsDiv = document.createElement('div');
-                actionsDiv.className = "flex space-x-2";
-                
-                const modificarBtn = document.createElement('button');
-                modificarBtn.textContent = 'Modificar';
-                modificarBtn.className = 'btn-gradient-sm btn-purple-gradient';
-                modificarBtn.onclick = () => modificarItem(item.id);
-
-                const eliminarBtn = document.createElement('button');
-                eliminarBtn.textContent = 'Eliminar';
-                eliminarBtn.className = 'btn-gradient-sm btn-red-gradient';
-                eliminarBtn.onclick = () => eliminarItem(item.id);
-
-                actionsDiv.appendChild(modificarBtn);
-                actionsDiv.appendChild(eliminarBtn);
-                nuevaEntrada.appendChild(contentDiv);
-                nuevaEntrada.appendChild(actionsDiv);
+                nuevaEntrada.innerHTML = `
+                    <div>
+                        <p class="font-medium text-gray-800">${item.categoria}</p>
+                        <p class="text-lg font-bold ${textColor}">${item.type === 'ingreso' ? '+' : '-'} ${formatCurrency(item.monto)}</p>
+                        ${descripcionHtml}
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="btn-gradient-sm btn-purple-gradient" data-id="${item.id}" data-action="modificar">Modificar</button>
+                        <button class="btn-gradient-sm btn-red-gradient" data-id="${item.id}" data-action="eliminar">Eliminar</button>
+                    </div>`;
                 historialPorFechaList.appendChild(nuevaEntrada);
             });
         }
 
+        historialPorFechaList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const id = e.target.dataset.id;
+                const action = e.target.dataset.action;
+                if (action === 'modificar') modificarItem(id);
+                else if (action === 'eliminar') eliminarItem(id);
+            }
+        });
+
         function eliminarItem(id) {
             itemToDeleteId = id;
-            dateToDelete = null; // Ensure we're deleting a single item
+            dateToDelete = null; 
             deleteConfirmationMessage.textContent = '¿Estás seguro de que quieres eliminar este registro?';
             deleteConfirmationModal.classList.remove('hidden');
         }
@@ -1349,42 +1238,21 @@
             selectedDate = itemToModify.fecha;
             
             if (itemToModify.type === 'ingreso') {
-                 if (itemToModify.categoria === 'Mercado Pago') {
-                    mercadoPagoMontoInput.value = formatWithSeparators(itemToModify.monto);
-                    historialPorFechaScreen.classList.add('hidden');
-                    mercadoPagoModal.classList.remove('hidden');
-                }
-                 else if (itemToModify.categoria === 'Beneficios') {
-                    beneficiosMontoInput.value = formatWithSeparators(itemToModify.monto);
-                    historialPorFechaScreen.classList.add('hidden');
-                    beneficiosModal.classList.remove('hidden');
+                const info = {
+                    'Colecta de Bonpland': { isCash: true, title: 'Modificar Colecta de Bonpland' },
+                    'Beneficios': { isCash: true, title: 'Modificar Ingreso por Beneficios' },
+                    'Mercado Pago': { isCash: false, title: 'Modificar Ingreso por Mercado Pago' }
+                };
+
+                if (info[itemToModify.categoria]) {
+                    openDirectAmountModal({ ...info[itemToModify.categoria], category: itemToModify.categoria }, itemToModify.monto);
                 }
                 else if (itemToModify.categoria === 'Secretaría') {
-                    const existingEntry = cargasPendientes.find(item => item.categoria === 'Secretaría');
-                    if (existingEntry && existingEntry.id !== id) {
-                        showToast('Ya existe un ingreso de Secretaría en la lista pendiente.', 'error');
-                        return;
-                    }
                     secretariaMontoInput.value = formatWithSeparators(itemToModify.monto);
                     secretariaDescripcionInput.value = itemToModify.descripcion || '';
                     secretariaModalTitle.textContent = 'Modificar Ingreso de Secretaría';
-                    historialPorFechaScreen.classList.add('hidden');
                     secretariaModal.classList.remove('hidden');
-                } else if (itemToModify.categoria === 'Colecta de Bonpland') {
-                    const existingEntry = cargasPendientes.find(item => item.categoria === 'Colecta de Bonpland');
-                    if (existingEntry && existingEntry.id !== id) {
-                        showToast('Ya existe un ingreso de Bonpland en la lista pendiente.', 'error');
-                        return;
-                    }
-                    bonplandMontoInput.value = formatWithSeparators(itemToModify.monto);
-                    historialPorFechaScreen.classList.add('hidden');
-                    bonplandMontoModal.classList.remove('hidden');
-                } else { // Any other income type with banknotes
-                    const isDuplicate = cargasPendientes.some(item => item.categoria === itemToModify.categoria && item.id !== id);
-                    if (isDuplicate) {
-                         showToast(`La carga de "${itemToModify.categoria}" ya ha sido agregada a la lista pendiente.`, 'error');
-                         return;
-                    }
+                } else { 
                     billeteInputs.forEach(input => {
                         const denom = input.id.split('-')[1];
                         input.value = itemToModify.billetes[denom] || '';
@@ -1392,23 +1260,19 @@
                     calcularTotalColecta();
                     selectedColecta = itemToModify.categoria;
                     billetesTitle.textContent = `Modificar: ${selectedColecta} (${selectedDate})`;
-                    historialPorFechaScreen.classList.add('hidden');
                     billetesScreen.classList.remove('hidden');
                 }
+                 historialPorFechaScreen.classList.add('hidden');
+
             } else if (itemToModify.type === 'egreso') {
-                const existingEntry = cargasPendientes.find(item => item.type === 'egreso');
-                if (existingEntry && existingEntry.id !== id) {
-                    showToast('Ya existe un egreso en la lista pendiente.', 'error');
-                    return;
-                }
+                // Pre-popula todos los egresos de esa fecha para modificar
+                const egresosDelDia = historialData.filter(i => i.fecha === selectedDate && i.type === 'egreso');
                 resetEgresosScreen();
-                if (itemToModify.categoria === 'Gastos Padre Jorge') {
-                    egresoJorgeInput.value = formatWithSeparators(itemToModify.monto);
-                } else if (itemToModify.categoria === 'Gastos Padre Adán') {
-                    egresoAdanInput.value = formatWithSeparators(itemToModify.monto);
-                } else {
-                    egresoOtrosInput.value = formatWithSeparators(itemToModify.monto);
-                }
+                egresosDelDia.forEach(egresoItem => {
+                    if (egresoItem.categoria === 'Gastos Padre Jorge') egresoJorgeInput.value = formatWithSeparators(egresoItem.monto);
+                    if (egresoItem.categoria === 'Gastos Padre Adán') egresoAdanInput.value = formatWithSeparators(egresoItem.monto);
+                    if (egresoItem.categoria === 'Otros gastos') egresoOtrosInput.value = formatWithSeparators(egresoItem.monto);
+                });
                 calcularTotalEgresos();
                 historialPorFechaScreen.classList.add('hidden');
                 egresosScreen.classList.remove('hidden');
@@ -1422,18 +1286,8 @@
                 await fetchDataFromFirestore();
                 loginScreen.classList.add('hidden');
                 initialScreen.classList.remove('hidden');
-                errorMessage.classList.add('hidden');
             } else {
-                initialScreen.classList.add('hidden');
-                selectColectaScreen.classList.add('hidden');
-                billetesScreen.classList.add('hidden');
-                egresosScreen.classList.add('hidden');
-                summaryScreen.classList.add('hidden');
-                historialDetalladoScreen.classList.add('hidden');
-                historialPorFechaScreen.classList.add('hidden');
-                reportsScreen.classList.add('hidden');
-                bonplandMontoModal.classList.add('hidden');
-                
+                [initialScreen, selectColectaScreen, billetesScreen, egresosScreen, summaryScreen, historialDetalladoScreen, historialPorFechaScreen, reportsScreen, secretariaModal, directAmountModal].forEach(el => el.classList.add('hidden'));
                 loginScreen.classList.remove('hidden');
                 historialData = []; // Clear data on logout
             }
@@ -1442,43 +1296,33 @@
 
         loginBtn.addEventListener('click', async () => {
             showSpinner();
-            const email = "adanrdmato@gmail.com";
-            const password = "sanjose2025";
             try {
-                await signInWithEmailAndPassword(auth, email, password);
+                await signInWithEmailAndPassword(auth, "adanrdmato@gmail.com", "sanjose2025");
                 showToast('¡Bienvenido!', 'success');
             } catch (error) {
                 console.error("Error de autenticación:", error);
-                errorMessage.textContent = "Error de autenticación. Verifique las credenciales.";
+                errorMessage.textContent = "Error de autenticación.";
                 errorMessage.classList.remove('hidden');
                 showToast('Error al ingresar.', 'error');
+            } finally {
                 hideSpinner();
             }
         });
 
-        logoutBtn.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                showToast('Sesión cerrada.', 'info');
-            } catch (error) {
-                console.error("Error al cerrar sesión:", error);
-                showToast('Error al cerrar sesión.', 'error');
-            }
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).catch(error => console.error("Error al cerrar sesión:", error));
+            showToast('Sesión cerrada.', 'info');
         });
         
         // --- Event Listeners ---
         cargarBtn.addEventListener('click', () => {
-            const now = new Date();
-            colectaDateInput.value = now.toISOString().split('T')[0];
+            colectaDateInput.value = new Date().toISOString().split('T')[0];
             datePickerModal.classList.remove('hidden');
         });
         
         dateOkBtn.addEventListener('click', () => {
             selectedDate = formatDate(colectaDateInput.value);
-            if (!selectedDate) {
-                showToast('Por favor, selecciona una fecha.', 'error');
-                return;
-            }
+            if (!selectedDate) return showToast('Por favor, selecciona una fecha.', 'error');
             datePickerModal.classList.add('hidden');
             initialScreen.classList.add('hidden');
             selectColectaScreen.classList.remove('hidden');
@@ -1486,17 +1330,13 @@
             cargasPendientes = [];
         });
 
-        dateCancelBtn.addEventListener('click', () => {
-            datePickerModal.classList.add('hidden');
-        });
+        dateCancelBtn.addEventListener('click', () => datePickerModal.classList.add('hidden'));
 
         colectaOptionBtns.forEach(button => {
             button.addEventListener('click', (event) => {
                 const colectaType = event.target.dataset.colecta;
-                const isDuplicate = cargasPendientes.some(item => item.categoria === colectaType);
-                if (isDuplicate) {
-                    showToast(`La carga de "${colectaType}" ya ha sido agregada a la lista pendiente.`, 'error');
-                    return;
+                if (cargasPendientes.some(item => item.categoria === colectaType)) {
+                    return showToast(`La carga de "${colectaType}" ya ha sido agregada.`, 'error');
                 }
                 
                 if (colectaType === 'Colecta Especial') {
@@ -1514,15 +1354,11 @@
         
         colectaEspecialConfirmBtn.addEventListener('click', () => {
             const tipoColectaEspecial = colectaEspecialInput.value.trim();
-            if (tipoColectaEspecial === '') {
-                showToast('Por favor, ingresa un tipo de colecta especial.', 'error');
-                return;
-            }
+            if (!tipoColectaEspecial) return showToast('Por favor, ingresa un tipo de colecta especial.', 'error');
+
             selectedColecta = `Colecta Especial - ${tipoColectaEspecial}`;
-            const isDuplicate = cargasPendientes.some(item => item.categoria === selectedColecta);
-            if (isDuplicate) {
-                showToast('Esta colecta especial ya ha sido agregada a la lista pendiente.', 'error');
-                return;
+            if (cargasPendientes.some(item => item.categoria === selectedColecta)) {
+                return showToast('Esta colecta especial ya ha sido agregada.', 'error');
             }
 
             billetesTitle.textContent = `Cargar para: ${selectedColecta} (${selectedDate})`;
@@ -1532,107 +1368,129 @@
             resetBilletesScreen();
         });
         
-        colectaEspecialCancelBtn.addEventListener('click', () => {
-            colectaEspecialPromptModal.classList.add('hidden');
+        colectaEspecialCancelBtn.addEventListener('click', () => colectaEspecialPromptModal.classList.add('hidden'));
+
+        // --- Lógica para Modales de Monto Directo (Refactorizado) ---
+        function openDirectAmountModal(info, monto = '') {
+            currentDirectAmountInfo = info;
+            directAmountModalTitle.textContent = info.title;
+            directAmountInput.value = formatWithSeparators(monto);
+            directAmountModal.classList.remove('hidden');
+        }
+
+        bonplandBtn.addEventListener('click', () => openDirectAmountModal({ category: 'Colecta de Bonpland', isCash: true, title: 'Ingreso de Colecta de Bonpland' }));
+        beneficiosBtn.addEventListener('click', () => openDirectAmountModal({ category: 'Beneficios', isCash: true, title: 'Ingreso por Beneficios' }));
+        mercadoPagoBtn.addEventListener('click', () => openDirectAmountModal({ category: 'Mercado Pago', isCash: false, title: 'Ingreso por Mercado Pago' }));
+
+        directAmountCancelBtn.addEventListener('click', () => {
+            directAmountModal.classList.add('hidden');
+            itemToModify = null;
         });
 
-        bonplandBtn.addEventListener('click', () => {
-            const colectaType = 'Colecta de Bonpland';
-            const isDuplicate = cargasPendientes.some(item => item.categoria === colectaType);
-            if (isDuplicate) {
-                showToast(`La carga de "${colectaType}" ya ha sido agregada a la lista pendiente.`, 'error');
-                return;
+        directAmountConfirmBtn.addEventListener('click', async () => {
+            const monto = parseFormattedValue(directAmountInput.value);
+            if (isNaN(monto) || monto <= 0) return showToast('Por favor, ingresa un monto válido.', 'error');
+            
+            showSpinner();
+            directAmountModal.classList.add('hidden');
+
+            try {
+                const data = { type: 'ingreso', categoria: currentDirectAmountInfo.category, monto, fecha: selectedDate, isCash: currentDirectAmountInfo.isCash };
+                if (itemToModify) {
+                    await updateDataInFirestore(itemToModify.id, data);
+                    await fetchDataFromFirestore();
+                    verDetallePorFecha(selectedDate);
+                    showToast(`${currentDirectAmountInfo.category} modificado.`, 'success');
+                } else {
+                    cargasPendientes.push(data);
+                    selectColectaScreen.classList.remove('hidden');
+                    showToast(`${currentDirectAmountInfo.category} guardado en la lista pendiente.`, 'success');
+                }
+            } catch (error) {
+                console.error(`Error saving ${currentDirectAmountInfo.category}:`, error);
+                showToast('Error al guardar el ingreso.', 'error');
+            } finally {
+                itemToModify = null;
+                hideSpinner();
             }
-            bonplandMontoInput.value = '';
-            bonplandMontoModal.classList.remove('hidden');
         });
 
-        mercadoPagoBtn.addEventListener('click', () => {
-            const colectaType = 'Mercado Pago';
-            const isDuplicate = cargasPendientes.some(item => item.categoria === colectaType);
-            if (isDuplicate) {
-                showToast(`La carga de "${colectaType}" ya ha sido agregada a la lista pendiente.`, 'error');
-                return;
-            }
-            mercadoPagoMontoInput.value = '';
-            mercadoPagoModal.classList.remove('hidden');
-        });
 
-        beneficiosBtn.addEventListener('click', () => {
-            const colectaType = 'Beneficios';
-            const isDuplicate = cargasPendientes.some(item => item.categoria === colectaType);
-            if (isDuplicate) {
-                showToast(`La carga de "${colectaType}" ya ha sido agregada a la lista pendiente.`, 'error');
-                return;
-            }
-            beneficiosMontoInput.value = '';
-            beneficiosModal.classList.remove('hidden');
-        });
-        
         egresosDirectBtn.addEventListener('click', () => {
-            const colectaType = 'Egresos';
-            const existingEntry = cargasPendientes.find(item => item.categoria.includes('Gastos') || item.categoria.includes('Otros gastos'));
-            if (existingEntry) {
-                 showToast('Los egresos ya han sido agregados a la lista pendiente. Por favor, elimina el registro anterior para modificarlos.', 'error');
-                return;
+            resetEgresosScreen();
+            const egresosYaCargados = cargasPendientes
+                .filter(item => item.type === 'egreso')
+                .map(item => item.categoria);
+
+            const allEgresos = ['Gastos Padre Jorge', 'Gastos Padre Adán', 'Otros gastos'];
+            const egresosContainers = {
+                'Gastos Padre Jorge': egresoJorgeContainer,
+                'Gastos Padre Adán': egresoAdanContainer,
+                'Otros gastos': egresoOtrosContainer
+            };
+
+            let visibleCount = 0;
+            allEgresos.forEach(egreso => {
+                const container = egresosContainers[egreso];
+                if (egresosYaCargados.includes(egreso)) {
+                    container.style.display = 'none';
+                } else {
+                    container.style.display = 'block';
+                    visibleCount++;
+                }
+            });
+
+            if (visibleCount === 0) {
+                 return showToast('Todos los tipos de egresos ya fueron agregados.', 'error');
             }
+            
             egresosScreen.classList.remove('hidden');
             selectColectaScreen.classList.add('hidden');
-            resetEgresosScreen();
         });
         
         billeteInputs.forEach(input => input.addEventListener('input', calcularTotalColecta));
         
         amountInputs.forEach(input => {
             input.addEventListener('input', (event) => {
-                const input = event.target;
-                let value = input.value.replace(/\./g, '');
-                
+                let value = event.target.value.replace(/\./g, '');
                 if (isNaN(value) || value === '') {
-                    input.value = '';
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
-                    return;
+                    event.target.value = '';
+                } else {
+                    event.target.value = formatWithSeparators(parseInt(value, 10));
                 }
-
-                const numberValue = parseInt(value, 10);
-                input.value = formatWithSeparators(numberValue);
-
-                if (input.id.startsWith('egreso')) {
+                if (event.target.id.startsWith('egreso')) {
                     calcularTotalEgresos();
                 }
             });
         });
 
-        // NUEVO: El botón de confirmar carga ahora agrega a la lista pendiente sin confirmación extra
         confirmarCargaBtn.addEventListener('click', async () => {
             showSpinner();
             try {
-                const totalMonto = parseFloat(totalColectaSpan.textContent.replace(/\$|\./g, '').replace(',', '.')) || 0;
+                const totalMonto = parseFormattedValue(totalColectaSpan.textContent);
                 const billetes = {};
                 billeteInputs.forEach(input => {
-                    const denomination = input.id.split('-')[1];
-                    billetes[denomination] = parseInt(input.value) || 0;
+                    billetes[input.id.split('-')[1]] = parseInt(input.value) || 0;
                 });
                 
                 const data = { type: 'ingreso', categoria: selectedColecta, monto: totalMonto, billetes, fecha: selectedDate, isCash: true };
                 
                 if (itemToModify) {
                     await updateDataInFirestore(itemToModify.id, data);
-                    itemToModify = null;
-                    billetesScreen.classList.add('hidden');
                     await fetchDataFromFirestore();
                     verDetallePorFecha(selectedDate);
                     showToast('Registro modificado con éxito.', 'success');
                 } else {
                     cargasPendientes.push(data);
-                    billetesScreen.classList.add('hidden');
                     selectColectaScreen.classList.remove('hidden');
-                    showToast(`Colecta "${selectedColecta}" agregada a la lista pendiente.`, 'success');
+                    showToast(`"${selectedColecta}" agregado a la lista pendiente.`, 'success');
                 }
+                 billetesScreen.classList.add('hidden');
             } catch (error) {
                 console.error("Error confirming charge:", error);
                 showToast('Error al guardar el registro.', 'error');
             } finally {
+                itemToModify = null;
                 hideSpinner();
             }
         });
@@ -1640,58 +1498,37 @@
         confirmarEgresosBtn.addEventListener('click', async () => {
             showSpinner();
             try {
-                const egresoJorge = parseFormattedValue(egresoJorgeInput.value);
-                const egresoAdan = parseFormattedValue(egresoAdanInput.value);
-                const egresoOtros = parseFormattedValue(egresoOtrosInput.value);
-                
-                if (egresoJorge <= 0 && egresoAdan <= 0 && egresoOtros <= 0 && !itemToModify) {
-                    showToast('Introduce al menos un monto de egreso.', 'error');
-                    hideSpinner();
-                    return;
+                const egresos = [
+                    { tipo: 'Gastos Padre Jorge', monto: parseFormattedValue(egresoJorgeInput.value) },
+                    { tipo: 'Gastos Padre Adán', monto: parseFormattedValue(egresoAdanInput.value) },
+                    { tipo: 'Otros gastos', monto: parseFormattedValue(egresoOtrosInput.value) }
+                ].filter(e => e.monto > 0);
+
+                if (egresos.length === 0 && !itemToModify) {
+                    return showToast('Introduce al menos un monto de egreso.', 'error');
                 }
                 
                 if (itemToModify) {
                     const batch = writeBatch(db);
-                    const egresos = [
-                         { tipo: 'Gastos Padre Jorge', monto: egresoJorge, id: itemToModify.id },
-                         { tipo: 'Gastos Padre Adán', monto: egresoAdan, id: itemToModify.id },
-                         { tipo: 'Otros gastos', monto: egresoOtros, id: itemToModify.id }
-                    ];
-
-                    for (const egreso of egresos) {
-                        if (egreso.monto > 0 && itemToModify.categoria === egreso.tipo) {
-                             const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
-                             batch.update(doc(db, "colectas", itemToModify.id), data);
-                        } else if (egreso.monto > 0) {
-                             const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
-                             batch.set(doc(colectasCollection), data);
-                        }
-                    }
-
+                    const egresosDelDiaIds = historialData.filter(i => i.fecha === selectedDate && i.type === 'egreso').map(i => i.id);
+                    egresosDelDiaIds.forEach(id => batch.delete(doc(db, "colectas", id)));
+                    egresos.forEach(egreso => {
+                        const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
+                        batch.set(doc(colectasCollection), data);
+                    });
                     await batch.commit();
                     showToast('Egresos modificados con éxito.', 'success');
                     await fetchDataFromFirestore();
-                    egresosScreen.classList.add('hidden');
                     verDetallePorFecha(selectedDate);
                 } else {
-                    const egresos = [
-                        { tipo: 'Gastos Padre Jorge', monto: egresoJorge },
-                        { tipo: 'Gastos Padre Adán', monto: egresoAdan },
-                        { tipo: 'Otros gastos', monto: egresoOtros }
-                    ];
-                    cargasPendientes = cargasPendientes.filter(item => item.type !== 'egreso');
-                    for (const egreso of egresos) {
-                        if (egreso.monto > 0) {
-                             const data = { type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate };
-                             cargasPendientes.push(data);
-                        }
-                    }
+                    egresos.forEach(egreso => {
+                        cargasPendientes.push({ type: 'egreso', categoria: egreso.tipo, monto: egreso.monto, fecha: selectedDate });
+                    });
                     showToast('Egresos agregados a la lista pendiente.', 'success');
-                    egresosScreen.classList.add('hidden');
                     selectColectaScreen.classList.remove('hidden');
                 }
+                egresosScreen.classList.add('hidden');
                 itemToModify = null;
-                resetEgresosScreen();
             } catch (error) {
                 console.error("Error saving expenses:", error);
                 showToast('Error al guardar los egresos.', 'error');
@@ -1700,137 +1537,23 @@
             }
         });
         
-        bonplandMontoCancelBtn.addEventListener('click', () => {
-            bonplandMontoModal.classList.add('hidden');
-            itemToModify = null;
-        });
-
-        bonplandMontoConfirmBtn.addEventListener('click', async () => {
-            const monto = parseFormattedValue(bonplandMontoInput.value);
-            
-            if (isNaN(monto) || monto <= 0) {
-                showToast('Por favor, ingresa un monto válido.', 'error');
-                return;
-            }
-            
-            showSpinner();
-            bonplandMontoModal.classList.add('hidden');
-
-            try {
-                const data = { type: 'ingreso', categoria: 'Colecta de Bonpland', monto: monto, fecha: selectedDate, isCash: true };
-                
-                if (itemToModify) {
-                    await updateDataInFirestore(itemToModify.id, data);
-                    await fetchDataFromFirestore();
-                    verDetallePorFecha(selectedDate);
-                    showToast('Colecta de Bonpland modificada.', 'success');
-                } else {
-                    cargasPendientes.push(data);
-                    selectColectaScreen.classList.remove('hidden');
-                    showToast('Colecta de Bonpland guardada en la lista pendiente.', 'success');
-                }
-            } catch (error) {
-                console.error("Error saving Bonpland collection:", error);
-                showToast('Error al guardar el ingreso.', 'error');
-            } finally {
-                itemToModify = null;
-                hideSpinner();
-            }
-        });
-
-        mercadoPagoCancelBtn.addEventListener('click', () => {
-            mercadoPagoModal.classList.add('hidden');
-            itemToModify = null;
-        });
-
-        mercadoPagoConfirmBtn.addEventListener('click', async () => {
-            const monto = parseFormattedValue(mercadoPagoMontoInput.value);
-            if (isNaN(monto) || monto <= 0) {
-                showToast('Por favor, ingresa un monto válido.', 'error');
-                return;
-            }
-            showSpinner();
-            mercadoPagoModal.classList.add('hidden');
-            try {
-                const data = { type: 'ingreso', categoria: 'Mercado Pago', monto: monto, fecha: selectedDate, isCash: false };
-                if (itemToModify) {
-                    await updateDataInFirestore(itemToModify.id, data);
-                    await fetchDataFromFirestore();
-                    verDetallePorFecha(selectedDate);
-                    showToast('Ingreso de Mercado Pago modificado.', 'success');
-                } else {
-                    cargasPendientes.push(data);
-                    selectColectaScreen.classList.remove('hidden');
-                    showToast('Ingreso de Mercado Pago guardado en la lista pendiente.', 'success');
-                }
-            } catch (error) {
-                console.error("Error saving Mercado Pago income:", error);
-                showToast('Error al guardar el ingreso.', 'error');
-            } finally {
-                itemToModify = null;
-                hideSpinner();
-            }
-        });
-
-        beneficiosCancelBtn.addEventListener('click', () => {
-            beneficiosModal.classList.add('hidden');
-            itemToModify = null;
-        });
-
-        beneficiosConfirmBtn.addEventListener('click', async () => {
-            const monto = parseFormattedValue(beneficiosMontoInput.value);
-            if (isNaN(monto) || monto <= 0) {
-                showToast('Por favor, ingresa un monto válido.', 'error');
-                return;
-            }
-            showSpinner();
-            beneficiosModal.classList.add('hidden');
-            try {
-                const data = { type: 'ingreso', categoria: 'Beneficios', monto: monto, fecha: selectedDate, isCash: true };
-                if (itemToModify) {
-                    await updateDataInFirestore(itemToModify.id, data);
-                    await fetchDataFromFirestore();
-                    verDetallePorFecha(selectedDate);
-                    showToast('Ingreso de Beneficios modificado.', 'success');
-                } else {
-                    cargasPendientes.push(data);
-                    selectColectaScreen.classList.remove('hidden');
-                    showToast('Ingreso de Beneficios guardado en la lista pendiente.', 'success');
-                }
-            } catch (error) {
-                console.error("Error saving Beneficios income:", error);
-                showToast('Error al guardar el ingreso.', 'error');
-            } finally {
-                itemToModify = null;
-                hideSpinner();
-            }
-        });
-
         confirmarTodoBtn.addEventListener('click', async () => {
             if (cargasPendientes.length === 0) {
-                showToast('No hay cargas pendientes. Por favor, agrega al menos una.', 'error');
-                return;
+                return showToast('No hay cargas pendientes.', 'error');
             }
-
             showSpinner();
             try {
                 const batch = writeBatch(db);
-                cargasPendientes.forEach(item => {
-                    batch.set(doc(colectasCollection), item);
-                });
+                cargasPendientes.forEach(item => batch.set(doc(colectasCollection), item));
                 await batch.commit();
-
-                showToast('Todas las cargas han sido guardadas con éxito.', 'success');
-                selectColectaScreen.classList.add('hidden');
-                
-                historialData = [];
-                cargasPendientes = [];
+                showToast('Todas las cargas han sido guardadas.', 'success');
                 
                 await fetchDataFromFirestore();
                 
+                selectColectaScreen.classList.add('hidden');
                 summaryScreen.classList.remove('hidden');
                 renderDetailedSummary();
-                
+                cargasPendientes = [];
             } catch (error) {
                 console.error("Error al guardar todas las cargas:", error);
                 showToast('Error al guardar las cargas.', 'error');
@@ -1845,91 +1568,69 @@
             await fetchDataFromFirestore();
             renderHistorialDetallado();
         });
-
+        
+        // --- Botones de "Volver" ---
         backFromHistorialDetalladoBtn.addEventListener('click', () => {
             historialDetalladoScreen.classList.add('hidden');
             initialScreen.classList.remove('hidden');
         });
-        
         backFromHistorialPorFechaBtn.addEventListener('click', () => {
             historialPorFechaScreen.classList.add('hidden');
             historialDetalladoScreen.classList.remove('hidden');
             renderHistorialDetallado();
         });
-
         backFromSelectBtn.addEventListener('click', () => {
             selectColectaScreen.classList.add('hidden');
             initialScreen.classList.remove('hidden');
         });
-
         backFromBilletesBtn.addEventListener('click', () => {
             billetesScreen.classList.add('hidden');
-            if(itemToModify){
-                verDetallePorFecha(itemToModify.fecha);
-                itemToModify = null;
-            } else {
-                selectColectaScreen.classList.remove('hidden');
-            }
+            itemToModify ? verDetallePorFecha(itemToModify.fecha) : selectColectaScreen.classList.remove('hidden');
+            itemToModify = null;
         });
-        
         backFromEgresosBtn.addEventListener('click', () => {
             egresosScreen.classList.add('hidden');
-            if(itemToModify){
-                verDetallePorFecha(itemToModify.fecha);
-                itemToModify = null;
-            } else {
-                selectColectaScreen.classList.remove('hidden');
-            }
+            itemToModify ? verDetallePorFecha(itemToModify.fecha) : selectColectaScreen.classList.remove('hidden');
+            itemToModify = null;
         });
-        
         backFromSummaryBtn.addEventListener('click', () => {
             summaryScreen.classList.add('hidden');
             initialScreen.classList.remove('hidden');
         });
 
-        downloadPdfHistorialBtn.addEventListener('click', () => {
-            const fechaActual = historialPorFechaDate.textContent.replace('Fecha: ', '');
-            descargarPdfPorFecha(fechaActual);
-        });
+        // --- Botones de Descarga ---
+        downloadPdfHistorialBtn.addEventListener('click', () => descargarPdfPorFecha(historialPorFechaDate.textContent.replace('Fecha: ', '')));
+        downloadPdfBtn.addEventListener('click', () => descargarPdfPorFecha(selectedDate));
 
-        downloadPdfBtn.addEventListener('click', () => {
-            descargarPdfPorFecha(selectedDate);
-        });
-
-        // --- Delete Confirmation Modal Listeners ---
-        deleteCancelBtn.addEventListener('click', () => {
-            deleteConfirmationModal.classList.add('hidden');
-            itemToDeleteId = null;
-            dateToDelete = null;
-        });
+        // --- Lógica de Eliminación ---
+        deleteCancelBtn.addEventListener('click', () => deleteConfirmationModal.classList.add('hidden'));
 
         deleteConfirmBtn.addEventListener('click', async () => {
             showSpinner();
             deleteConfirmationModal.classList.add('hidden');
             try {
                 if (dateToDelete) {
-                    const itemsToDelete = historialData.filter(item => item.fecha === dateToDelete);
                     const batch = writeBatch(db);
-                    itemsToDelete.forEach(item => {
-                        const docRef = doc(db, "colectas", item.id);
-                        batch.delete(docRef);
-                    });
+                    historialData.filter(item => item.fecha === dateToDelete)
+                                 .forEach(item => batch.delete(doc(db, "colectas", item.id)));
                     await batch.commit();
-                    await fetchDataFromFirestore();
-                    renderHistorialDetallado();
                     showToast(`Registros del día ${dateToDelete} eliminados.`, 'success');
                 } else if (itemToDeleteId) {
-                    const item = historialData.find(i => i.id === itemToDeleteId);
-                    if (item) {
-                        await deleteDataFromFirestore(itemToDeleteId);
-                        await fetchDataFromFirestore();
-                        showToast('Registro eliminado.', 'success');
-                        if (historialData.filter(i => i.fecha === item.fecha).length === 0) {
-                            historialPorFechaScreen.classList.add('hidden');
-                            renderHistorialDetallado();
-                        } else {
-                            verDetallePorFecha(item.fecha);
-                        }
+                    await deleteDataFromFirestore(itemToDeleteId);
+                    showToast('Registro eliminado.', 'success');
+                }
+                await fetchDataFromFirestore();
+                const currentScreen = historialPorFechaScreen.classList.contains('hidden') ? 'historial' : 'detalle';
+                if (currentScreen === 'historial') {
+                    renderHistorialDetallado();
+                } else {
+                    const fechaDelItem = historialData.find(i => i.id === itemToDeleteId)?.fecha || selectedDate;
+                    if(historialData.some(i => i.fecha === fechaDelItem)) {
+                       verDetallePorFecha(fechaDelItem);
+                    } else {
+                       historialPorFechaScreen.classList.add('hidden');
+                       historialDetalladoScreen.classList.remove('hidden');
+                       renderHistorialDetallado();
                     }
                 }
             } catch (error) {
@@ -1941,22 +1642,9 @@
                 hideSpinner();
             }
         });
-
-        // --- Final Confirmation Modal Listeners ---
-        finalConfirmYesBtn.addEventListener('click', () => {
-            finalConfirmationModal.classList.add('hidden');
-            summaryScreen.classList.remove('hidden');
-            renderDetailedSummary();
-        });
-
-        finalConfirmNoBtn.addEventListener('click', () => {
-            finalConfirmationModal.classList.add('hidden');
-            verDetallePorFecha(selectedDate);
-        });
-
-        // --- Search and Filter Listeners ---
+        
+        // --- Filtros y Búsqueda ---
         searchHistorialInput.addEventListener('input', renderHistorialDetallado);
-
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 filterBtns.forEach(b => b.classList.remove('active'));
@@ -1966,113 +1654,7 @@
             });
         });
 
-        exportExcelBtn.addEventListener('click', () => {
-            const dataToExport = [];
-            
-            const sortedData = [...historialData].sort((a, b) => {
-                const dateA = new Date(a.fecha.split('/').reverse().join('-'));
-                const dateB = new Date(b.fecha.split('/').reverse().join('-'));
-                const dateDiff = dateB - dateA;
-                if (dateDiff !== 0) {
-                    return dateDiff;
-                }
-                return sortItemsByCategory(a, b); // Secondary sort
-            });
-
-            sortedData.forEach(item => {
-                let billetesDetalle = '';
-                if (item.type === 'ingreso' && item.billetes) {
-                    billetesDetalle = Object.entries(item.billetes)
-                        .filter(([, cantidad]) => cantidad > 0)
-                        .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
-                        .map(([denominacion, cantidad]) => `${cantidad}x$${denominacion}`)
-                        .join(', ');
-                }
-
-                dataToExport.push({
-                    'Fecha': item.fecha,
-                    'Tipo': item.type === 'ingreso' ? 'Ingreso' : 'Egreso',
-                    'Categoría': item.categoria,
-                    'Descripción': item.descripcion || '',
-                    'Monto': item.monto,
-                    'Detalle de Billetes': billetesDetalle
-                });
-            });
-
-            const worksheet = XLSX.utils.json_to_sheet(dataToExport, { origin: 'A3', skipHeader: true });
-            
-            // Add Main Header
-            XLSX.utils.sheet_add_aoa(worksheet, [['Parroquia San José - Resumen de Colectas']], { origin: 'A1' });
-            worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }]; // Merge A1 to F1
-            
-            // Add Column Headers
-            XLSX.utils.sheet_add_aoa(worksheet, [['Fecha', 'Tipo', 'Categoría', 'Descripción', 'Monto', 'Detalle de Billetes']], { origin: 'A2' });
-
-            const dataRangeEnd = dataToExport.length + 2;
-            const totalRowStart = dataRangeEnd + 2;
-
-            // Add Totals Section
-            XLSX.utils.sheet_add_aoa(worksheet, [
-                ['', '', '', 'Subtotal Ingresos'],
-                ['', '', '', 'Subtotal Egresos'],
-                ['', '', '', 'SALDO TOTAL']
-            ], { origin: `B${totalRowStart}` });
-
-            // Add Formulas
-            worksheet[`E${totalRowStart}`] = { t: 'n', f: `SUMIF(B3:B${dataRangeEnd},"Ingreso",E3:E${dataRangeEnd})`, z: '$#,##0' };
-            worksheet[`E${totalRowStart + 1}`] = { t: 'n', f: `SUMIF(B3:B${dataRangeEnd},"Egreso",E3:E${dataRangeEnd})`, z: '$#,##0' };
-            worksheet[`E${totalRowStart + 2}`] = { t: 'n', f: `E${totalRowStart}-E${totalRowStart + 1}`, z: '$#,##0' };
-            
-            // Apply currency format to the Monto column
-            for (let i = 3; i <= dataRangeEnd; i++) {
-                const cellAddress = `E${i}`;
-                if (worksheet[cellAddress]) {
-                    worksheet[cellAddress].z = '$#,##0';
-                }
-            }
-
-            // Set column widths
-            worksheet['!cols'] = [
-                { wch: 12 }, // Fecha
-                { wch: 10 }, // Tipo
-                { wch: 30 }, // Categoría
-                { wch: 30 }, // Descripción
-                { wch: 15 }, // Monto
-                { wch: 40 }  // Detalle de Billetes
-            ];
-
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Resumen General");
-            XLSX.writeFile(workbook, "Resumen_Total_Colectas.xlsx");
-        });
-
-        exportPdfBackupBtn.addEventListener('click', () => {
-            const allDates = [...new Set(historialData.map(item => item.fecha))].sort((a, b) => {
-                const dateA = new Date(a.fecha.split('/').reverse().join('-'));
-                const dateB = new Date(b.fecha.split('/').reverse().join('-'));
-                return dateB - dateA;
-            });
-
-            let fullHtml = `<h1 style="text-align: center; font-size: 24px; margin-bottom: 20px;">Copia de Seguridad - Parroquia San José</h1>`;
-            allDates.forEach(fecha => {
-                fullHtml += `<div style="page-break-after: always;">${generateDetailedSummaryHTML(fecha, true)}</div>`;
-            });
-
-            const element = document.createElement('div');
-            element.innerHTML = fullHtml;
-
-            const opt = {
-                margin: 0.5,
-                filename: `Backup_Total_Colectas.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-
-            html2pdf().from(element).set(opt).save();
-        });
-
-        // --- Reports Screen Logic ---
+        // --- Lógica de Reportes ---
         reportsBtn.addEventListener('click', () => {
             initialScreen.classList.add('hidden');
             reportsScreen.classList.remove('hidden');
@@ -2080,64 +1662,32 @@
             createExpensesPieChart();
             createEvolutionLineChart(timeFilterSelect.value);
         });
-
         backFromReportsBtn.addEventListener('click', () => {
             reportsScreen.classList.add('hidden');
             initialScreen.classList.remove('hidden');
         });
-
-        timeFilterSelect.addEventListener('change', (e) => {
-            createEvolutionLineChart(e.target.value);
-        });
+        timeFilterSelect.addEventListener('change', (e) => createEvolutionLineChart(e.target.value));
 
         function createIncomeBarChart() {
             const ctx = document.getElementById('income-by-type-chart').getContext('2d');
-            const incomeData = historialData.filter(item => item.type === 'ingreso');
-            const data = incomeData.reduce((acc, item) => {
-                acc[item.categoria] = (acc[item.categoria] || 0) + item.monto;
-                return acc;
-            }, {});
-
+            const data = historialData.filter(item => item.type === 'ingreso')
+                                      .reduce((acc, item) => {
+                                          acc[item.categoria] = (acc[item.categoria] || 0) + item.monto;
+                                          return acc;
+                                      }, {});
             if (incomeChart) incomeChart.destroy();
-            incomeChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(data),
-                    datasets: [{
-                        label: 'Total Ingresos',
-                        data: Object.values(data),
-                        backgroundColor: 'rgba(22, 163, 74, 0.7)',
-                        borderColor: 'rgba(22, 163, 74, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: { scales: { y: { beginAtZero: true } } }
-            });
+            incomeChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(data), datasets: [{ label: 'Total Ingresos', data: Object.values(data), backgroundColor: 'rgba(22, 163, 74, 0.7)', borderColor: 'rgba(22, 163, 74, 1)', borderWidth: 1 }] }, options: { scales: { y: { beginAtZero: true } } } });
         }
-
         function createExpensesPieChart() {
             const ctx = document.getElementById('expenses-pie-chart').getContext('2d');
-            const expenseData = historialData.filter(item => item.type === 'egreso');
-            const data = expenseData.reduce((acc, item) => {
-                acc[item.categoria] = (acc[item.categoria] || 0) + item.monto;
-                return acc;
-            }, {});
-
+            const data = historialData.filter(item => item.type === 'egreso')
+                                      .reduce((acc, item) => {
+                                          acc[item.categoria] = (acc[item.categoria] || 0) + item.monto;
+                                          return acc;
+                                      }, {});
             if (expensesChart) expensesChart.destroy();
-            expensesChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(data),
-                    datasets: [{
-                        data: Object.values(data),
-                        backgroundColor: ['rgba(220, 38, 38, 0.7)', 'rgba(234, 179, 8, 0.7)', 'rgba(37, 99, 235, 0.7)'],
-                        borderColor: ['rgba(220, 38, 38, 1)', 'rgba(234, 179, 8, 1)', 'rgba(37, 99, 235, 1)'],
-                        borderWidth: 1
-                    }]
-                }
-            });
+            expensesChart = new Chart(ctx, { type: 'pie', data: { labels: Object.keys(data), datasets: [{ data: Object.values(data), backgroundColor: ['rgba(220, 38, 38, 0.7)', 'rgba(234, 179, 8, 0.7)', 'rgba(37, 99, 235, 0.7)'], borderColor: ['#fff'], borderWidth: 2 }] } });
         }
-
         function createEvolutionLineChart(period) {
             const ctx = document.getElementById('evolution-line-chart').getContext('2d');
             let labels = [];
@@ -2145,61 +1695,41 @@
             let expenseDataset = [];
 
             if (period === '30d') {
-                const thirtyDaysAgo = new Date();
-                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-                const filteredData = historialData.filter(item => new Date(item.fecha.split('/').reverse().join('-')) >= thirtyDaysAgo);
-                
-                const dailyData = {};
+                const dataMap = new Map();
                 for (let i = 0; i < 30; i++) {
                     const date = new Date();
                     date.setDate(date.getDate() - i);
-                    const formattedDate = formatDate(date.toISOString().split('T')[0]);
-                    dailyData[formattedDate] = { income: 0, expense: 0 };
+                    dataMap.set(formatDate(date.toISOString().split('T')[0]), { income: 0, expense: 0 });
                 }
-
-                filteredData.forEach(item => {
-                    if (dailyData[item.fecha]) {
-                        if (item.type === 'ingreso' && item.isCash !== false) dailyData[item.fecha].income += item.monto;
-                        else if (item.type === 'egreso') dailyData[item.fecha].expense += item.monto;
+                historialData.forEach(item => {
+                    if (dataMap.has(item.fecha)) {
+                        if (item.type === 'ingreso' && item.isCash !== false) dataMap.get(item.fecha).income += item.monto;
+                        else if (item.type === 'egreso') dataMap.get(item.fecha).expense += item.monto;
                     }
                 });
-
-                labels = Object.keys(dailyData).reverse();
-                incomeDataset = Object.values(dailyData).map(d => d.income).reverse();
-                expenseDataset = Object.values(dailyData).map(d => d.expense).reverse();
+                labels = [...dataMap.keys()].reverse();
+                incomeDataset = [...dataMap.values()].map(d => d.income).reverse();
+                expenseDataset = [...dataMap.values()].map(d => d.expense).reverse();
             } else { // thisYear
-                const currentYear = new Date().getFullYear();
-                const filteredData = historialData.filter(item => new Date(item.fecha.split('/').reverse().join('-')).getFullYear() === currentYear);
-                
-                const monthlyData = {};
                 const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-                monthNames.forEach((month, index) => {
-                    monthlyData[index] = { income: 0, expense: 0 };
-                });
+                const monthlyData = Array(12).fill(0).map(() => ({ income: 0, expense: 0 }));
+                const currentYear = new Date().getFullYear();
 
-                filteredData.forEach(item => {
-                    const month = new Date(item.fecha.split('/').reverse().join('-')).getMonth();
-                    if (item.type === 'ingreso' && item.isCash !== false) monthlyData[month].income += item.monto;
-                    else if (item.type === 'egreso') monthlyData[month].expense += item.monto;
+                historialData.forEach(item => {
+                    const itemDate = new Date(item.fecha.split('/').reverse().join('-'));
+                    if (itemDate.getFullYear() === currentYear) {
+                        const month = itemDate.getMonth();
+                        if (item.type === 'ingreso' && item.isCash !== false) monthlyData[month].income += item.monto;
+                        else if (item.type === 'egreso') monthlyData[month].expense += item.monto;
+                    }
                 });
-
                 labels = monthNames;
-                incomeDataset = Object.values(monthlyData).map(d => d.income);
-                expenseDataset = Object.values(monthlyData).map(d => d.expense);
+                incomeDataset = monthlyData.map(d => d.income);
+                expenseDataset = monthlyData.map(d => d.expense);
             }
 
             if (evolutionChart) evolutionChart.destroy();
-            evolutionChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: 'Ingresos', data: incomeDataset, borderColor: 'rgba(22, 163, 74, 1)', backgroundColor: 'rgba(22, 163, 74, 0.2)', fill: true, tension: 0.1 },
-                        { label: 'Egresos', data: expenseDataset, borderColor: 'rgba(220, 38, 38, 1)', backgroundColor: 'rgba(220, 38, 38, 0.2)', fill: true, tension: 0.1 }
-                    ]
-                },
-                options: { scales: { y: { beginAtZero: true } } }
-            });
+            evolutionChart = new Chart(ctx, { type: 'line', data: { labels, datasets: [ { label: 'Ingresos', data: incomeDataset, borderColor: 'rgba(22, 163, 74, 1)', backgroundColor: 'rgba(22, 163, 74, 0.2)', fill: true, tension: 0.1 }, { label: 'Egresos', data: expenseDataset, borderColor: 'rgba(220, 38, 38, 1)', backgroundColor: 'rgba(220, 38, 38, 0.2)', fill: true, tension: 0.1 } ] }, options: { scales: { y: { beginAtZero: true } } } });
         }
         
         // --- Dashboard Logic ---
@@ -2237,11 +1767,8 @@
 
         // --- Secretaría Logic ---
         secretariaBtn.addEventListener('click', () => {
-            const colectaType = 'Secretaría';
-            const existingEntry = cargasPendientes.find(item => item.categoria === colectaType);
-            if (existingEntry) {
-                showToast('Ya existe un ingreso de Secretaría en la lista pendiente.', 'error');
-                return;
+            if (cargasPendientes.some(item => item.categoria === 'Secretaría')) {
+                return showToast('El ingreso de Secretaría ya fue agregado.', 'error');
             }
             secretariaMontoInput.value = '';
             secretariaDescripcionInput.value = '';
@@ -2256,19 +1783,13 @@
 
         secretariaConfirmBtn.addEventListener('click', async () => {
             const monto = parseFormattedValue(secretariaMontoInput.value);
-            const descripcion = secretariaDescripcionInput.value.trim();
-            
-            if (isNaN(monto) || monto <= 0) {
-                showToast('Por favor, ingresa un monto válido.', 'error');
-                return;
-            }
+            if (isNaN(monto) || monto <= 0) return showToast('Por favor, ingresa un monto válido.', 'error');
             
             showSpinner();
             secretariaModal.classList.add('hidden');
 
             try {
-                const data = { type: 'ingreso', categoria: 'Secretaría', monto: monto, descripcion: descripcion, fecha: selectedDate, isCash: true };
-                
+                const data = { type: 'ingreso', categoria: 'Secretaría', monto, descripcion: secretariaDescripcionInput.value.trim(), fecha: selectedDate, isCash: true };
                 if (itemToModify) {
                     await updateDataInFirestore(itemToModify.id, data);
                     await fetchDataFromFirestore();
@@ -2290,4 +1811,3 @@
 
     </script>
 </html>
-
