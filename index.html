@@ -203,6 +203,11 @@
             --tw-gradient-to: #ea580c;
         }
         
+        .btn-teal-gradient {
+            --tw-gradient-from: #14b8a6;
+            --tw-gradient-to: #0d9488;
+        }
+        
         .btn-neutral-gradient {
             --tw-gradient-from: #f9fafb; /* gray-50 */
             --tw-gradient-to: #e5e7eb;   /* gray-200 */
@@ -331,13 +336,16 @@
                 <button id="bonpland-btn" class="w-full btn-gradient btn-neutral-gradient">
                     Colecta de Bonpland
                 </button>
+                <button id="beneficios-btn" class="w-full btn-gradient btn-teal-gradient">
+                    Beneficios
+                </button>
                 <button id="mercado-pago-btn" class="w-full btn-gradient btn-blue-gradient">
                     Mercado Pago
                 </button>
                 <button id="egresos-direct-btn" class="w-full btn-gradient btn-orange-gradient">
                     Egresos
                 </button>
-                <button id="secretaria-btn" class="w-full btn-gradient btn-neutral-gradient">
+                <button id="secretaria-btn" class="w-full btn-gradient btn-teal-gradient">
                     Secretaría
                 </button>
                 <button id="confirmar-todo-btn" class="mt-4 w-full btn-gradient btn-green-gradient">
@@ -545,7 +553,7 @@
             <div class="mb-8 p-4 bg-gray-50 rounded-lg">
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="text-lg font-semibold text-gray-700">Evolución Financiera</h3>
-                    <select id="time-filter-select" class="text-sm rounded-lg border-gray-300 bg-white text-gray-900 focus:ring-blue-500 focus:border-blue-500">
+                    <select id="time-filter-select" class="text-sm rounded-lg border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                         <option value="30d">Últimos 30 días</option>
                         <option value="thisYear">Este Año</option>
                     </select>
@@ -766,6 +774,27 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Modal de Beneficios (para monto directo) -->
+        <div id="beneficios-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+            <div class="relative bg-white rounded-lg shadow-xl max-w-sm w-full mx-2 p-6">
+                <h3 class="text-xl font-bold leading-6 text-gray-900 mb-4 text-center">Ingreso por Beneficios</h3>
+                <div class="mt-2 space-y-4">
+                    <div>
+                        <label for="beneficios-monto-input" class="block text-sm font-medium text-gray-700">Monto</label>
+                        <input type="text" inputmode="numeric" id="beneficios-monto-input" placeholder="Monto Total" class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-center gap-4">
+                    <button id="beneficios-confirm-btn" type="button" class="flex-1 btn-gradient btn-green-gradient text-sm py-2">
+                        Confirmar
+                    </button>
+                    <button id="beneficios-cancel-btn" type="button" class="flex-1 btn-gradient btn-neutral-gradient text-sm py-2">
+                        Volver
+                    </button>
+                </div>
+            </div>
+        </div>
 
     </div>
     </body>
@@ -857,6 +886,7 @@
             'Donaciones',
             'Alcancias',
             'Colecta de Bonpland',
+            'Beneficios',
             'Mercado Pago',
             'Gastos Padre Jorge',
             'Gastos Padre Adán',
@@ -971,8 +1001,14 @@
         const mercadoPagoMontoInput = document.getElementById('mercado-pago-monto-input');
         const mercadoPagoConfirmBtn = document.getElementById('mercado-pago-confirm-btn');
         const mercadoPagoCancelBtn = document.getElementById('mercado-pago-cancel-btn');
+        // New elements for Beneficios
+        const beneficiosBtn = document.getElementById('beneficios-btn');
+        const beneficiosModal = document.getElementById('beneficios-modal');
+        const beneficiosMontoInput = document.getElementById('beneficios-monto-input');
+        const beneficiosConfirmBtn = document.getElementById('beneficios-confirm-btn');
+        const beneficiosCancelBtn = document.getElementById('beneficios-cancel-btn');
         // Campos de importe que necesitan formato
-        const amountInputs = document.querySelectorAll('#egreso-jorge-input, #egreso-adan-input, #egreso-otros-input, #secretaria-monto-input, #bonpland-monto-input, #mercado-pago-monto-input');
+        const amountInputs = document.querySelectorAll('#egreso-jorge-input, #egreso-adan-input, #egreso-otros-input, #secretaria-monto-input, #bonpland-monto-input, #mercado-pago-monto-input, #beneficios-monto-input');
         // Botón de confirmar carga final
         const confirmarTodoBtn = document.getElementById('confirmar-todo-btn');
         const egresosDirectBtn = document.getElementById('egresos-direct-btn');
@@ -1318,6 +1354,11 @@
                     historialPorFechaScreen.classList.add('hidden');
                     mercadoPagoModal.classList.remove('hidden');
                 }
+                 else if (itemToModify.categoria === 'Beneficios') {
+                    beneficiosMontoInput.value = formatWithSeparators(itemToModify.monto);
+                    historialPorFechaScreen.classList.add('hidden');
+                    beneficiosModal.classList.remove('hidden');
+                }
                 else if (itemToModify.categoria === 'Secretaría') {
                     const existingEntry = cargasPendientes.find(item => item.categoria === 'Secretaría');
                     if (existingEntry && existingEntry.id !== id) {
@@ -1516,6 +1557,17 @@
             mercadoPagoMontoInput.value = '';
             mercadoPagoModal.classList.remove('hidden');
         });
+
+        beneficiosBtn.addEventListener('click', () => {
+            const colectaType = 'Beneficios';
+            const isDuplicate = cargasPendientes.some(item => item.categoria === colectaType);
+            if (isDuplicate) {
+                showToast(`La carga de "${colectaType}" ya ha sido agregada a la lista pendiente.`, 'error');
+                return;
+            }
+            beneficiosMontoInput.value = '';
+            beneficiosModal.classList.remove('hidden');
+        });
         
         egresosDirectBtn.addEventListener('click', () => {
             const colectaType = 'Egresos';
@@ -1713,6 +1765,40 @@
                 }
             } catch (error) {
                 console.error("Error saving Mercado Pago income:", error);
+                showToast('Error al guardar el ingreso.', 'error');
+            } finally {
+                itemToModify = null;
+                hideSpinner();
+            }
+        });
+
+        beneficiosCancelBtn.addEventListener('click', () => {
+            beneficiosModal.classList.add('hidden');
+            itemToModify = null;
+        });
+
+        beneficiosConfirmBtn.addEventListener('click', async () => {
+            const monto = parseFormattedValue(beneficiosMontoInput.value);
+            if (isNaN(monto) || monto <= 0) {
+                showToast('Por favor, ingresa un monto válido.', 'error');
+                return;
+            }
+            showSpinner();
+            beneficiosModal.classList.add('hidden');
+            try {
+                const data = { type: 'ingreso', categoria: 'Beneficios', monto: monto, fecha: selectedDate, isCash: true };
+                if (itemToModify) {
+                    await updateDataInFirestore(itemToModify.id, data);
+                    await fetchDataFromFirestore();
+                    verDetallePorFecha(selectedDate);
+                    showToast('Ingreso de Beneficios modificado.', 'success');
+                } else {
+                    cargasPendientes.push(data);
+                    selectColectaScreen.classList.remove('hidden');
+                    showToast('Ingreso de Beneficios guardado en la lista pendiente.', 'success');
+                }
+            } catch (error) {
+                console.error("Error saving Beneficios income:", error);
                 showToast('Error al guardar el ingreso.', 'error');
             } finally {
                 itemToModify = null;
