@@ -1079,6 +1079,23 @@
 
             const saldoFinal = totalIngresosEfectivo - totalEgresos;
 
+            // --- AÑADIDO: Cálculo del subtotal de colectas de fin de semana ---
+            const colectasFinde = ['Colecta de sábado 20h', 'Colecta de domingo 08h', 'Colecta de domingo 10:30h', 'Colecta de domingo 20h'];
+            const subtotalFinde = itemsDelDia
+                .filter(item => colectasFinde.includes(item.categoria))
+                .reduce((acc, item) => acc + item.monto, 0);
+
+            let subtotalFindeHtml = '';
+            if (isForPdf && subtotalFinde > 0) {
+                subtotalFindeHtml = `
+                <div class="pdf-section" style="margin-top: 20px; border-top: 2px solid #333; padding-top: 10px;">
+                    <h2 class="pdf-section-title" style="background-color: #eee; padding: 5px; border-bottom: none;">Subtotal Colectas Fin de Semana</h2>
+                    <div class="pdf-subtotal" style="text-align: center; border-top: none; padding-top: 5px; font-size: 18px;">
+                        <span>${formatCurrency(subtotalFinde)}</span>
+                    </div>
+                </div>`;
+            }
+
             if (isForPdf) {
                 return `
                     <div class="pdf-container">
@@ -1089,10 +1106,11 @@
                             <div class="pdf-subtotal"><span>Subtotal Efectivo:</span><span>${formatCurrency(totalIngresosEfectivo)}</span></div>
                         </div>
                          <div class="pdf-section">
-                            <h2 class="pdf-section-title">Ingresos Digitales (Mercado Pago)</h2>
+                            <h2 class="pdf-section-title">Ingresos Digitales</h2>
                             ${ingresosDigitalHtml || '<div class="pdf-item"><span>No hay ingresos registrados.</span></div>'}
                             <div class="pdf-subtotal"><span>Subtotal Digital:</span><span>${formatCurrency(totalIngresosDigital)}</span></div>
                         </div>
+                        ${subtotalFindeHtml} 
                         <div class="pdf-section">
                             <h2 class="pdf-section-title">Egresos</h2>
                             ${egresosHtml || '<div class="pdf-item"><span>No hay egresos registrados.</span></div>'}
@@ -1102,6 +1120,7 @@
                     </div>`;
             }
 
+            // ... (el resto del HTML para la pantalla no cambia)
             return `
                 <div class="p-4 bg-green-50 rounded-lg shadow-sm">${ingresosEfectivoDelDia.length > 0 ? `<h3 class="text-lg font-bold text-green-800 mb-2 border-b pb-1 border-green-200">Ingresos (Efectivo)</h3><div class="space-y-2 text-sm">${ingresosEfectivoHtml}</div>` : '<p class="text-sm text-gray-500 italic">No hay ingresos en efectivo.</p>'}<hr class="my-3 border-green-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal Efectivo:</p><span class="text-green-700">${formatCurrency(totalIngresosEfectivo)}</span></div></div>
 
@@ -1471,7 +1490,7 @@
         confirmarCargaBtn.addEventListener('click', async () => {
             showSpinner();
             try {
-                const totalMonto = billetesTotalAmount; // <<< FIX: Use the numeric total directly
+                const totalMonto = billetesTotalAmount; // FIX: Use the numeric total directly
                 const billetes = {};
                 billeteInputs.forEach(input => {
                     billetes[input.id.split('-')[1]] = parseInt(input.value) || 0;
