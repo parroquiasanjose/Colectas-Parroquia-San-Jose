@@ -1080,7 +1080,7 @@
             const saldoFinal = totalIngresosEfectivo - totalEgresos;
 
             // --- AÑADIDO: Cálculo del subtotal de colectas de fin de semana ---
-            const colectasFinde = ['Colecta de sábado 20h', 'Colecta de domingo 08h', 'Colecta de domingo 10:30h', 'Colecta de domingo 20h'];
+            const colectasFinde = ['Colecta de sábado 20h', 'Colecta de domingo 08h', 'Colecta de domingo 20h'];
             const subtotalFinde = itemsDelDia
                 .filter(item => colectasFinde.includes(item.categoria))
                 .reduce((acc, item) => acc + item.monto, 0);
@@ -1834,4 +1834,3 @@
 
     </script>
 </html>
-
