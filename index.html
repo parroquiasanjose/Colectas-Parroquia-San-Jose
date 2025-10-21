@@ -71,17 +71,10 @@
         }
 
         /* Estilos específicos para la generación de PDF */
-        @media print {
-            body {
-                font-family: Arial, sans-serif;
-            }
-        }
         .pdf-container {
             font-family: Arial, sans-serif;
             color: #000;
             padding: 20px;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
         }
         .pdf-header {
             text-align: center;
@@ -106,23 +99,6 @@
             border-bottom: 1px solid #555;
             padding-bottom: 5px;
             margin-bottom: 10px;
-        }
-        .pdf-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px dotted #ccc;
-        }
-        .pdf-item-category {
-            font-weight: bold;
-        }
-        .pdf-billetes, .pdf-description {
-            padding-left: 20px;
-            font-size: 12px;
-            color: #333;
-        }
-        .pdf-description {
-            font-style: italic;
         }
         .pdf-subtotal, .pdf-total {
             text-align: right;
@@ -993,115 +969,151 @@
             const itemsDelDia = historialData.length > 0 ? historialData.filter(item => item.fecha === fecha) : cargasPendientes;
             itemsDelDia.sort(sortItemsByCategory);
             
-            let totalIngresosEfectivo = 0;
-            let totalIngresosDigital = 0;
-            let totalEgresos = 0;
-
-            let ingresosEfectivoHtml = '';
-            const ingresosEfectivoDelDia = itemsDelDia.filter(item => item.type === 'ingreso' && item.isCash !== false);
-            
-            if (ingresosEfectivoDelDia.length > 0) {
-                ingresosEfectivoDelDia.forEach(item => {
-                    totalIngresosEfectivo += item.monto;
-                    let billetesHtml = '';
-                    let descripcionHtml = '';
-                    if (item.descripcion) {
-                        descripcionHtml = `<div class="${isForPdf ? 'pdf-description' : 'ml-4 mt-1 text-xs text-gray-500 italic'}">${item.descripcion}</div>`;
-                    }
-                    if (item.billetes && Object.keys(item.billetes).length > 0) {
-                        const billetesDetalle = Object.entries(item.billetes)
-                            .filter(([, cantidad]) => cantidad > 0)
-                            .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
-                            .map(([denominacion, cantidad]) => `<div>${cantidad} x ${formatCurrency(parseInt(denominacion))} = ${formatCurrency(cantidad * parseInt(denominacion))}</div>`)
-                            .join('');
-                        if (billetesDetalle) {
-                            billetesHtml = `<div class="${isForPdf ? 'pdf-billetes' : 'ml-4 mt-1 text-xs text-gray-600'}">${billetesDetalle}</div>`;
-                        }
-                    }
-                    if (isForPdf) {
-                        ingresosEfectivoHtml += `<div class="pdf-item"><span>${item.categoria}</span><span>${formatCurrency(item.monto)}</span></div>${descripcionHtml}${billetesHtml}`;
-                    } else {
-                        ingresosEfectivoHtml += `<div class="border-b border-gray-200 pb-2 mb-2"><p class="font-semibold text-gray-800">${item.categoria}: <span class="font-bold text-green-700">${formatCurrency(item.monto)}</span></p>${descripcionHtml}${billetesHtml}</div>`;
-                    }
-                });
-            }
-
-            let ingresosDigitalHtml = '';
-            const ingresosDigitalDelDia = itemsDelDia.filter(item => item.type === 'ingreso' && item.isCash === false);
-            if(ingresosDigitalDelDia.length > 0) {
-                 ingresosDigitalDelDia.forEach(item => {
-                    totalIngresosDigital += item.monto;
-                    if (isForPdf) {
-                        ingresosDigitalHtml += `<div class="pdf-item"><span>${item.categoria}</span><span>${formatCurrency(item.monto)}</span></div>`;
-                    } else {
-                        ingresosDigitalHtml += `<div class="flex justify-between items-center py-1 border-b border-gray-200"><p class="font-semibold text-gray-800">${item.categoria}:</p><p class="font-bold text-blue-700">${formatCurrency(item.monto)}</p></div>`;
-                    }
-                });
-            }
-
-            let egresosHtml = '';
-            const egresosDelDia = itemsDelDia.filter(item => item.type === 'egreso');
-            if (egresosDelDia.length > 0) {
-                egresosDelDia.forEach(item => {
-                    totalEgresos += item.monto;
-                    if (isForPdf) {
-                        egresosHtml += `<div class="pdf-item"><span>${item.categoria}</span><span>-${formatCurrency(item.monto)}</span></div>`;
-                    } else {
-                        egresosHtml += `<div class="flex justify-between items-center py-1 border-b border-gray-200"><p class="font-semibold text-gray-800">${item.categoria}:</p><p class="font-bold text-red-700">${formatCurrency(item.monto)}</p></div>`;
-                    }
-                });
-            }
-
-            const saldoFinal = totalIngresosEfectivo - totalEgresos;
-
-            const colectasFinde = ['Colecta de sábado 20h', 'Colecta de domingo 08h', 'Colecta de domingo 20h'];
-            const subtotalFinde = itemsDelDia
-                .filter(item => colectasFinde.includes(item.categoria))
-                .reduce((acc, item) => acc + item.monto, 0);
-
-            let subtotalFindeHtml = '';
-            if (isForPdf && subtotalFinde > 0) {
-                subtotalFindeHtml = `
-                <div class="pdf-section" style="margin-top: 20px; border-top: 2px solid #333; padding-top: 10px;">
-                    <h2 class="pdf-section-title" style="background-color: #eee; padding: 5px; border-bottom: none;">Subtotal Colectas Fin de Semana</h2>
-                    <div class="pdf-subtotal" style="text-align: center; border-top: none; padding-top: 5px; font-size: 18px;">
-                        <span>${formatCurrency(subtotalFinde)}</span>
-                    </div>
-                </div>`;
-            }
-
             if (isForPdf) {
-                return `
-                    <div class="pdf-container">
-                        <div class="pdf-header"><h1>Parroquia San José</h1><p>Resumen del día: ${fecha}</p></div>
-                        <div class="pdf-section">
-                            <h2 class="pdf-section-title">Ingresos en Efectivo</h2>
-                            ${ingresosEfectivoHtml || '<div class="pdf-item"><span>No hay ingresos registrados.</span></div>'}
-                            <div class="pdf-subtotal"><span>Subtotal Efectivo:</span><span>${formatCurrency(totalIngresosEfectivo)}</span></div>
-                        </div>
-                         <div class="pdf-section">
-                            <h2 class="pdf-section-title">Ingresos Digitales</h2>
-                            ${ingresosDigitalHtml || '<div class="pdf-item"><span>No hay ingresos registrados.</span></div>'}
-                            <div class="pdf-subtotal"><span>Subtotal Digital:</span><span>${formatCurrency(totalIngresosDigital)}</span></div>
-                        </div>
-                        ${subtotalFindeHtml} 
-                        <div class="pdf-section">
-                            <h2 class="pdf-section-title">Egresos</h2>
-                            ${egresosHtml || '<div class="pdf-item"><span>No hay egresos registrados.</span></div>'}
-                            <div class="pdf-subtotal"><span>Subtotal Egresos:</span><span>-${formatCurrency(totalEgresos)}</span></div>
-                        </div>
-                        <div class="pdf-total"><span>SALDO FINAL (Efectivo):</span><span>${formatCurrency(saldoFinal)}</span></div>
-                    </div>`;
-            }
-
-            return `
-                <div class="p-4 bg-green-50 rounded-lg shadow-sm">${ingresosEfectivoDelDia.length > 0 ? `<h3 class="text-lg font-bold text-green-800 mb-2 border-b pb-1 border-green-200">Ingresos (Efectivo)</h3><div class="space-y-2 text-sm">${ingresosEfectivoHtml}</div>` : '<p class="text-sm text-gray-500 italic">No hay ingresos en efectivo.</p>'}<hr class="my-3 border-green-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal Efectivo:</p><span class="text-green-700">${formatCurrency(totalIngresosEfectivo)}</span></div></div>
-
-                <div class="p-4 bg-blue-50 rounded-lg shadow-sm">${ingresosDigitalDelDia.length > 0 ? `<h3 class="text-lg font-bold text-blue-800 mb-2 border-b pb-1 border-blue-200">Ingresos (Digital)</h3><div class="space-y-2 text-sm">${ingresosDigitalHtml}</div>` : '<p class="text-sm text-gray-500 italic">No hay ingresos digitales.</p>'}<hr class="my-3 border-blue-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal Digital:</p><span class="text-blue-700">${formatCurrency(totalIngresosDigital)}</span></div></div>
-
-                <div class="p-4 bg-red-50 rounded-lg shadow-sm">${egresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-red-800 mb-2 border-b pb-1 border-red-200">Egresos</h3><div class="space-y-2 text-sm">${egresosHtml}</div>` : '<p class="text-sm text-gray-500 italic">No hay egresos registrados.</p>'}<hr class="my-3 border-red-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal de Egresos:</p><span class="text-red-700">${formatCurrency(totalEgresos)}</span></div></div>
+                // Lógica de generación de PDF con tablas y saltos de página
+                const headerHtml = `<div class="pdf-header"><h1>Parroquia San José</h1><p>Resumen del día: ${fecha}</p></div>`;
+                let fullHtml = '';
                 
-                <div class="p-4 bg-gray-200 rounded-lg shadow-inner mt-4"><div class="flex justify-between items-center text-lg font-extrabold text-gray-800"><p>SALDO FINAL (Efectivo):</p><span class="text-slate-700">${formatCurrency(saldoFinal)}</span></div></div>`;
+                const createPdfSection = (title, items) => {
+                    if (!items || items.length === 0) return '';
+                    
+                    let rowsHtml = '';
+                    items.forEach(item => {
+                        const sign = item.type === 'egreso' ? '-' : '';
+                        rowsHtml += `
+                            <tr style="page-break-inside: avoid;">
+                                <td style="padding: 5px 0; font-weight: bold; border-bottom: 1px dotted #ccc; width: 70%;">${item.categoria}</td>
+                                <td style="padding: 5px 0; text-align: right; border-bottom: 1px dotted #ccc; white-space: nowrap;">${sign}${formatCurrency(item.monto)}</td>
+                            </tr>
+                        `;
+                        let subRowsHtml = '';
+                        if (item.descripcion) {
+                            subRowsHtml += `<div style="font-style: italic; font-size: 12px; color: #333;">${item.descripcion}</div>`;
+                        }
+                        if (item.billetes && Object.keys(item.billetes).length > 0) {
+                            const billetesDetalle = Object.entries(item.billetes)
+                                .filter(([, cantidad]) => cantidad > 0)
+                                .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
+                                .map(([denominacion, cantidad]) => `<div>${cantidad} x ${formatCurrency(parseInt(denominacion))} = ${formatCurrency(cantidad * parseInt(denominacion))}</div>`)
+                                .join('');
+                            if (billetesDetalle) {
+                                subRowsHtml += `<div style="padding-top: 3px; font-size: 12px; color: #333;">${billetesDetalle}</div>`;
+                            }
+                        }
+                        if (subRowsHtml) {
+                            rowsHtml += `
+                                <tr style="page-break-inside: avoid;">
+                                    <td colspan="2" style="font-size: 12px; color: #333; padding-left: 20px; padding-bottom: 5px; border-bottom: 1px dotted #ccc;">
+                                        ${subRowsHtml}
+                                    </td>
+                                </tr>`;
+                        }
+                    });
+
+                    return `
+                        <div class="pdf-section">
+                            <h2 class="pdf-section-title">${title}</h2>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 14px;"><tbody>${rowsHtml}</tbody></table>
+                        </div>`;
+                };
+                
+                const group1_cats = ['Colecta entre semana', 'Colecta de sábado 20h', 'Colecta de domingo 08h'];
+                const group2_cats = ['Colecta de domingo 10:30h', 'Colecta de domingo 20h'];
+                const group3_cats = ['Intenciones y Sacramento', 'Donaciones', 'Alcancias'];
+                const other_cash_cats = ['Colecta de Bonpland', 'Beneficios', 'Secretaría'];
+                
+                const group1_items = itemsDelDia.filter(item => group1_cats.includes(item.categoria));
+                const group2_items = itemsDelDia.filter(item => group2_cats.includes(item.categoria));
+                const special_items = itemsDelDia.filter(item => item.categoria.startsWith('Colecta Especial'));
+                const group3_items = itemsDelDia.filter(item => group3_cats.includes(item.categoria));
+                const other_cash_items = itemsDelDia.filter(item => other_cash_cats.includes(item.categoria));
+                const digital_items = itemsDelDia.filter(item => item.isCash === false);
+                const egreso_items = itemsDelDia.filter(item => item.type === 'egreso');
+                
+                let pages = [];
+                let currentPageContent = '';
+
+                currentPageContent += createPdfSection('Ingresos - Colectas (Parte 1)', group1_items);
+                if (currentPageContent) { pages.push(currentPageContent); currentPageContent = ''; }
+
+                currentPageContent += createPdfSection('Ingresos - Colectas (Parte 2)', group2_items);
+                currentPageContent += createPdfSection('Ingresos - Colectas Especiales', special_items);
+                if (currentPageContent) { pages.push(currentPageContent); currentPageContent = ''; }
+                
+                currentPageContent += createPdfSection('Ingresos Varios', group3_items);
+                if (currentPageContent) { pages.push(currentPageContent); currentPageContent = ''; }
+
+                currentPageContent += createPdfSection('Otros Ingresos en Efectivo', other_cash_items);
+                
+                const totalIngresosEfectivo = itemsDelDia.filter(item => item.type === 'ingreso' && item.isCash !== false).reduce((sum, item) => sum + item.monto, 0);
+                const totalIngresosDigital = digital_items.reduce((sum, item) => sum + item.monto, 0);
+                const totalEgresos = egreso_items.reduce((sum, item) => sum + item.monto, 0);
+                const saldoFinal = totalIngresosEfectivo - totalEgresos;
+                const colectasFinde = ['Colecta de sábado 20h', 'Colecta de domingo 08h', 'Colecta de domingo 20h'];
+                const subtotalFinde = itemsDelDia.filter(item => colectasFinde.includes(item.categoria)).reduce((acc, item) => acc + item.monto, 0);
+
+                currentPageContent += `<div class="pdf-subtotal"><span>Subtotal Efectivo:</span><span>${formatCurrency(totalIngresosEfectivo)}</span></div>`;
+                
+                if (digital_items.length > 0) {
+                    currentPageContent += createPdfSection('Ingresos Digitales', digital_items);
+                    currentPageContent += `<div class="pdf-subtotal"><span>Subtotal Digital:</span><span>${formatCurrency(totalIngresosDigital)}</span></div>`;
+                }
+                
+                if (subtotalFinde > 0) {
+                    currentPageContent += `<div class="pdf-section" style="page-break-inside: avoid; margin-top: 20px; border-top: 2px solid #333; padding-top: 10px;">
+                        <h2 class="pdf-section-title" style="background-color: #eee; padding: 5px; border-bottom: none;">Subtotal Colectas Fin de Semana</h2>
+                        <div class="pdf-subtotal" style="text-align: center; border-top: none; padding-top: 5px; font-size: 18px;">
+                            <span>${formatCurrency(subtotalFinde)}</span>
+                        </div>
+                    </div>`;
+                }
+
+                if (egreso_items.length > 0) {
+                    currentPageContent += createPdfSection('Egresos', egreso_items);
+                    currentPageContent += `<div class="pdf-subtotal"><span>Subtotal Egresos:</span><span>-${formatCurrency(totalEgresos)}</span></div>`;
+                }
+                
+                currentPageContent += `<div class="pdf-total"><span>SALDO FINAL (Efectivo):</span><span>${formatCurrency(saldoFinal)}</span></div>`;
+                if (currentPageContent) pages.push(currentPageContent);
+
+                return pages.map(p => `<div class="pdf-container">${headerHtml}${p}</div>`).join('<div style="page-break-after: always;"></div>');
+
+            } else {
+                // Lógica para la vista en pantalla (sin cambios)
+                const totalIngresosEfectivo = itemsDelDia.filter(item => item.type === 'ingreso' && item.isCash !== false).reduce((sum, item) => sum + item.monto, 0);
+                const totalIngresosDigital = itemsDelDia.filter(item => item.type === 'ingreso' && item.isCash === false).reduce((sum, item) => sum + item.monto, 0);
+                const totalEgresos = itemsDelDia.filter(item => item.type === 'egreso').reduce((sum, item) => sum + item.monto, 0);
+                const saldoFinal = totalIngresosEfectivo - totalEgresos;
+
+                const createHtmlList = (items, type) => {
+                    let html = '';
+                    items.forEach(item => {
+                        let billetesHtml = '';
+                        let descripcionHtml = '';
+                        if (item.descripcion) {
+                            descripcionHtml = `<p class="ml-4 mt-1 text-xs text-gray-500 italic">${item.descripcion}</p>`;
+                        }
+                        if (item.billetes && Object.keys(item.billetes).length > 0) {
+                            billetesHtml = Object.entries(item.billetes)
+                                .filter(([, cantidad]) => cantidad > 0)
+                                .sort((a, b) => parseInt(b[0]) - parseInt(a[0]))
+                                .map(([denominacion, cantidad]) => `<div>${cantidad} x ${formatCurrency(parseInt(denominacion))} = ${formatCurrency(cantidad * parseInt(denominacion))}</div>`)
+                                .join('');
+                             if(billetesHtml) billetesHtml = `<div class="ml-4 mt-1 text-xs text-gray-600">${billetesHtml}</div>`;
+                        }
+                         html += `<div class="border-b border-gray-200 pb-2 mb-2"><p class="font-semibold text-gray-800">${item.categoria}: <span class="font-bold ${type === 'efectivo' ? 'text-green-700' : 'text-blue-700'}">${formatCurrency(item.monto)}</span></p>${descripcionHtml}${billetesHtml}</div>`;
+                    });
+                    return html;
+                }
+
+                const egresosHtml = itemsDelDia.filter(i => i.type === 'egreso').map(item => `<div class="flex justify-between items-center py-1 border-b border-gray-200"><p class="font-semibold text-gray-800">${item.categoria}:</p><p class="font-bold text-red-700">${formatCurrency(item.monto)}</p></div>`).join('');
+
+                return `
+                    <div class="p-4 bg-green-50 rounded-lg shadow-sm">${ingresosEfectivoDelDia.length > 0 ? `<h3 class="text-lg font-bold text-green-800 mb-2 border-b pb-1 border-green-200">Ingresos (Efectivo)</h3><div class="space-y-2 text-sm">${createHtmlList(ingresosEfectivoDelDia, 'efectivo')}</div>` : '<p class="text-sm text-gray-500 italic">No hay ingresos en efectivo.</p>'}<hr class="my-3 border-green-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal Efectivo:</p><span class="text-green-700">${formatCurrency(totalIngresosEfectivo)}</span></div></div>
+                    <div class="p-4 bg-blue-50 rounded-lg shadow-sm">${ingresosDigitalDelDia.length > 0 ? `<h3 class="text-lg font-bold text-blue-800 mb-2 border-b pb-1 border-blue-200">Ingresos (Digital)</h3><div class="space-y-2 text-sm">${createHtmlList(ingresosDigitalDelDia, 'digital')}</div>` : '<p class="text-sm text-gray-500 italic">No hay ingresos digitales.</p>'}<hr class="my-3 border-blue-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal Digital:</p><span class="text-blue-700">${formatCurrency(totalIngresosDigital)}</span></div></div>
+                    <div class="p-4 bg-red-50 rounded-lg shadow-sm">${egresosDelDia.length > 0 ? `<h3 class="text-lg font-bold text-red-800 mb-2 border-b pb-1 border-red-200">Egresos</h3><div class="space-y-2 text-sm">${egresosHtml}</div>` : '<p class="text-sm text-gray-500 italic">No hay egresos registrados.</p>'}<hr class="my-3 border-red-200"><div class="flex justify-between items-center text-md font-bold text-gray-800"><p>Subtotal de Egresos:</p><span class="text-red-700">${formatCurrency(totalEgresos)}</span></div></div>
+                    <div class="p-4 bg-gray-200 rounded-lg shadow-inner mt-4"><div class="flex justify-between items-center text-lg font-extrabold text-gray-800"><p>SALDO FINAL (Efectivo):</p><span class="text-slate-700">${formatCurrency(saldoFinal)}</span></div></div>`;
+            }
         }
 
 
